@@ -1,0 +1,793 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{natbib}
+\usepackage{array}
+\usepackage{url} % not crucial - just used below for the URL 
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[noend]{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{amsthm}
+
+\usepackage{multirow}
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+
+\usepackage[normalem]{ulem}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+%\usepackage{babel}
+\usepackage[font=small,labelfont=bf]{caption}
+
+\newcommand*{\myprime}{^{\prime}\mkern-1.2mu}
+\newcommand*{\mydprime}{^{\prime\prime}\mkern-1.2mu}
+\newcommand*{\mytrprime}{^{\prime\prime\prime}\mkern-1.2mu}
+\newcommand{\RN}[1]{%
+  \textup{\uppercase\expandafter{\romannumeral#1}}%
+}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}{Corollary}[theorem]
+\pdfminorversion=4
+% NOTE: To produce blinded version, replace "0" with "1" below.
+\newcommand{\blind}{0}
+\makeatletter
+\newcommand{\vast}{\bBigg@{3.5}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\makeatother
+
+\usepackage{etoolbox}
+\usepackage{tikz}
+
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{customthm}{Theorem}
+
+\newcommand{\cmark}{\ding{51}}%
+
+% DON'T change margins - should be 1 inch all around.
+\addtolength{\oddsidemargin}{-.5in}%
+\addtolength{\evensidemargin}{-.5in}%
+\addtolength{\textwidth}{1in}%
+\addtolength{\textheight}{-.1in}%
+\addtolength{\topmargin}{-.3in}%
+
+%\pdfminorversion = 4
+
+\begin{document}
+
+\def\spacingset#1{\renewcommand{\baselinestretch}%
+{#1}\small\normalsize} \spacingset{1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if1\blind
+{
+  \title{\bf Title}
+  \author{Author 1\thanks{
+    The authors gratefully acknowledge \textit{please remember to list all relevant funding sources in the unblinded version}}\hspace{.2cm}\\
+    Department of YYY, University of XXX\\
+    and \\
+    Author 2 \\
+    Department of ZZZ, University of WWW}
+  \maketitle
+} \fi
+
+\if0\blind
+{
+  \bigskip
+  \bigskip
+  \bigskip
+  \begin{center}
+    {\Large\bf High-Dimensional Trace Regression with Weighted Nuclear Norm Regularization}
+\end{center}
+\begin{center}
+
+	  \end{center}
+	       \begin{center} 
+
+\end{center}
+  \medskip
+} \fi
+
+\bigskip
+\begin{abstract}
+
+\end{abstract}
+
+\noindent%
+{\it Keywords:  }   
+\vfill
+
+\spacingset{1.5} % DON'T change the spacing!
+%$\epsilon_{i}$ is a zero mean noise with finite variance and 
+\section{Introduction}
+{\bf Why study WNN}\\
+Trace regression models become more popular in many application fields, such as matrix completion, compressed sensing, quantum state tomography, and power state estimation. The goal of these applications is to recover a low-rank parameter matrix, and the trace regression is usually equipped with standard nuclear norm (SNN) regularization to recover the matrix. The SNN penalizes the singular values of the matrix with equal weights, which may not be appropriate because the singular values have clear physical meanings in the applications and should be treated differently. This motivates us to recover the matrix by using the weighted nuclear norm (WNN), where each singular value can be assigned with an appropriate penalty weight. In addition, using WNN is expected to have a better recovering because SNN is a special case of WNN. Although with these positive expectations of using WNN,  we are not aware of a paper studying the theoretical properties of the matrix recovered by the trace regression with WNN, and showing using WNN is better than SNN. Studying the theoretical properties is non-trivial because WNN is a non-convex norm. The aim of this paper is to provide these theoretical properties.
+
+{\bf Details for trace regression}\\
+We consider the problem of recovering an unknown parameter matrix $\boldsymbol{\Theta^\star}\in \mathbf{R}^{d_{1} \times d_{2}}$ from $n$ observations satisfying the following expression
+\begin{equation}
+    y_{i} = \textbf{tr}(\mathbf{X}^{T}_{i}\boldsymbol{\Theta^\star}) + \varepsilon_{i} \ ,\ i = 1, \cdots, n, \label{eq: TR}
+\end{equation}
+where $\textbf{tr}$ is the trace operator, $\mathbf{X}_{i} \in \mathbf{R}^{d_{1} \times d_{2}}$ is a known measurement matrix for $i = 1, \cdots, n$ and $\big\{\varepsilon_{i}\big\}_{i=1}^{n}\stackrel{\text{i.i.d}}{\sim} \mathcal{N}\big( 0, \nu^{2} \big)$. 
+Equation (\ref{eq: TR}) is well-known as trace regression, and it has been used a lot in many applications for recovering the matrix $\boldsymbol{\Theta^\star}$. 
+The matrix $\boldsymbol{\Theta^\star}$ in these applications usually possesses a low rank structure with large dimension size (i.e., the values of $d_{1}$ and $d_{2}$ are large but rank($\boldsymbol{\Theta^\star}$) << $\min(d_{1}, d_{2}):=p$). 
+To recover the low rank matrix, many methods has been proposed in the literature, but methods with using weighted nuclear norm are limited in the literature.
+
+{\bf Details for WNN}\\
+The problem of using  weighted nuclear norm to recover the matrix $\boldsymbol{\Theta^\star}$ with the given noisy measurement pairs $\big\{\mathbf{X}_{i},y_{i}\big\}_{i=1}^{n}$ can be expressed as solving  
+\begin{equation} 
+    \min_{\boldsymbol{\Theta}} \frac{1}{2n}\sum^{n}_{i=1} (y_{i} - \textbf{tr}(\mathbf{X}^{T}_{i}\boldsymbol{\Theta}))^2 + \lambda_{n} ||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}} \label{eq: opt}
+\end{equation}
+with 
+\begin{equation}
+    ||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}} =\sum^{p}_{j=1} \omega_{j}\sigma_{j}(\boldsymbol{\Theta}), \label{eq: wnn}
+\end{equation}
+where $\sigma_{j}(\boldsymbol{\Theta})$ means the $j$-th largest singular value of a matrix $\boldsymbol{\Theta} \in \mathbf{R}^{d_{1} \times d_{2}}$, $\omega_{j}$ is a non-negative weight assigned to $\sigma_{j}(\boldsymbol{\Theta})$, and $\lambda_{n}\geq 0$ is a hyper-tuning parameter. 
+Specifically, it is a well-known fact that the landscape of~\eqref{eq: opt} is non-convex when the weights are in non-decreasing order, $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$. 
+See~\cite{gu2014weighted,chen2013reduced}.
+The non-decreasing order is more desirable for use because smaller singular values are expected with a larger penalty to shrink to 0, so a correct low rank approximation can be obtained. However, the non-convex nature of~\eqref{eq: opt} makes conducting statistical inferences on an estimator of matrix $\boldsymbol{\Theta^\star}$ be highly non-trivial. In this study, we propose a method for estimating matrix $\boldsymbol{\Theta}$ by solving (\ref{eq: opt}) with (\ref{eq: wnn}) with {\it showing the resulting estimator achieves the global optimal}.
+
+{\bf Literature review and possible applications}\\
+Literatures have rigorously studied the statistical properties of trace regression with SNN, i.e., problem (\ref{eq: wnn}) with the weights satisfying $w_{1} = w_{2} = \cdots = 1$. Negahban and Wainwright (2011) and Koltchinskii et al. (2011) derived the statistical error rate of the estimator from trace regression with SNN when noise term  is following sub-Gaussian. Fan et al. (2016) provide a method to handle
+heavy-tailed noise, and the resulting estimator is shown to achieve the same statistical error rate as Negahban and Wainwright (2011). Fan et al. explore the SNN under generalized trace regression problems for categorical responses. On the other hand, theoretical properties about WNN has been studied in \citet{chen2013reduced} for matrix regression problems but not for trace regression problems. 
+
+{\bf No Closed Form Solutions}\\
+Although reduced rank regression (RRR) with WNN has a closed form solution (\citep{chen2013reduced}), a generalized model of RRR with SNN, which is a special case of RRR with WNN, to trace regression with SNN has no closed form solution, pointed out in the literature (\citep{negahban2011estimation, koltchinskii2011nuclear}). Hence,  trace regression with WNN cannot be expected to have a closed form solution.
+
+
+{\bf Contributions of the paper}\\
+The contributions of the paper is summarized below
+\begin{itemize}
+    \item Propose an algorithm for solving the WNN problem with achieving global optimal.
+    \item Explore the estimation properties of the global optimal estimator.
+\end{itemize}
+
+
+
+
+
+
+\newpage
+\begin{algorithm}[h] \label{alg:1}
+    \textbf{Input} : $\big\{\mathbf{X}_{i},y_{i}\big\}_{i=1}^{n}$, $\lambda_{n} \geq 0$. \\
+    \textbf{Prelimiaries} : $\mathbf{M_{y}x}:=\sum_{i=1}^{n}y_{i}\mathbf{X}_{i}$, and
+    $\mathcal{A} := \frac{1}{n}\sum_{i=1}^{n} v(\mathbf{X}_{i})v(\mathbf{X}_{i})^{\top}+\rho\cdot\mathcal{I}_{d_1d_2}$. \\
+    \textbf{Initialization} : $\Theta^{(0)}=\mathbf{0}$, $\Gamma^{(0)}=\mathbf{0}$, $\Lambda^{(0)}=\mathbf{0} \in\mathbb{R}^{d_{1}\times d_{2}}$. \\
+    \qquad {\bf Repeat following Steps :} \\
+    \qquad \qquad {\bf Step 1.} Let $\mathbf{B^{(k)}}:=\frac{1}{n}\mathbf{M_{y}x}-\Lambda^{(k)}+\rho \cdot \Gamma^{(k)}$. \quad $\mathbf{B^{(k)}}=\mathbf{U}\boldsymbol{\Sigma}\mathbf{V^{\top}}$. (SVD) \\
+    \qquad \qquad \qquad \qquad $\sigma_{j}\big(\Theta^{(k+1)}\big)=\max\bigg\{\frac{1}{\rho}\big(\sigma_{j}(\mathbf{B}^{(k)}\big)-\lambda_{n} w_{j}\big),0 \bigg\}$ for $j=1,\dots,p$. \\
+    \qquad \qquad \qquad \qquad $\Theta^{(k+1)} = \mathbf{UDV^{\top}}$ where $\mathbf{D}=\textbf{diag}\big( \sigma_{1}\big(\Theta^{(k+1)}\big),\dots,\sigma_{p}\big(\Theta^{(k+1)}\big) \big)$.  \\
+    \qquad \qquad {\bf Step 2.} 
+    $\Gamma^{(k+1)} = \textbf{Mat} \big[\mathcal{A}^{-1}\big(\rho v(\Theta^{(k+1)})-v(\Lambda^{(k)})\big)\big].$\\
+    \qquad \qquad {\bf Step 3.} $\Lambda^{(k+1)} = \Lambda^{(k)} + \rho\big( \Theta^{(k+1)}-\Gamma^{(k+1)} \big)$.\\
+    \qquad {\bf Until} $|| \Theta^{(k+1)}-\Gamma^{(k+1)} ||_{F}\leq 10^{-7}$ and $|| \Gamma^{(k+1)}-\Gamma^{(k)} ||_{F}\leq 10^{-7}$. \\
+    \textbf{Output} : $\widehat{\Theta}=\Theta^{(k+1)}$. 
+\caption{ADMM for weighted Trace Regression. (WTR-ADMM)}
+\end{algorithm}
+
+\section{ADMM}
+In this Section, we show that the global minimizer of~\eqref{eq: opt} can be found with a simple application of ADMM algorithm. 
+%See \cite{boyd2011distributed} for the comprehensive survey on ADMM.
+First, we describe the implementation of Alternating Direction Method of Multipliers (ADMM) algorithm for solving the minimization problem~\eqref{eq: opt}, which is summarized in Table~\eqref{alg:1}.
+Then, we show the solution $\widehat{\Theta}$ from Algorithm 1 is indeed a global minimizer of the optimization problem~\eqref{eq: opt}.
+We start with reformulating~\eqref{eq: opt} as follows:
+\begin{align*}
+    \min_{\Theta, \Gamma} \bigg\{ f(\Theta) + g(\Gamma) \bigg\}
+    \qquad \textbf{s.t.} \qquad \Theta = \Gamma \in \mathbb{R}^{d_{1}\times d_{2}},
+\end{align*}
+by letting $f(\Theta):=-\frac{1}{n}\textbf{tr}\big( \big(\sum_{j=1}^{n}y_{i}\mathbf{X}_{i}\big)^{\top}\Theta \big)+\lambda_{n}||\Theta||_{\boldsymbol{\omega,\star}}$ and $g(\Gamma)=\frac{1}{2n}\sum_{j=1}^{n}\textbf{tr}\big(\mathbf{X_i^\top}\Gamma\big)^{2}$.
+This reformulation naturally leads to the construction of an augmented lagrangian function $\mathcal{L}_{\rho}\big(\Theta,\Gamma,\Lambda\big)$ : For any $\rho>0$ and dual variable $\Lambda \in \mathbb{R}^{d_{1}\times d_{2}}$, 
+\begin{align*}
+    \mathcal{L}_{\rho}\big(\Theta,\Gamma,\Lambda\big):=
+    f(\Theta) + g(\Gamma) + \textbf{tr}\big( \Lambda^{\top}\big( \Theta-\Gamma \big)\big)
+    + \frac{\rho}{2} || \Theta-\Gamma ||_{F}^{2}.
+\end{align*}
+Then, we solve following three optimization problems repeatedly until primal and dual feasibility condition hold; that is, 
+repeat Step $1 \sim 3$,
+\begin{align*}
+    &\textbf{Step 1.} \quad \Theta^{(k+1)} = \argmin_{\Theta} \mathcal{L}_{\rho} \big( \Theta,\Gamma^{(k)},\Lambda^{(k)} \big), \\
+    &\textbf{Step 2.} \quad \Gamma^{(k+1)} = \argmin_{\Gamma} \mathcal{L}_{\rho} \big( \Theta^{(k+1)},\Gamma,\Lambda^{(k)} \big),  \\
+    &\textbf{Step 3.} \quad \Lambda^{(k+1)} = \Lambda^{(k)} + \rho\big( \Theta^{(k+1)}-\Gamma^{(k+1)} \big),
+\end{align*}
+until $|| \Theta^{(k+1)}-\Gamma^{(k+1)} ||_{F}\leq e$ and $|| \Gamma^{(k+1)}-\Gamma^{(k)} ||_{F}\leq e$ for some small enough $e>0$.
+Note that the optimization problem in \textbf{Step $1$} is non-convex problem, whereas the objective in \textbf{Step $2$} is a simple convex function. 
+Surprisingly, we can show that a global minimizer of \textbf{Step $1$} can be obtained. 
+For simplicity, denote $\mathbf{M_{y}x}:=\sum_{i=1}^{n}y_{i}\mathbf{X}_{i}$ and $\mathbf{B}^{(k)}:=\frac{1}{n}\mathbf{M_{y}x}-\Lambda^{(k)}+\rho \cdot \Gamma^{(k)}$, then we have
+\begin{align}
+    \Theta^{(k+1)} 
+    &= \argmin_{\Theta} \mathcal{L}_{\rho} \big( \Theta,\Gamma^{(k)},\Lambda^{(k)} \big) \nonumber \\
+    &= \argmin_{\Theta}  \bigg\{ f(\Theta) + \textbf{tr}\big(\Lambda^{(k) \top}\Theta\big) + \frac{\rho}{2} || \Theta-\Gamma^{(k)} ||_{F}^{2} \bigg\}  \nonumber \\
+    &= \argmin_{\Theta} \bigg\{ \bigg(-\frac{1}{n}\textbf{tr}\big(\mathbf{M_{y}x}^{\top}\Theta\big)+\lambda_{n}\sum_{j=1}^{p}w_{j}\cdot \sigma_{j}\big(\Theta\big) \bigg) \nonumber \\
+    &\qquad \qquad \qquad \qquad \qquad \qquad + \textbf{tr}\big( \Lambda^{(k) \top}\Theta \big) + \frac{\rho}{2}\textbf{tr}\big(\Theta\Theta^{\top}\big)-\rho\textbf{tr}\big( \Gamma^{(k) \top}\Theta \big) \bigg\} \nonumber \\
+    &= \argmin_{\Theta} \bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2}\sigma_{j}(\Theta)^{2} + \lambda_{n}w_{j}\cdot\sigma_{j}(\Theta) \bigg) -\textbf{tr} \big( \mathbf{B}^{(k) \top}\Theta \big) \bigg\} \label{eq: step1_orig}.
+\end{align}
+Note that we used $\textbf{tr}\big(\Theta\Theta^{\top}\big)=\sum_{j=1}^{p}\sigma_{j}\big(\Theta\big)^{2}$ in the last equality.
+For further convenience of notation, let $\{d_{j}\}_{j=1}^{p}:=\{\sigma_{j}\big(\Theta\big)\}_{j=1}^{p}$ and 
+denote $\Theta=\mathbf{UDV^{\top}}$ where 
+$\mathbf{U}$ and $\mathbf{V}$ are the left and right singular matrices of $\Theta$ and $\mathbf{D}:=\text{diag}\big(\{d_{1},d_{2},\dots,d_{p}\}\big)$.
+Note that the entries in $\mathbf{D}$ are in non-increasing order, i.e. $d_{1} \geq d_{2} \dots \geq d_{p} \geq 0$.
+Then, we can rewrite the optimization problem in~\eqref{eq: step1_orig} as follows:
+\begin{align}
+    \Theta^{(k+1)} 
+    &= \argmin_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \lambda_{n}w_{j}d_{j} \bigg) - \max_{\mathbf{U}^{\top}\mathbf{U} = \mathcal{I}_{d_{1}}, \mathbf{V}^{\top}\mathbf{V} = \mathcal{I}_{d_{2}}} \textbf{tr}\big(\mathbf{B}^{(k)\top}\Theta\big) \bigg\} \label{eq: step1_sec} 
+\end{align}
+The maximum of second term in~\eqref{eq: step1_sec} can be achieved when $\mathbf{U}$ and $\mathbf{V}$ coincide with 
+left and right singular matrices of $\mathbf{B}^{(k)}$ respectively, giving us the maximized value as $\sum_{j=1}^{p}\sigma_{j}(\mathbf{B}^{(k)})d_{j}$.
+This is a well-known von-Neumann's trace inequality.
+See \cite{von1937some,mirsky1975trace}. 
+Then the final form of the optimization reduces to
+\begin{align}
+     \Theta^{(k+1)} = \argmin_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \big( \lambda_{n}w_{j}-\sigma_{j}(\mathbf{B}^{(k)}) \big) d_{j} \bigg)  \bigg\}. \label{eq: step1}
+\end{align}
+The objective function~\eqref{eq: step1} is completely decompsable coordinate-wise and is minimized only at $d_{j}=\max\big\{\frac{1}{\rho}\big(\sigma_{j}(\mathbf{B}^{(k)}\big)-\lambda_{n} w_{j}\big),0 \big\}$ for $j=1,\dots,p$.
+Since $\sigma_{1}(\mathbf{B}^{(k)})\geq\sigma_{2}(\mathbf{B}^{(k)})\dots\geq\sigma_{p}(\mathbf{B}^{(k)})$ and $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$, the solution is feasible.
+Furthermore, we have an unique minimizer due to the equality condition of von-Neumann's trace inequality when $\mathbf{B}^{(k)}$ has distinct non-zero singular values, and the strict convexity of~\eqref{eq: step1} in $d_{j}$ for $j=1,\dots,p$.
+
+Now, we turn our attention on minimizing the convex problem in \textbf{Step $2$}.
+First, let $v(M)\in\mathbb{R}^{d_{1}d_{2}}$ be the vectorized version of matrix $M$ concatenating columns of $M\in\mathbb{R}^{d_{1} \times d_{2}}$ into one column vector. 
+Then, it is easy to rewrite the problem in \textbf{Step $2$} as follows: 
+\begin{align}
+    \Gamma^{(k+1)} 
+    &= \argmin_{\Gamma} \mathcal{L}_{\rho} \big( \Theta^{(k+1)},\Gamma,\Lambda^{(k)} \big) \nonumber \\
+    &= \argmin_{\Gamma} \bigg\{ g(\Gamma) - \textbf{tr}\big( \Lambda^{(k)\top}\Gamma\big) + \frac{\rho}{2} || \Theta^{(k+1)}-\Gamma ||_{F}^{2} \bigg\}, \\
+    &= \argmin_{\Gamma} \bigg\{v\big(\Gamma\big)^{\top}\mathcal{B} v\big(\Gamma\big) - \big( \rho \cdot v(\Theta^{(k+1)})+\Lambda^{(k)} \big)^{\top}v\big(\Gamma\big) \bigg\}, \label{eq: step2}
+\end{align}
+where $\mathcal{B}:=\frac{1}{2n}\sum_{i=1}^{n} v(\mathbf{X}_{i})v(\mathbf{X}_{i})^{\top}+\frac{\rho}{2}\cdot\mathcal{I}_{d_1d_2}$. 
+Note that the quadratic equation~\eqref{eq: step2} always has an unique minimizer as long as $\rho>0$.
+See the solution of~\eqref{eq: step2} in Table~\ref{alg:1}.
+However, inverting a matrix $2\mathcal{B}\in\mathbb{R}^{d_{1}d_{2}\times d_{1}d_{2}}$ is a computationally heavy task in a high-dimensional setting (i.e. $n \ll d_{1}d_{2}$).
+\textcolor{red}{We need to give the solution for this computational issue.} 
+{\color{blue} Because $\mathcal{B}$ is positive definite if $\rho > 0$, the computational problem is equivalent to solving the large linear systems  $\mathcal{B}v(\Gamma) = \big( \rho \cdot v(\Theta^{(k+1)})+\Lambda^{(k)} \big).$ Many numerical methods has been proposed for this issue \citep{young2014iterative}, and we recommend use ....}
+
+\begin{theorem} [\textbf{Global convergence of $\widehat{\Theta}$}] \label{Thm1}
+    Let $\widehat{\Theta}$ be the converged solution of~\eqref{eq: opt} via the proposed algorithm WTR-ADMM.
+    Then, $\widehat{\Theta}$ is a global minimizer of the objective function~\eqref{eq: opt} for the case $0\leq w_{1}\leq\dots\leq w_{p}$.
+    Furthermore, if all the non-zero singular values of $\Theta^{(k+1)}$ in the last iteration of WTR-ADMM are distinct, then $\widehat{\Theta}$ is an unique optimal solution.
+\end{theorem}
+
+The key to the success of global convergence of WTR-ADMM stems from the fact that the minimizers of \textbf{Steps 1} and \textbf{2} can be achieved in every iteration of the algorithm.
+In this sense, the proof of the Theorem~\ref{Thm1} is identical to the standard proof on the convergence of ADMM where both $f(\cdot)$ and $g(\cdot)$ are assumed to be convex functions. 
+See the results in Subsection $3.2.1$ of~\cite{boyd2011distributed} and its proof presented in the Appendix of the paper.
+Note that their proof uses the fact that we can achieve global minimizers of \textbf{Steps 1} and \textbf{2} in each iteration of the algorithm 
+due to the convexity of the functions $f(\cdot)$ and $g(\cdot)$.
+
+\section{Bound on statistical estimation error}
+In this Section, we study the statistical consistency of the obtained estimator $\widehat{\Theta}$ from the WTR-ADMM.
+\subsection{General framework}
+For the explicit statements of our results, we introduce two key ingredients: $(\RN{1})$ restricted strong convexity of the cost function $\mathcal{L}_{n}(\Theta):=\frac{1}{2n}\sum^{n}_{i=1} (y_{i} - \textbf{tr}(\mathbf{X}^{T}_{i}\boldsymbol{\Theta}))^2$ around $\Theta^\star$;
+$(\RN{2})$ decomposability of nuclear norm.
+In high-dimensional setting where $n \ll d_{1}d_{2}$, although the function $\mathcal{L}_{n}(\Theta)$ might be curved in some directions, there are $\big(d_{1}d_{2}-n\big)$ directions where it is flat up to second order. 
+We hope that the associated error matrix $\widehat{\Delta}=\widehat{\Theta}-\Theta^{\star}$ 
+lies in some directions $\mathcal{C}\subseteq \mathbb{R}^{d_{1}\times d_{2}}$ where the $\mathcal{L}_{n}(\Theta)$ is curved. 
+This notion is neatly expressed as follows: for some positive constant $\kappa>0$,
+\begin{align*}
+    \mathcal{E}_{n}\big(\widehat{\Delta})\geq \kappa || \widehat{\Delta} ||_{F}^{2} \qquad \text{for all} \quad \widehat{\Delta}\in\mathcal{C},
+\end{align*}
+where $\mathcal{E}_{n}\big(\widehat{\Delta})$ denotes the first order Taylor-expansion error of $\mathcal{L}_{n}(\cdot)$ around $\Theta^\star$. 
+In other words, we call $\mathcal{E}_{n}\big(\widehat{\Delta})$ succeeds \textit{``restricted strong convexity''} (RSC) over the set $\mathcal{C}$, if there exists $\kappa>0$.
+
+The decomposability of nuclear norm in conjunction with the proper choice of regularization parameter $\lambda_{n}$ plays a key role in characterizing the set $\mathcal{C}$.
+Here, we briefly present the notion with relevant notations that will be used throughout the paper.
+Nuclear norm is known to be ``\textit{decomposable}'' with respect to a pair of matrices $A\in\mathcal{M}_{r}\big( \mathcal{U}, \mathcal{V} \big)$ and $B\in\overline{\mathcal{M}}_{r}^{\perp}\big( \mathcal{U}, \mathcal{V} \big)$, where the subspaces $\mathcal{M}_{r}\big( \mathcal{U}, \mathcal{V} \big)$ and $\overline{\mathcal{M}}_{r}^{\perp}\big( \mathcal{U}, \mathcal{V} \big)$ are defined as follows:
+For any given integer $r\leq p$, 
+\begin{align}
+    &\mathcal{M}_{r}\big( \mathcal{U}, \mathcal{V} \big) = \big\{ \Theta\in\mathbb{R}^{d_{1} \times d_{2}} : \textbf{colspan}(\Theta) \subseteq \mathcal{U},\quad  \textbf{rowspan}(\Theta) \subseteq \mathcal{V}  \big\} \label{M} \\
+    &\overline{\mathcal{M}}_{r}^{\perp}\big( \mathcal{U}, \mathcal{V} \big) = \big\{ \Theta\in\mathbb{R}^{d_{1} \times d_{2}} : \textbf{colspan}(\Theta) \subseteq \mathcal{U}^{\perp},\quad  \textbf{rowspan}(\Theta) \subseteq \mathcal{V}^{\perp} \big\}.
+    \label{M_perp}
+\end{align}
+Let $\mathbf{U}$ and $\mathbf{V}$ be the left and right singular matrices of ground truth matrix $\Theta^{\star}$.
+Then, $\mathcal{U}$ and $\mathcal{V}$ are the r-dimensional subspaces of vectors from the first r columns of matrices $\mathbf{U}$ and $\mathbf{V}$. 
+Moreover, $\mathcal{U}^{\perp}$ and $\mathcal{V}^{\perp}$ denote the subspaces orthogonal to  $\mathcal{U}$ and $\mathcal{V},$ respectively, and $\textbf{colspan}(\Theta)$ and $\textbf{rowspan}(\Theta)$ denote the column space and row space of $\Theta$.
+With this notation, any matrices $A\in\mathcal{M}_{r}\big( \mathcal{U}, \mathcal{V} \big)$ and $B\in\overline{\mathcal{M}}_{r}^{\perp}\big( \mathcal{U}, \mathcal{V} \big)$ can be represented in the following form:
+\begin{align*}
+    A = \mathbf{U}
+    \begin{bmatrix}
+        \mathbf{T}_{1,1} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{0}_{(p-r) \times (p-r)} 
+    \end{bmatrix}
+    \mathbf{V}^{\top}, \qquad
+    B = \mathbf{U}
+    \begin{bmatrix}
+        \mathbf{0}_{r \times r} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{T}_{2,2}
+    \end{bmatrix}
+    \mathbf{V}^{\top}.
+\end{align*}
+From now on, we will omit $\mathcal{U}$ and $\mathcal{V}$ from the notations, if they are clear from the context. 
+We are now ready to characterize the set $\mathcal{C}$. 
+
+\subsection{Main results}
+\begin{lemma} \label{Lemma 3.1}
+Suppose $\widehat{\Theta}$ is an global minimizer of the~\eqref{eq: opt} obtained from WTR-ADMM, with the associated matrix $\widehat{\Delta} = \widehat{\Theta}-\Theta^{\star}$.
+Furthermore, suppose that we have the weight vector $0 < w_{1} \leq w_{2} \leq \dots w_{p} < 2w_{1}$, and a strictly positive regularization parameter $\lambda_{n}\geq\frac{2}{nw_{p}}\left\|\sum_{i=1}^{n}\varepsilon_{i}\mathbf{X}_{i}\right\|_{op}$.
+Then, for any $r\leq p$ and for some positive constant $\delta>0$, 
+\begin{align*}
+    \mathcal{C}\big(\mathcal{M}_{r},\overline{\mathcal{M}}_{r}^{\perp};\Theta^{\star}, \widehat{\Delta} \big) 
+    := \bigg\{& \widehat{\Delta}\in\mathbb{R}^{d_{1}\times d_{2}} : || \widehat{\Delta}||_{F} \geq \delta \quad \text{and} \\ 
+    & \qquad \left\|\widehat{\Delta}^{\mydprime}\right\|_{*} \leq \bigg(\frac{2w_{p}}{w_{1}-\frac{w_{p}}{2}}\bigg)
+    \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) + \bigg(\frac{\frac{5}{2}w_{p}-w_{1}}{w_{1}-\frac{w_{p}}{2}}\bigg)
+    \left\|\widehat{\Delta}^{\myprime}\right\|_{*} \bigg\},
+\end{align*}
+where $\widehat{\Delta}^{\mydprime} \in \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}\big(\widehat{\Delta}\big)$ and $\widehat{\Delta}^{\myprime}=\widehat{\Delta}-\widehat{\Delta}^{\mydprime}$.
+Let $\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}$ denote the projection operator onto the subspace $\overline{\mathcal{M}}_{r}^{\perp}$.
+\end{lemma}
+A detailed proof of the Lemma is deferred in the Appendix.
+Here, we present several remarks regarding the Lemma.
+\begin{enumerate}
+    \item Our result is an extension of Lemma $1$ in~\cite{negahban2011estimation}. 
+    Note that plugging in $w_{1}=w_{2}=\dots=w_{p}=1$ recovers their result.
+    Furthermore, the set $\mathcal{C}$ is represented in terms of nuclear norm, not a weighted nuclear norm.
+    Through this construction of the set, we can obtain the bound on the estimation error in terms of Frobenius norm, 
+    so that a direct comparison with the error of the estimator of the trace regression problem with the unweighted nuclear norm becomes possible.
+    See the Theorem $1$ of~\cite{negahban2011estimation}. 
+    This will be more detailed subsequently.
+    
+    \item We restrict our attentions on the regime $0\leq w_{1} \leq w_{2} \leq \dots w_{p} < 2w_{1}$, and leaves the characterizations of the set for the remaining regime to the future work.
+    In the regime of interest; first, think of the set without the constraint $||\widehat{\Delta}||_{F}\geq \delta$ denoting it as $\mathcal{C^{\myprime}}$.
+    Then, it is easy to see $\widehat{\Delta}$ lies in the star-shaped set around the origin, whose size is adjusted by the smallest and largest weights, $w_{1}$ and $w_{p}$.
+    The set $\mathcal{C^{\myprime}}$ being a star-shaped means that if $\widehat{\Delta}\in\mathcal{C^{\myprime}}$, then $t\widehat{\Delta}\in\mathcal{C^{\myprime}}$ for all $t\in[0,1]$.
+    Because of this property of the set, it contains an open ball around the origin with certain radius $\delta>0$, 
+    specifically when ground-truth matrix $\Theta^\star$ is not an exact rank $r$ matrix.
+    Note that if $\Theta^{\star}$ is an exactly rank $r$ matrix, then the set becomes a cone.  
+    A motivation for the constraint $||\widehat{\Delta}||_{F}\geq\delta$ in the set $\mathcal{C}$ is to eliminate the open ball from the set so that when the hessian of $\frac{1}{2n}\sum^{n}_{i=1} (y_{i} - \textbf{tr}(\mathbf{X}^{T}_{i}\Theta))^2$ fails the RSC in a global sense, it still satisfies the RSC over the set $\mathcal{C}$.
+
+    \item With the help of Theorem~\ref{Thm1}, basic inequality can be employed at the beginning of the proof,
+    which is a standard technique in statistical literature for obtaining the estimation error.
+    However, a technical difficulty for proving our Lemma arises from the violation of triangle inequality of $|| \cdot ||_{w,\star}$. 
+    We circumvent this problem by devising a new norm $|| \cdot ||_{w_{p}-w,\star}:=\sum_{j=1}^{p}(w_{p}-w_{j})\sigma_{j}(\cdot)$. 
+    See Theorem~$1$ of~\cite{chen2013reduced} on why $|| \cdot ||_{w_{p}-w,\star}$ satisfies the triangle inequality.
+\end{enumerate}
+
+\begin{theorem} \label{thm2}
+%\begin{align*}
+%    || \widehat{\Theta} - \Theta^{\star} ||_{F} \leq \max\Bigg\{ \delta,  \frac{8\lambda_{n}w_{p}}{\kappa}\bigg(\frac{\frac{5}{2}w_{p}-w_{1}}{w_{1}-\frac{w_{p}}{2}}\bigg)\sqrt{r}, 
+%    \Bigg[\frac{4\lambda_{n}w_{p}}{\kappa}\bigg(\frac{\frac{5}{2}w_{p}-w_{1}}{w_{1}-\frac{w_{p}}{2}}\bigg) \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) \Bigg]^{\frac{1}{2}} \Bigg\}
+%\end{align*}
+\begin{equation}
+    || \widehat{\Theta} - \Theta^{\star} ||_{F} \leq \max \bigg\{2\lambda_{n}\bigg[\frac{C}{2} + w_{p}-w_{1}\bigg]\frac{2w_{p}}{w_{1}-\frac{C}{2}}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}, 4\sqrt{r}\lambda_{n}\bigg[\frac{C}{2} + w_{p}-w_{1}\bigg]\frac{2w_{p}}{w_{1}-\frac{C}{2}}\bigg\} \nonumber
+\end{equation}
+for $0 \leq C \leq 2w_{1}$
+\end{theorem}
+
+\begin{figure}
+  \includegraphics[width=\textwidth]{Region_better.eps}
+  \caption{} 
+  \label{fig_rate_zsc}
+\end{figure}
+
+\newpage
+\begin{corollary}
+If $w_{1}, w_{p},$ and $C$ satisfying the following conditions are used
+\begin{eqnarray}
+w^2_{p} - (w_{1}-\frac{C}{2})w_{p} - (w_{1} - \frac{C}{2}) & \leq & 0, \nonumber
+\end{eqnarray}
+with $C \in (0, 2w_{1}), w_{1} + w_{p} \leq 1, w_{1} \geq 0,$ and $w_{1} \leq w_{p} \leq 1,$ 
+then the resulting WNN method possesses a smaller estimation error and approximation error than the SNN method.
+\end{corollary}
+Demonstration plots:
+
+
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=1\textwidth]{Figure/RegionPlot.pdf}
+  \caption{} 
+  \label{fig_1}
+\end{figure}
+
+\section{Simulation Studies}
+
+\begin{algorithm}[h] \label{alg:2}
+    \textbf{Input} : $\big\{\mathbf{X}_{i},y_{i}\big\}_{i=1}^{n}$, Cadidate values $\{(\lambda_{j}, w_{1j}, w_{pj}): w_{pj} > w_{1j} > 0, \lambda_{j} > 0\}^{K}_{j=1}$. \\
+    \textbf{Prelimiaries}: Split the dataset into 10 sub-datasets. \\
+    For each $(\lambda_{j}, w_{1j}, w_{pj}),$ calculate its CV score by
+    following \\
+    \qquad  {\bf Step 1.} Fix a sub-dataset as the testing dataset, and fit the trace regression with SNN to the remaining 9 sub-datasets by using $\lambda_{j}$ as the penalty parameter.
+    Denote the matrix estimator from Step 1 as $\hat{\Theta}^{(S)}$\\
+    \qquad  {\bf Step 2.} Find the rank of $\hat{\Theta}^{(S)}$, denoted by $\hat{r}$.\\
+    \qquad  {\bf Step 3.} Fit the trace regression with WNN to the 9 sub-datasets by using $\lambda_{j}$ and $w_{1} = \cdots = w_{\hat{r}} = w_{1j} \equiv \frac{1}{\hat{\sigma}^{S}_{1}}$ and $w_{\hat{r} + 1} = \cdots = w_{p} = w_{pj}  \equiv \frac{1}{\hat{\sigma}^{S}_{p}}$.\\
+     \qquad  {\bf Step 4.} Evaluate the testing error by using the testing dataset and the matrix estimator from Step 3.\\
+    \qquad  {\bf Step 5.} Repeat the previous steps until all the sub-dataset are treated as the testing dataset, and record the testing error each time.\\
+    \qquad  {\bf Step 6.} Record the average of all testing errors.\\
+    Find the candidate value $(\lambda_{j}, w_{1j}, w_{pj})$ that is associated with the minimum of the average testing errors, denoted by $(\tilde{\lambda}, \tilde{w}_{1}, \tilde{w}_{p})$.\\
+\textbf{Output}: $(\tilde{\lambda}, \tilde{w}_{1}, \tilde{w}_{p})$. 
+\caption{Tuning process for WTR-ADMM}
+\end{algorithm}
+
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=\textwidth]{Figure/Result1.pdf}
+  \caption{Simulation Study 1} 
+  \label{fig_1}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+  \includegraphics[width=\textwidth]{Figure/Result2.pdf}
+  \caption{Simulation Study 2} 
+  \label{fig_1}
+\end{figure}
+
+\newpage
+\section{Appendix: Proof of Lemma~\ref{Lemma3.1}}
+Since $\widehat{\Theta}$ is a minimizer and $\Theta^{\star}$ is a feasible solution of the optimization problem in~\eqref{eq: opt} respectively, we have a following basic inequality:
+\begin{eqnarray} \label{basic_eq}
+& & \frac{1}{2n}\sum^{n}_{i=1} \big( y_{i} - \textbf{tr}(\mathbf{X}_{i}^{\top}\widehat{\Theta}) \big)^{2} + \lambda_{n}||\widehat{\Theta}||_{w,\star}  \leq 
+\frac{1}{2n}\sum^{n}_{i=1}\big( y_{i} - \textbf{tr}(\mathbf{X}_{i}^{\top}\Theta^{\star}) \big)^{2} + \lambda_{n}||\Theta^{\star}||_{w,\star}.
+\end{eqnarray}
+Plugging in $ y_{i} = \textbf{tr}(\mathbf{X}^{T}_{i}\Theta^\star) + \varepsilon_{i} \ ,\ i = 1, \cdots, n$ on LHS and RHS of the~\eqref{basic_eq} yields
+\begin{align}
+    \frac{1}{2n}\sum^{n}_{i=1}\big(\textbf{tr}(\mathbf{X}_{i}^{\top}(\Theta^{\star} - \widehat{\Theta}))\big)^{2} \leq \frac{1}{n} \sum^{n}_{i=1} \textbf{tr}\big( \mathbf{X}_{i}^{\top}(\widehat{\Theta} - \Theta^{\star}) \big)\epsilon_{i} + 
+    \lambda_{n} \big( ||\Theta^{\star}||_{w,\star} - ||\widehat{\Theta}||_{w,\star} \big). \label{eq: apn_pre}
+\end{align}
+By denoting $\widehat{\Delta} \equiv \widehat{\Theta} - \Theta^{\star}$ and since LHS of \eqref{eq: apn_pre} is $\geq 0$, we have 
+\begin{eqnarray}
+    0 \leq \frac{1}{n}\sum^{n}_{i=1}\textbf{tr}(\mathbf{X}_{i}^{\top}\widehat{\Delta})\epsilon_{i} + \lambda_{n}\big( ||\Theta^{\star}||_{w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w,\star} \big).  \label{eq: apn_main}
+\end{eqnarray}
+%\noindent {\bf [Decomposition of weighted nuclear norm, an extension of \citep{negahban2011estimation}, page 1 in results]}
+%Let the SVD of $\Theta^{\star} = \mathbf{UDV}^{T}$. For a given interger $r \leq \min{m_{1}, m_{2}},$ denote the $r$-dimensional subspaces of the first $r$ columns of $\mathbf{U}$ and $\mathbf{V}$ by $\mathcal{U}$ and $\mathcal{V},$ respectively. We can define the two subspaces of matrices   
+%\begin{eqnarray}
+%A_{r} & = & \left\lbrace \Theta \in R^{d_{1} \times d_{2}} : rowspan(\Theta) \subseteq \mathcal{U},  colspan(\Theta) \subseteq \mathcal{V} \right\rbrace \nonumber \\
+%B_{r} & = & \left\lbrace \Theta \in R^{d_{1} \times d_{2}} : rowspan(\Theta) \subseteq \mathcal{U}^{\perp},  colspan(\Theta) \subseteq \mathcal{V}^{\perp} \right\rbrace \nonumber, 
+%\end{eqnarray}
+%where $\mathcal{U}^{\perp}$ and $\mathcal{V}^{\perp}$ denote the subspaces orthogonal to  $\mathcal{U}$ and $\mathcal{V},$ respectively, and $rowspan(\Theta) \subseteq R^{m_{1}}$ and  $colspan(\Theta) \subseteq R^{m_{1}}$ denote the row space and column space of $\Theta$.
+First, we will control the upper-bound on the second term of the~\eqref{eq: apn_main}.
+By the definition of the weighted nuclear norm, we can re-write the term as follows:
+\begin{align}
+    & ||\Theta^{\star}||_{w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w,\star} \nonumber \\
+    & \quad = \sum^{p}_{j = 1} w_{j}\sigma_{j}\big(\Theta^{\star}\big) - \sum^{p}_{j = 1} w_{j}\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big)  \nonumber \\
+    & \quad = \left[w_{p}\sum^{p}_{j = 1}\sigma_{j}\big(\Theta^{\star}\big) - \sum^{p}_{j = 1}(w_{p} - w_{j})\sigma_{j}\big(\Theta^{\star}\big)\right] - \left[w_{p}\sum^{p}_{j = 1}\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big) - \sum^{p}_{j = 1}(w_{p} - w_{j})\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big)\right] \nonumber \\
+    & \quad = w_{p}\Bigg[ \sum^{p}_{j = 1}\sigma_{j}\big(\Theta^{\star}\big) - \sum^{p}_{j = 1}\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big) \Bigg] + \Bigg[ \sum^{p}_{j=1}(w_{p} - w_{j})\big\{ \sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big)-\sigma_{j}\big(\Theta^{\star}\big)\big\}\Bigg] \nonumber\\
+    & \quad = \underbrace{w_{p}\big( ||\Theta^{\star}||_{\star} - ||\widehat{\Delta} + \Theta^{\star}||_{\star} \big)}_{:=\RN{1}} + \underbrace{\big( ||\widehat{\Delta} + \Theta^{\star}||_{w_{p}-w,\star} - ||\Theta^{\star}||_{w_{p}-w,\star}\big)}_{:=\RN{2}}, \label{eq: wnn_diff}
+\end{align}
+where $||\Theta||_{w_{p} - w, \star} = \sum^{p}_{j = 1} (w_{p} - w_{j})\sigma_{j}(\Theta)$.
+\newpage \noindent
+By the definitions of the two spaces $\mathcal{M}_{r}$ and $\overline{\mathcal{M}}_{r}^{\perp}$ in~\eqref{M} and~\eqref{M_perp} for any $r\leq p$, we have
+\begin{equation} \label{star}
+    \Theta^{\star} = \Pi_{\mathcal{M}_{r}}\big(\Theta^{\star}\big) +  \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}\big(\Theta^{\star}\big).
+\end{equation}
+Recall that $\widehat{\Delta}^{\mydprime} \in \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}\big(\widehat{\Delta}\big)$ and 
+$\widehat{\Delta}^{\myprime}=\widehat{\Delta}-\widehat{\Delta}^{\mydprime}$.
+Then, we can control the term $||\widehat{\Delta} + \Theta^{\star}||_{\star}$ as follows: 
+\begin{align}
+    ||\widehat{\Delta} + \Theta^{\star}||_{\star} & =  ||\widehat{\Delta}^{\myprime} + \widehat{\Delta}^{\mydprime} + \Pi_{\mathcal{M}_{r}}(\Theta^{\star}) + \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}\nonumber \\
+    & \geq  ||\widehat{\Delta}^{\mydprime} + \Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} - \{||\widehat{\Delta}^{\myprime}||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}\} \nonumber\\
+    & =  ||\widehat{\Delta}^{\mydprime}||_{\star} + ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} - \{||\widehat{\Delta}^{\myprime}||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}\} \label{one_inq},
+\end{align}
+where in the first inequality, we used the triangle inequality of $||\cdot||_{\star}$ and in the last equality, the decomposability of $||\cdot||_{\star}$ with respect to a pair of subspaces $(\mathcal{M}_{r},\overline{\mathcal{M}}_{r}^{\perp})$ is used.
+With~\eqref{one_inq}, we are ready to control the term $\RN{1}$ in~\eqref{eq: wnn_diff}.
+\begin{align}
+    w_{p}\Bigg( ||\Theta^{\star}||_{\star} - ||\widehat{\Delta} + \Theta^{\star}||_{\star} \Bigg) 
+    & \leq  w_{p} \cdot \Bigg\{ \left( ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} \right) \nonumber \\ 
+    &\qquad \qquad - \left(||\widehat{\Delta}^{\mydprime}||_{\star} + ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} - \{||\widehat{\Delta}^{\myprime}||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}\} \right) \Bigg\} \nonumber \\
+    & =  w_{p} \cdot \left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star} \right\rbrace \label{eq: wnn_diff_1}
+\end{align}
+Note that the equality $||\Theta^\star||_{\star}=||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}$ is used in the first inequality due to~\eqref{star}.
+
+Now the term~\RN{2} in~\eqref{eq: wnn_diff} needs to be controlled.
+First, we need to see the norm $ ||\cdot||_{w_{p} - w, \star} = \sum^{p}_{j = 1} (w_{p}-w_{j}) \sigma_{j}\big(\cdot\big)$ with respect to a pair $(A,B)\in(\mathcal{M}_{r},\overline{\mathcal{M}}_{r}^{\perp})$ satisfies the decomposability, meaning $
+||A+B||_{w_{p} - w, \star}=||A||_{w_{p} - w, \star}+||B||_{w_{p} - w, \star}$.
+Define two diagonal matrices $\mathbf{W}_{1}:=\text{diag}(w_{p}-w_{1},\dots,w_{p}-w_{r})$ and $\mathbf{W}_{2}:=\text{diag}(w_{p}-w_{r+1},\dots,w_{p}-w_{p})$.
+Then, we have 
+\begin{align*}
+    ||A+B||_{w_{p} - w, \star}
+    &= \left\| \begin{bmatrix}
+        \mathbf{W}_{1}\mathbf{T}_{1,1} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{0}_{(p-r) \times (p-r)} 
+    \end{bmatrix} + 
+    \begin{bmatrix}
+        \mathbf{0}_{r \times r} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{W}_{2}\mathbf{T}_{2,2}
+    \end{bmatrix}
+    \right\|_{\star}\\
+    &= \left\| \begin{bmatrix}
+        \mathbf{W}_{1}\mathbf{T}_{1,1} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{0}_{(p-r) \times (p-r)} 
+    \end{bmatrix}  \right\|_{\star} 
+    + \left\|\begin{bmatrix}
+        \mathbf{0}_{r \times r} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{W}_{2}\mathbf{T}_{2,2}
+    \end{bmatrix}\right\|_{\star} \\
+    &= ||A||_{w_{p} - w, \star}+||B||_{w_{p} - w, \star}.
+\end{align*}
+In the first equality, the definition of $\|\cdot\|_{w_{p} - w, \star}$ and the invariance of the nuclear norm to orthogonal transformation to multiplication by the matrices $\mathbf{U}$ and $\mathbf{V}$ are used. 
+Using this fact, similarly with~\eqref{one_inq} and~\eqref{eq: wnn_diff_1}, we get the upper-bound on $\RN{2}$ in the equality~\eqref{eq: wnn_diff}: 
+\begin{align}
+||\widehat{\Delta} + \Theta^{\star}||_{w_{p} - w, \star} -  ||\Theta^{\star}||_{w_{p} - w, \star} 
+ & \Leftrightarrow  ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star}) + \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) + \widehat{\Delta}' + \widehat{\Delta}''||_{w_{p} - w, \star} - ||\Theta^{\star}||_{w_{p} - w, \star} \nonumber\\
+ & \leq ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star}) + \widehat{\Delta}^{\mydprime}||_{w_{p} - w, \star} + || \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) ||_{w_{p} - w, \star} + ||\widehat{\Delta}'||_{w_{p} - w, \star} 
+ \nonumber \\
+ & \qquad - ||\Theta^{\star}||_{w_{p} - w, \star} \nonumber\\
+ & = \bigg\{ ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{w_{p} - w, \star} + || \widehat{\Delta}''||_{w_{p} - w, \star}  + || \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) ||_{w_{p} - w, \star} + \nonumber\\
+ & \qquad ||\widehat{\Delta}^{\myprime} ||_{w_{p} - w, \star} \bigg\}  - \bigg\{ ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{w_{p} - w, \star} + || \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) ||_{w_{p} - w, \star} \bigg\} \nonumber\\
+ & = ||\widehat{\Delta}^{\mydprime}||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}. \label{eq: wnn_diff_2} 
+\end{align}
+By combining the inequalities~\eqref{eq: wnn_diff_1} and~\eqref{eq: wnn_diff_2}, we can obtain an upper-bound on the Eq.~\eqref{eq: wnn_diff};
+
+\begin{align}
+    &||\Theta^{\star}||_{w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w,\star} \nonumber \\
+    &\quad =   w_{p}(||\Theta^{\star}||_{\star} - ||\widehat{\Delta} + \Theta^{\star}||_{\star}) + (||\widehat{\Delta} + \Theta^{\star}||_{w_{p}-w,\star} - ||\Theta^{\star}||_{w_{p}-w,\star} )  \nonumber\\ 
+    &\quad \leq  w_{p}\left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star}  \right\rbrace + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace.\nonumber
+\end{align}
+Now, we control the first term of RHS in~\eqref{eq: apn_main} as follows:
+\begin{align} 
+    \left| \frac{1}{n}\sum^{n}_{i=1}\textbf{tr}\big(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big)\epsilon_{i}  \right| 
+    &=\left|\frac{1}{n}\textbf{tr}\Bigg( \left(\sum^{n}_{i=1}\epsilon_{i}\mathbf{X}_{i}\right)^{\top}\widehat{\Delta} \Bigg) \right| \nonumber \\
+    &\leq \left\|\frac{1}{ C n} \sum^{n}_{i=1}\epsilon_{i}\mathbf{X}_{i}\right\|_{op} \bigg( C ||\widehat{\Delta}||_{\star} \bigg) \nonumber \\ 
+    & \leq  \frac{\lambda_{n}}{2}  \bigg( C ||\widehat{\Delta}||_{\star} \bigg)
+    \label{holder_ineq}
+\end{align}
+for some constants $C > 0$.
+In the first inequality, we used H\"older's inequality and in the second inequality 
+the condition $\lambda_{n}\geq\frac{2}{nC}\left\|\sum_{i=1}^{n}\varepsilon_{i}\mathbf{X}_{i}\right\|_{op}$ is used.
+Combining everything, we finally have a bound on Eq.~\eqref{eq: apn_main}:
+\begin{align}
+    0  & \leq \frac{1}{n}\sum^{n}_{j=1}\mathbf{tr}\big(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big)\epsilon_{i} + \lambda_{n}\left\lbrace||\Theta^{\star}||_{w, \star} - ||\widehat{\Delta} + \Theta^{\star}||_{w, \star}\right\rbrace \nonumber\\
+    & \leq \lambda_{n} \Bigg\{ \frac{C}{2}||\widehat{\Delta}||_{\star} + w_{p}\left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star}  \right\rbrace + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace \Bigg\} \nonumber\\
+    & \leq \lambda_{n} \Bigg\{ \frac{C}{2}||\widehat{\Delta}'||_{\star} + \frac{C}{2}||\widehat{\Delta}''||_{\star} + w_{p}\left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star}  \right\rbrace + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace \Bigg\} \nonumber\\
+    &= \lambda_{n} \Bigg\{ 2w_{p}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} +  ||\widehat{\Delta}'||_{2w_{p}-w+\frac{c}{2}, \star} - ||\widehat{\Delta}''||_{w - \frac{c}{2},\star} \Bigg\}, \label{eq: pre_new_main}
+\end{align}
+for $0 < C < 2w_{r+1}$.
+Note the norm detnotes $ ||\cdot||_{2w_{p} - w + \frac{C}{2}, \star} = \sum^{p}_{j = 1} (2w_{p}-w_{j}+\frac{C}{2}) \sigma_{j}\big(\cdot\big)$.
+The inequality (\ref{eq: pre_new_main}) implies
+\begin{eqnarray}
+    \sum^{p}_{j = r+1}\bigg(w_{j} - \frac{C}{2}\bigg)\sigma_{j}\big(\widehat{\Delta}''\big) \leq  2w_{p} \cdot ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + \sum^{2r}_{j = 1} \bigg(2w_{p}-w_{j} + \frac{C}{2} \bigg) \sigma_{j}\big(\widehat{\Delta}'\big). \label{eq: new main_0}
+\end{eqnarray}
+\noindent
+In~\eqref{eq: new main_0}, we use the fact $\text{rank}(\widehat{\Delta}^{'}) \leq 2r$.
+(See the Lemma $1$ in~\cite{negahban2011estimation}.)
+Because  $(w_{r+1} - C/2)\sum^{p}_{j = 1}\sigma_{j}\big(\widehat{\Delta}''\big) \leq \sum^{p}_{j = r+1}\big(w_{j} - \frac{C}{2}\big)\sigma_{j}\big(\widehat{\Delta}''\big)$, and similarly, $\sum^{2r}_{j = 1}\big(2w_{p} - w_{j} +  \frac{C}{2}\big)\sigma_{j}\big(\widehat{\Delta}'\big)\leq (2w_{p}-w_{1}+\frac{C}{2})\sum_{j=1}^{2r}\sigma_{j}(\widehat{\Delta}')$,
+the inequality (\ref{eq: new main_0}) implies 
+\begin{align}
+    ||\widehat{\Delta}''||_{\star} \leq \frac{2w_{p}}{w_{r+1}-\frac{C}{2}}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + \frac{2w_{p} - w_{1} + \frac{C}{2}}{w_{r+1}-\frac{C}{2}}||\widehat{\Delta}'||_{\star},
+    \label{eq: new main_1}
+\end{align}
+for $0 < C < 2 w_{r+1}$.
+
+\section{Proof of Theorem 3.2}
+First, recall the basic inequality~\eqref{eq: apn_pre}, transformation of weighted nuclear norm~\eqref{eq: wnn_diff} and duality of operator and nuclear norm~\eqref{holder_ineq}.
+Then, we have
+\begin{align}
+    \frac{1}{2n}\sum^{n}_{i=1} \textbf{tr}(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big)^{2} 
+    &\leq \frac{1}{n} \sum^{n}_{i=1} \textbf{tr}\big(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big) \epsilon_{i} + 
+    \lambda_{n} \big( ||\Theta^{\star}||_{w,\star} - ||\widehat{\Theta}||_{w,\star} \big) \nonumber \\
+    &\leq \lambda_{n}\bigg\{ \frac{C}{2}||\widehat{\Delta}'||_{\star} 
+    + \frac{C}{2}||\widehat{\Delta}''||_{\star}
+    + w_{p}\big( ||\Theta^{\star}||_{\star} - ||\widehat{\Delta}  + \Theta^{\star}||_{\star} \big) \nonumber \\
+    &\qquad \qquad \qquad \qquad \qquad + \big( ||\widehat{\Delta} + \Theta^{\star}||_{w_{p}-w,\star} - ||\Theta^{\star}||_{w_{p}-w,\star}\big)\bigg\} \nonumber \\
+    &\leq \lambda_{n}\bigg\{ \frac{C}{2}||\widehat{\Delta}'||_{\star} 
+    + \frac{C}{2}||\widehat{\Delta}''||_{\star}
+    + w_{p}\big( ||\widehat{\Delta}'||_{\star} + ||\widehat{\Delta}''||_{\star} \big) \nonumber \\
+    &\qquad \qquad \qquad \qquad \qquad + \big( ||\widehat{\Delta}'||_{w_{p}-w,\star} + ||\widehat{\Delta}''||_{w_{p}-w,\star}\big)\bigg\} \nonumber \\
+    &=\lambda_{n}\bigg\{ \sum_{j=1}^{2r}\bigg(2w_{p}-w_{j}+\frac{C}{2}\bigg)\sigma_{j}\big(\widehat{\Delta}'\big) + \sum_{j=r+1}^{p}\bigg(2w_{p}-w_{j}+\frac{C}{2}\bigg)\sigma_{j}\big(\widehat{\Delta}''\big)\bigg\} \nonumber \\
+    &\leq \lambda_{n}\bigg\{ \bigg( 2w_{p}-w_{1}+\frac{C}{2} \bigg)
+    \left\|\widehat{\Delta}'\right\|_{\star} + 
+    \bigg( 2w_{p}-w_{r+1}+\frac{C}{2} \bigg)
+    \left\|\widehat{\Delta}'' \right\|_{\star}\bigg\},  \label{eq: basic}
+\end{align}
+where in the third inequality, triangle inequality of norms $\left\| \cdot \right\|_{\star}$ and $\left\| \cdot \right\|_{w_{p}-w,\star}$ is applied twice.
+In the last inequality, we used 
+$\sum_{j=1}^{2r}\big(2w_{p}-w_{j}+\frac{C}{2}\big)\sigma_{j}\big(\widehat{\Delta}'\big)\leq \big(2w_{p}-w_{1}+\frac{C}{2}\big) \sum_{j=1}^{2r}\sigma_{j}\big(\widehat{\Delta}'\big)$ and 
+$\sum_{j=r+1}^{p}\big(2w_{p}-w_{j}+\frac{C}{2}\big)\sigma_{j}\big(\widehat{\Delta}''\big)\leq \big(2w_{p}-w_{r+1}+\frac{C}{2}\big) \sum_{j=r+1}^{p}\sigma_{j}\big(\widehat{\Delta}'\big)$.
+\noindent 
+Since it is assumed that the least square loss function satisfy the RSC condition over the set $\widehat{\Delta}\in\mathcal{C}$, there exists a constant $\kappa>0$ such that $\kappa \|\widehat{\Delta}\|_{F}^{2}\leq \frac{1}{2n}\sum^{n}_{i=1} \textbf{tr}(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big)^{2}$. 
+Then, for $\|\widehat{\Delta}\|_{F}\geq \delta$, by~\eqref{eq: new main_1} and~\eqref{eq: basic}, with some straightforward calculations, we have
+\begin{align} 
+    \kappa \|\widehat{\Delta}\|_{F}^{2}
+    &\leq 
+    \lambda_{n}\frac{2w_{p}\big(2w_{p}-w_{1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}}
+    \cdot \left\| \widehat{\Delta}' \right\|_{\star}
+    + \lambda_{n}\frac{2w_{p}\big(2w_{p}-w_{r+1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}} \cdot \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) \nonumber \\
+    &\leq 
+    \lambda_{n}\frac{2w_{p}\big(2w_{p}-w_{1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}}
+    \cdot 2\sqrt{r} \left\| \widehat{\Delta} \right\|_{F}
+    + \lambda_{n}\frac{2w_{p}\big(2w_{p}-w_{r+1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}} \cdot \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) \nonumber \\
+    &\leq 
+    \lambda_{n} 
+    \max\bigg\{ \frac{8w_{p}\big(2w_{p}-w_{1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}}
+    \cdot \sqrt{r} \left\| \widehat{\Delta} \right\|_{F},
+    \frac{4w_{p}\big(2w_{p}-w_{r+1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}} \cdot \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) 
+    \bigg\} \nonumber,
+\end{align}
+where in the second inequality, we used the fact 
+$\|\widehat{\Delta}'\|_{\star}\leq\sqrt{2r}\|\widehat{\Delta}'\|_{F}
+\leq 2\sqrt{r}\|\widehat{\Delta}\|_{F}$, and in the last inequality, 
+the inequality $a+b\leq \max\{2a, 2b\}$ for $a,b\geq 0$ is used.
+We obtain the final bound:
+\begin{align*}
+    &\left\| \widehat{\Theta} - \Theta^{\star} \right\|_{F} \\
+    &\qquad \leq \max\bigg\{ \delta, \frac{8w_{p}\big(2w_{p}-w_{1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}}
+    \cdot \frac{\lambda_{n}\sqrt{r}}{\kappa}, 
+    \bigg[  \frac{4w_{p}\big(2w_{p}-w_{r+1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}} \cdot \frac{\lambda_{n}\sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big)}{\kappa}  \bigg]^{1/2}
+    \bigg\}.
+\end{align*}
+\newpage
+\bibliographystyle{plainnat}
+\bibliography{Ref_all}
+
+\end{document}
+
+
+
+
+%\newpage
+\section{Appendix: Proof of Lemma~\ref{Lemma3.1}}
+Since $\widehat{\Theta}$ is a minimizer and $\Theta^{\star}$ is a feasible solution of the optimization problem in~\eqref{eq: opt} respectively, we have a following basic inequality:
+\begin{eqnarray} \label{basic_eq}
+& & \frac{1}{2n}\sum^{n}_{i=1} \big( y_{i} - \textbf{tr}(\mathbf{X}_{i}^{\top}\widehat{\Theta}) \big)^{2} + \lambda_{n}||\widehat{\Theta}||_{w,\star}  \leq 
+\frac{1}{2n}\sum^{n}_{i=1}\big( y_{i} - \textbf{tr}(\mathbf{X}_{i}^{\top}\Theta^{\star}) \big)^{2} + \lambda_{n}||\Theta^{\star}||_{w,\star}.
+\end{eqnarray}
+Plugging in $ y_{i} = \textbf{tr}(\mathbf{X}^{T}_{i}\Theta^\star) + \varepsilon_{i} \ ,\ i = 1, \cdots, n$ on LHS and RHS of the~\eqref{basic_eq} yields
+\begin{align}
+    \frac{1}{2n}\sum^{n}_{i=1}\big(\textbf{tr}(\mathbf{X}_{i}^{\top}(\Theta^{\star} - \widehat{\Theta}))\big)^{2} \leq \frac{1}{n} \sum^{n}_{i=1} \textbf{tr}\big( \mathbf{X}_{i}^{\top}(\widehat{\Theta} - \Theta^{\star}) \big)\epsilon_{i} + 
+    \lambda_{n} \big( ||\Theta^{\star}||_{w,\star} - ||\widehat{\Theta}||_{w,\star} \big). \label{eq: apn_pre}
+\end{align}
+By denoting $\widehat{\Delta} \equiv \widehat{\Theta} - \Theta^{\star}$ and since LHS of \eqref{eq: apn_pre} is $\geq 0$, we have 
+\begin{eqnarray}
+    0 \leq \frac{1}{n}\sum^{n}_{i=1}\textbf{tr}(\mathbf{X}_{i}^{\top}\widehat{\Delta})\epsilon_{i} + \lambda_{n}\big( ||\Theta^{\star}||_{w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w,\star} \big).  \label{eq: apn_main}
+\end{eqnarray}
+%\noindent {\bf [Decomposition of weighted nuclear norm, an extension of \citep{negahban2011estimation}, page 1 in results]}
+%Let the SVD of $\Theta^{\star} = \mathbf{UDV}^{T}$. For a given interger $r \leq \min{m_{1}, m_{2}},$ denote the $r$-dimensional subspaces of the first $r$ columns of $\mathbf{U}$ and $\mathbf{V}$ by $\mathcal{U}$ and $\mathcal{V},$ respectively. We can define the two subspaces of matrices   
+%\begin{eqnarray}
+%A_{r} & = & \left\lbrace \Theta \in R^{d_{1} \times d_{2}} : rowspan(\Theta) \subseteq \mathcal{U},  colspan(\Theta) \subseteq \mathcal{V} \right\rbrace \nonumber \\
+%B_{r} & = & \left\lbrace \Theta \in R^{d_{1} \times d_{2}} : rowspan(\Theta) \subseteq \mathcal{U}^{\perp},  colspan(\Theta) \subseteq \mathcal{V}^{\perp} \right\rbrace \nonumber, 
+%\end{eqnarray}
+%where $\mathcal{U}^{\perp}$ and $\mathcal{V}^{\perp}$ denote the subspaces orthogonal to  $\mathcal{U}$ and $\mathcal{V},$ respectively, and $rowspan(\Theta) \subseteq R^{m_{1}}$ and  $colspan(\Theta) \subseteq R^{m_{1}}$ denote the row space and column space of $\Theta$.
+First, we will control the upper-bound on the second term of the~\eqref{eq: apn_main}.
+By the definition of the weighted nuclear norm, we can re-write the term as follows:
+\begin{align}
+    & ||\Theta^{\star}||_{w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w,\star} \nonumber \\
+    & \quad = \sum^{p}_{j = 1} w_{j}\sigma_{j}\big(\Theta^{\star}\big) - \sum^{p}_{j = 1} w_{j}\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big)  \nonumber \\
+    & \quad = \left[w_{p}\sum^{p}_{j = 1}\sigma_{j}\big(\Theta^{\star}\big) - \sum^{p}_{j = 1}(w_{p} - w_{i})\sigma_{j}\big(\Theta^{\star}\big)\right] - \left[w_{p}\sum^{p}_{j = 1}\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big) - \sum^{p}_{j = 1}(w_{p} - w_{i})\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big)\right] \nonumber \\
+    & \quad = w_{p}\Bigg[ \sum^{p}_{j = 1}\sigma_{j}\big(\Theta^{\star}\big) - \sum^{p}_{j = 1}\sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big) \Bigg] + \Bigg[ \sum^{p}_{j=1}(w_{p} - w_{j})\big\{ \sigma_{j}\big(\widehat{\Delta} + \Theta^{\star}\big)-\sigma_{j}\big(\Theta^{\star}\big)\big\}\Bigg] \nonumber\\
+    & \quad = \underbrace{w_{p}\big( ||\Theta^{\star}||_{\star} - ||\widehat{\Delta} + \Theta^{\star}||_{\star} \big)}_{:=\RN{1}} + \underbrace{\big( ||\widehat{\Delta} + \Theta^{\star}||_{w_{p}-w,\star} - ||\Theta^{\star}||_{w_{p}-w,\star}\big)}_{:=\RN{2}}, \label{eq: wnn_diff}
+\end{align}
+where $||\Theta||_{w_{p} - w, \star} = \sum^{p}_{j = 1} (w_{p} - w_{j})\sigma_{j}(\Theta)$.
+\newpage \noindent
+By the definitions of the two spaces $\mathcal{M}_{r}$ and $\overline{\mathcal{M}}_{r}^{\perp}$ in~\eqref{M} and~\eqref{M_perp} for any $r\leq p$, we have
+\begin{equation} \label{star}
+    \Theta^{\star} = \Pi_{\mathcal{M}_{r}}\big(\Theta^{\star}\big) +  \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}\big(\Theta^{\star}\big).
+\end{equation}
+Recall that $\widehat{\Delta}^{\mydprime} \in \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}\big(\widehat{\Delta}\big)$ and 
+$\widehat{\Delta}^{\myprime}=\widehat{\Delta}-\widehat{\Delta}^{\mydprime}$.
+Then, we can control the term $||\widehat{\Delta} + \Theta^{\star}||_{\star}$ as follows: 
+\begin{align}
+    ||\widehat{\Delta} + \Theta^{\star}||_{\star} & =  ||\widehat{\Delta}^{\myprime} + \widehat{\Delta}^{\mydprime} + \Pi_{\mathcal{M}_{r}}(\Theta^{\star}) + \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}\nonumber \\
+    & \geq  ||\widehat{\Delta}^{\mydprime} + \Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} - \{||\widehat{\Delta}^{\myprime}||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|||_{\star}\} \nonumber\\
+    & =  ||\widehat{\Delta}^{\mydprime}||_{\star} + ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})|||_{\star} - \{||\widehat{\Delta}^{\myprime}||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|||_{\star}\} \label{one_inq},
+\end{align}
+where in the first inequality, we used the triangle inequality of $||\cdot||_{\star}$ and in the last equality, the decomposability of $||\cdot||_{\star}$ with respect to a pair of subspaces $(\mathcal{M}_{r},\overline{\mathcal{M}}_{r}^{\perp})$ is used.
+With~\eqref{one_inq}, we are ready to control the term $\RN{1}$ in~\eqref{eq: wnn_diff}.
+\begin{align}
+    w_{p}\Bigg( ||\Theta^{\star}||_{\star} - ||\widehat{\Delta} + \Theta^{\star}||_{\star} \Bigg) 
+    & \leq  w_{p} \cdot \Bigg\{ \left( ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})|||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|||_{\star} \right) \nonumber \\ 
+    &\qquad \qquad - \left(||\widehat{\Delta}^{\mydprime}||_{\star} + ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})|||_{\star} - \{||\widehat{\Delta}^{\myprime}||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|||_{\star}\} \right) \Bigg\} \nonumber \\
+    & =  w_{p} \cdot \left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star} \right\rbrace \label{eq: wnn_diff_1}
+\end{align}
+Note that the equality $||\Theta^\star||_{\star}=||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{\star} + ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star}$ is used in the first inequality due to~\eqref{star}.
+
+Now the term~\RN{2} in~\eqref{eq: wnn_diff} needs to be controlled.
+First, we need to see the norm $ ||\cdot||_{w_{p} - w, \star} = \sum^{p}_{j = 1} (w_{p}-w_{j}) \sigma_{j}\big(\cdot\big)$ with respect to a pair $(A,B)\in(\mathcal{M}_{r},\overline{\mathcal{M}}_{r}^{\perp})$ satisfies the decomposability, meaning $
+||A+B||_{w_{p} - w, \star}=||A||_{w_{p} - w, \star}+||B||_{w_{p} - w, \star}$.
+Define two diagonal matrices $\mathbf{W}_{1}:=\text{diag}(w_{p}-w_{1},\dots,w_{p}-w_{r})$ and $\mathbf{W}_{2}:=\text{diag}(w_{p}-w_{r+1},\dots,w_{p}-w_{p})$.
+Then, we have 
+\begin{align*}
+    ||A+B||_{w_{p} - w, \star}
+    &= \left\| \begin{bmatrix}
+        \mathbf{W}_{1}\mathbf{T}_{1,1} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{0}_{(p-r) \times (p-r)} 
+    \end{bmatrix} + 
+    \begin{bmatrix}
+        \mathbf{0}_{r \times r} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{W}_{2}\mathbf{T}_{2,2}
+    \end{bmatrix}
+    \right\|_{\star}\\
+    &= \left\| \begin{bmatrix}
+        \mathbf{W}_{1}\mathbf{T}_{1,1} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{0}_{(p-r) \times (p-r)} 
+    \end{bmatrix}  \right\|_{\star} 
+    + \left\|\begin{bmatrix}
+        \mathbf{0}_{r \times r} & \mathbf{0}_{r\times (p-r)} \\
+        \mathbf{0}_{(p-r) \times r} & \mathbf{W}_{2}\mathbf{T}_{2,2}
+    \end{bmatrix}\right\|_{\star} \\
+    &= ||A||_{w_{p} - w, \star}+||B||_{w_{p} - w, \star}.
+\end{align*}
+In the first equality, the definition of $\|\cdot\|_{w_{p} - w, \star}$ and the invariance of the nuclear norm to orthogonal transformation to multiplication by the matrices $\mathbf{U}$ and $\mathbf{V}$ are used. 
+Using this fact, similarly with~\eqref{one_inq} and~\eqref{eq: wnn_diff_1}, we get the upper-bound on $\RN{2}$ in the equality~\eqref{eq: wnn_diff}: 
+\begin{align}
+||\widehat{\Delta} + \Theta^{\star}||_{w_{p} - w, \star} -  ||\Theta^{\star}||_{w_{p} - w, \star} 
+ & \Leftrightarrow  ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star}) + \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) + \widehat{\Delta}' + \widehat{\Delta}''||_{w_{p} - w, \star} - ||\Theta^{\star}||_{w_{p} - w, \star} \nonumber\\
+ & \leq ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star}) + \widehat{\Delta}^{\mydprime}||_{w_{p} - w, \star} + || \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) ||_{w_{p} - w, \star} + ||\widehat{\Delta}'||_{w_{p} - w, \star} 
+ \nonumber \\
+ & \qquad - ||\Theta^{\star}||_{w_{p} - w, \star} \nonumber\\
+ & = \bigg\{ ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{w_{p} - w, \star} + || \widehat{\Delta}''||_{w_{p} - w, \star}  + || \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) ||_{w_{p} - w, \star} + \nonumber\\
+ & \qquad ||\widehat{\Delta}^{\myprime} ||_{w_{p} - w, \star} \bigg\}  - \bigg\{ ||\Pi_{\mathcal{M}_{r}}(\Theta^{\star})||_{w_{p} - w, \star} + || \Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star}) ||_{w_{p} - w, \star} \bigg\} \nonumber\\
+ & = ||\widehat{\Delta}^{\mydprime}||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}. \label{eq: wnn_diff_2} 
+\end{align}
+By combining the inequalities~\eqref{eq: wnn_diff_1} and~\eqref{eq: wnn_diff_2}, we can obtain an upper-bound on the Eq.~\eqref{eq: wnn_diff};
+
+\begin{eqnarray}
+    ||\Theta^{\star}||_{w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w,\star}    & = &  w_{p}(||\Theta^{\star}||_{\star} - ||\widehat{\Delta} + \Theta^{\star}||_{\star}) + (|\Theta^{\star}||_{w_{p}-w,\star} - ||\widehat{\Delta} + \Theta^{\star}||_{w_{p}-w,\star}) \nonumber\\ 
+    & \leq &  w_{p}\left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|| + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star}  \right\rbrace + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace.
+\end{eqnarray}
+Now, we control the first term of RHS in~\eqref{eq: apn_main} as follows:
+\begin{align*}
+    \left| \frac{1}{n}\sum^{n}_{i=1}\textbf{tr}\big(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big)\epsilon_{i}  \right| 
+    &=\left|\frac{1}{n}\textbf{tr}\Bigg( \left(\sum^{n}_{i=1}\epsilon_{i}\mathbf{X}_{i}\right)^{\top}\widehat{\Delta} \Bigg) \right| \\
+    &\leq \left\|\frac{1}{ w_{p} n} \sum^{n}_{i=1}\epsilon_{i}\mathbf{X}_{i}\right\|_{op} \bigg( w_{p} ||\widehat{\Delta}||_{\star} \bigg) \\ & \leq  \frac{\lambda_{n}}{2}  \bigg( w_{p} ||\widehat{\Delta}||_{\star} \bigg).
+\end{align*}
+In the first inequality, we used H\"older's inequality and in the second inequality 
+the condition $\lambda_{n}\geq\frac{2}{nw_{p}}\left\|\sum_{i=1}^{n}\varepsilon_{i}\mathbf{X}_{i}\right\|_{op}$ is used.
+Combining everything, we finally have a bound on Eq.~\eqref{eq: apn_main}:
+\begin{align}
+    0  & \leq \frac{1}{n}\sum^{n}_{j=1}\mathbf{tr}\big(\mathbf{X}_{i}^{\top}\widehat{\Delta}\big)\epsilon_{i} + \lambda_{n}\left\lbrace||\Theta^{\star}||_{w, \star} - ||\widehat{\Delta} + \Theta^{\star}||_{w, \star}\right\rbrace \nonumber\\
+    & \leq \lambda_{n} \Bigg\{ \frac{w_{p}}{2}||\widehat{\Delta}||_{\star} + w_{p}\left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star}  \right\rbrace + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace \Bigg\} \nonumber\\
+    & \leq \lambda_{n} \Bigg\{ \frac{w_{p}}{2}||\widehat{\Delta}'||_{\star} + \frac{w_{p}}{2}||\widehat{\Delta}''||_{\star} + w_{p}\left\lbrace 2||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + ||\widehat{\Delta}'||_{\star} - ||\widehat{\Delta}''||_{\star}  \right\rbrace \nonumber\\
+    & \qquad + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace \Bigg\} \nonumber\\
+    & \leq \lambda_{n} \Bigg\{ 2w_{p}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} +  \frac{3w_{p}}{2}||\widehat{\Delta}'||_{\star} - \frac{w_{p}}{2}||\widehat{\Delta}''||_{\star} + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace \Bigg\}. \label{eq: pre_new_main}
+\end{align}
+Inequality (\ref{eq: pre_new_main}) implies
+\begin{equation}
+    0 \leq  2w_{p}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + \sum^{p}_{j = 1} \bigg(\frac{5}{2}w_{p}-w_{j} \bigg) \sigma_{j}\big(\widehat{\Delta}'\big) + \sum^{p}_{j = 1}\bigg(\frac{1}{2}w_{p}-w_{j}\bigg)\sigma_{j}\big(\widehat{\Delta}''\big).
+    \label{eq: new main_1}
+\end{equation}
+
+\begin{equation}
+    \frac{1}{2}w_{p}||\widehat{\Delta}''||_{\star} \leq 2w_{p}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|| +  \frac{3w_{p}}{2}||\widehat{\Delta}'||_{\star} - \frac{w_{p}}{2}||\widehat{\Delta}''||_{\star} + \left\lbrace ||\widehat{\Delta}''||_{w_{p} - w, \star}  + ||\widehat{\Delta}'||_{w_{p} - w, \star}\right\rbrace. \label{eq: new main_2}
+\end{equation}
+
+If $w_{1} \leq w_{2} \leq \cdots \leq w_{p} \leq 2w_{1}$,
+from (\ref{eq: new main_1}), we obtain
+\begin{eqnarray}
+& & \frac{1}{2}\sum^{p}_{j = 1} (2w_{j} - w_{p})\sigma_{j}(\widehat{\Delta}'')  \leq 2w_{p}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|| + \sum^{p}_{j = 1}(\frac{5}{2}w_{p}-w_{j})\sigma_{j}(\widehat{\Delta}') +   {\color{blue} \underbrace{\sum^{p}_{j = 1}(\frac{1}{2}w_{p}-w_{j})\sigma_{j}(\widehat{\Delta}'')}_{removed ?}} \nonumber\\
+& \Longrightarrow & (w_{1} - \frac{w_{p}}{2})\sum^{p}_{j = 1}\sigma_{j}(\widehat{\Delta}'') \leq 2 w_{p} ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|| + (\frac{5}{2}w_{p} - w_{1}){\color{blue} \sum^{p}_{j=1}}\sigma_{j}(\widehat{\Delta}') \nonumber\\
+& \Longrightarrow & \sum^{p}_{j = 1}\sigma_{j}(\widehat{\Delta}'') \leq \frac{2 w_{p}}{(w_{1} - \frac{w_{p}}{2})} ||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})|| + \frac{\frac{5}{2}w_{p} - w_{1}}{(w_{1} - \frac{w_{p}}{2})}{\color{blue} \sum^{p}_{j=1}}\sigma_{j}(\widehat{\Delta}') \label{eq: lemma_3_1}
+\end{eqnarray}
+
+
+{\color{blue}
+$$
+\lambda_{n}\bigg\{ \bigg( 2w_{p}-w_{1}+\frac{C}{2} \bigg)
+    \left\|\widehat{\Delta}'\right\|_{\star} + 
+    \bigg( 2w_{p}-w_{r+1}+\frac{C}{2} \bigg)
+    \left\|\widehat{\Delta}'' \right\|_{\star}\bigg\}
+$$
+$$
+\leq \lambda_{n}\bigg\{ \bigg( 2w_{p}-w_{1}+\frac{C}{2} \bigg)
+    \left\|\widehat{\Delta}'\right\|_{\star} + 
+    \bigg( 2w_{p}-w_{r+1}+\frac{C}{2} \bigg)
+    \left(\frac{2w_{p}}{w_{r+1}-\frac{C}{2}}||\Pi_{\overline{\mathcal{M}}_{r}^{\perp}}(\Theta^{\star})||_{\star} + \frac{2w_{p} - w_{1} + \frac{C}{2}}{w_{r+1}-\frac{C}{2}}||\widehat{\Delta}'||_{\star}\right)\bigg\}
+$$
+$$
+=\lambda_{n}\left(1+\frac{2w_{p} - w_{r+1} + \frac{C}{2}}{w_{r+1}-\frac{C}{2}}\right) \bigg( 2w_{p}-w_{1}+\frac{C}{2} \bigg)\left\|\widehat{\Delta}'\right\|_{\star}
++
+\lambda_{n}\frac{2w_{p}\big(2w_{p}-w_{r+1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}} \cdot \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) 
+$$
+$$
+=\lambda_{n}\left(\frac{2w_{p} }{w_{r+1}-\frac{C}{2}}\right) \bigg( 2w_{p}-w_{1}+\frac{C}{2} \bigg)\left\|\widehat{\Delta}'\right\|_{\star}
++
+\lambda_{n}\frac{2w_{p}\big(2w_{p}-w_{r+1}+\frac{C}{2}\big)}{w_{r+1}-\frac{C}{2}} \cdot \sum_{j=r+1}^{p}\sigma_{j}\big(\Theta^{\star}\big) 
+$$
+}
+

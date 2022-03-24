@@ -1,0 +1,197 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{natbib}
+\usepackage{array}
+\usepackage{url} % not crucial - just used below for the URL 
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[noend]{algpseudocode}% http://ctan.org/pkg/algorithmicx
+\usepackage{amsthm}
+\usepackage{enumitem}
+
+\usepackage[nohead, nomarginpar, margin=1in, foot=.25in]{geometry}
+
+\usepackage{multirow}
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+
+\usepackage[normalem]{ulem}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[font=small,labelfont=bf]{caption}
+
+\newcommand*{\myprime}{^{\prime}\mkern-1.2mu}
+\newcommand*{\mydprime}{^{\prime\prime}\mkern-1.2mu}
+\newcommand*{\mytrprime}{^{\prime\prime\prime}\mkern-1.2mu}
+\newcommand{\RN}[1]{%
+  \textup{\uppercase\expandafter{\romannumeral#1}}%
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\renewcommand\thetheorem{\arabic{section}.\arabic{theorem}}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\pdfminorversion=4
+% NOTE: To produce blinded version, replace "0" with "1" below.
+\newcommand{\blind}{0}
+\makeatletter
+\newcommand{\vast}{\bBigg@{3.5}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\makeatother
+
+\usepackage{etoolbox}
+\usepackage{tikz}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{customthm}{Theorem}
+
+\newcommand{\cmark}{\ding{51}}%
+
+%\pdfminorversion = 4
+
+\begin{document}
+
+\subsection{Role of Weights via Bias-Variance Decomposition}
+In this subsection, we study the bound of estimation error of $\widehat{\mathbf{\Theta}}$ to the ground-truth coefficient matrix $\boldsymbol{\Theta^\star}$ under Frobenius norm (i.e., $\| \widehat{\mathbf{\Theta}} - \boldsymbol{\Theta^\star} \|_{\text{F}}^{2}$). 
+Before stating the Theorem~\ref{Thm2}, let us introduce a linear operator $\mathcal{P}_{\widehat{r}}:\mathbb{R}^{d_{1} \times d_{2}}\rightarrow{\mathbb{R}^{d_{1} \times d_{2}}}$, projecting the input matrix to the subspace spanned by the first $\widehat{r}$ left and right singular vectors of the input matrix.
+Also, note that the $\widehat{\mathbf{\Theta}}^{\text{SR}}$ has a closed-form solution (i.e.,  
+$\widehat{\mathbf{\Theta}}^{\text{SR}}=\big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-1}\mathbf{X}^{\top}\mathbf{Y}$).
+Then, through the results of Propositions~\ref{clsed-form} and~\ref{surrogate}, we have a following :
+\begin{align} \label{Theta_hat}
+    \widehat{\mathbf{\Theta}} 
+    = \mathcal{P}_{\widehat{r}}\big( \boldsymbol{\widehat{\Theta}^\text{SR}} \big)
+    = \mathcal{P}_{\widehat{r}}\big( \big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-1}\mathbf{X}^{\top}\mathbf{Y} \big).
+\end{align}
+Recall the ground-truth model we are considering is $\mathbf{Y}=\mathbf{X}\boldsymbol{\Theta^{\star}}+\mathbf{E}$. 
+Hence, the randomness of $\widehat{\mathbf{\Theta}}$ comes from the matrices $\mathbf{K}$ and $\mathbf{E}$ under the fixed orthogonal design.
+For the convenience of analysis, we fix the randomness of $\widehat{\mathbf{\Theta}}$ arising from $\mathbf{K}$, and take the conditional expectation over $\mathbf{E}|\mathbf{K}$ on the estimation error.
+We state the Theorem~\ref{Thm2} as follows:
+
+\begin{theorem} \label{Thm2}
+Let $\sigma_{j}(\boldsymbol{\Theta}^{\star}):=d_{j}^{\star}$ for $j\in\{1,\dots,p\}$.
+Under the orthogonal design assumption, the conditional estimation error has a following equality.
+\begin{align*}
+    \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[ \left\| \widehat{\mathbf{\Theta}} - \boldsymbol{\Theta^\star} \right\|_{\text{F}}^{2} \bigg]
+    &= \underbrace{ \sum_{j=1}^{\widehat{r}}\bigg( \frac{\lambda_{n}\omega_{j}}{\widehat{d}_{j}+\lambda_{n}\omega_{j}} \bigg)^{2} \big(d_{j}^{\star}\big)^{2}}_{:=\mathcal{B}^{2}}
+    +\underbrace{\frac{\sigma^{2}d_{2}}{n}\sum_{j=1}^{\widehat{r}}\bigg( \frac{\widehat{d}_{j}}{\widehat{d}_{j}+\lambda_{n}\omega_{j}} \bigg)^{2}}_{:=\mathcal{V}}
+    + \underbrace{ \sum_{j=\widehat{r}+1}^{p} \big(d_{j}^{\star}\big)^{2}}_{:=\mathcal{A}}.
+\end{align*}
+\end{theorem}
+
+\begin{proof}
+Similarly with $\mathcal{P}_{\widehat{r}}$, denote $\mathcal{P}_{\widehat{r}}^{\perp}:\mathbb{R}^{d_{1} \times d_{2}}\rightarrow{\mathbb{R}^{d_{1} \times d_{2}}}$ as the linear operator projecting the input matrix to the subspace spanned by the last $\big( p-\widehat{r} \big)$ left and right singular vectors of the input matrix.
+Then, for any $\widehat{r}\in\{1,\dots,p\}$, we have 
+\begin{align} \label{Ground_truth}
+    \boldsymbol{\Theta^\star} = \mathcal{P}_{\widehat{r}}\big( \boldsymbol{\Theta^\star} \big)
+    + \mathcal{P}^{\perp}_{\widehat{r}}\big( \boldsymbol{\Theta^\star} \big).
+\end{align}
+Combining~\eqref{Theta_hat} and~\eqref{Ground_truth}, the difference matrix $\widehat{\mathbf{\Theta}} - \boldsymbol{\Theta^\star}$
+can be written as 
+\begin{align}
+    \widehat{\mathbf{\Theta}} - \boldsymbol{\Theta^\star} = 
+    \mathcal{P}_{\widehat{r}}\big( \boldsymbol{\widehat{\Theta}^\text{SR}} \big) - \big( \mathcal{P}_{\widehat{r}}\big( \boldsymbol{\Theta^\star} \big) + \mathcal{P}^{\perp}_{\widehat{r}}\big( \boldsymbol{\Theta^\star} \big) \big)
+\end{align}
+
+Recall the ground-truth model we are considering is $\mathbf{Y}=\mathbf{X}\boldsymbol{\Theta^{\star}}+\mathbf{E}$, and the surrogate estimator has a closed-form solution 
+$\widehat{\mathbf{\Theta}}^{\text{SR}}=\big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-1}\mathbf{X}^{\top}\mathbf{Y}$.
+Therefore, we have a following decomposition:
+\begin{align} \label{Decomp}
+    \widehat{\mathbf{\Theta}}^{\text{SR}} - \boldsymbol{\Theta^\star} 
+    &= \big(\widehat{\mathbf{\Theta}}^{\text{SR}} - \mathbb{E}_{\mathbf{E}|\mathbf{K}}\big[ \widehat{\mathbf{\Theta}}^{\text{SR}} \big]\big) 
+    + \big( \mathbb{E}_{\mathbf{E}|\mathbf{K}} \big[ \widehat{\mathbf{\Theta}}^{\text{SR}} \big] - \boldsymbol{\Theta^\star} \big) \nonumber \\
+    &= \underbrace{\big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-1}\mathbf{X}^{\top}\mathbf{E}}_{:=\mathcal{I}_{1}}
+    - \underbrace{\lambda_{n}n \big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-1}\mathbf{K}\boldsymbol{\Theta^\star}}_{:=\mathcal{I}_{2}}.
+\end{align}
+Through the decomposition~\eqref{Decomp}, we have
+\begin{align} \label{Decompos}
+    \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[ \left\| \widehat{\mathbf{\Theta}}^{\text{SR}} - \boldsymbol{\Theta^\star} \right\|_{\text{F}}^{2} \bigg]
+    = \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}\big(\mathcal{I}_{1}^{\top}\mathcal{I}_{1}\big)\bigg]
+    + \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}\big(\mathcal{I}_{2}^{\top}\mathcal{I}_{2}\big)\bigg].
+\end{align}
+We control the first term in the equality~\eqref{Decompos}.
+Let us denote $ \widetilde{\mathbf{E}} := \mathbf{X}^{\top} \mathbf{E}$ and 
+$\widetilde{\mathcal{D}} := \big(n\mathbf{I}_{d_{1} \times d_{1}}+\lambda_{n}n \big(\widehat{\mathbf{D}}^{\text{K}}\big)^{-1}\big)^{-2}$. 
+It is easy to see that the rows of $\widetilde{\mathbf{E}}$ are independent from $\mathcal{N}\big(0, n \sigma^{2} \cdot \mathbf{I}_{d_{2} \times d_{2}} \big)$ via  
+the assumption $\mathbf{X}^{\top}\mathbf{X}=n\mathbf{I}_{d_{1} \times d_{1}}$.
+By using this fact, we can find that $\mathbb{E}_{\mathbf{E}|\mathbf{K}}\big[\mathbf{X}^{\top}\mathbf{E} \mathbf{E}^{\top}\mathbf{X}\big]=n\sigma^2 d_{2} \mathbf{I}_{d_{1} \times d_{1}}$.
+Then, we have
+\begin{align}
+    \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}\big(\mathcal{I}_{1}^{\top}\mathcal{I}_{1}\big)\bigg]
+    &= \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}\big( \mathbf{E}^{\top}\mathbf{X} \big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-2}\mathbf{X}^{\top}\mathbf{E} \big)\bigg] \nonumber  \\
+    &= \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}\big( \mathbf{E}^{\top}\mathbf{X}\widehat{\mathbf{U}}^{\text{LS}}\big(n\mathbf{I}_{d_{1} \times d_{1}}+\lambda_{n}n\big(\widehat{\mathbf{D}}^{\text{K}}\big)^{-1}\big)^{-2} \big(\widehat{\mathbf{U}}^{\text{LS}}\big)^{\top}\mathbf{X}^{\top}\mathbf{E} \big)\bigg] \nonumber \\
+    &= \textbf{tr}\big( \big(\widehat{\mathbf{U}}^{\text{LS}}\big)^{\top}\mathbb{E}_{\mathbf{E}|\mathbf{K}}\big[\mathbf{X}^{\top}\mathbf{E} \mathbf{E}^{\top}\mathbf{X}\big] \widehat{\mathbf{U}}^{\text{LS}}\big(n\mathbf{I}_{d_{1} \times d_{1}}+\lambda_{n}n\big(\widehat{\mathbf{D}}^{\text{K}}\big)^{-1}\big)^{-2} \big) \nonumber \\
+    &= \frac{\sigma^{2}d_{2}}{n}\sum_{j=1}^{\widehat{r}}\bigg( \frac{\widehat{d}_{j}}{\widehat{d}_{j}+\lambda_{n}\omega_{j}} \bigg)^{2}.
+\end{align}
+%We control the entries of diagonal matrix $\widetilde{\mathcal{D}}$ through Taylor's Theorem.
+%For any $1\leq j \leq \widehat{r}$, each $j^{\text{th}}$ entry of the diagonal matrix $\widetilde{\mathcal{D}}$ is a function of $\widehat{d_{j}}$ and we denote it as $h_{1}(\widehat{d_{j}})$.
+%Let us denote $d_{j}:=\sigma_{j}\big(\boldsymbol{\Theta^{\star}}\big)$ for $j\in\{1,\dots,p\}$.
+%Through Taylor's expansion of $h_{1}(\widehat{d_{j}})$ at a ground truth $d_{j}$, we have:
+%\begin{align*}
+%    h_{1}(\widehat{d_{j}}) 
+%    &= h_{1}(d_{j}) + h_{1}^{\prime}(d_{j})(\widehat{d}_{j}-d_{j}) + \frac{h_{1}^{\prime\prime}(d_{j})}{2}(\widehat{d}_{j}-d_{j})^{2} + \dots \\
+%    &= h_{1}(d_{j}) + \mathcal{O} \bigg( \frac{\sqrt{p}+\sqrt{q}}{n^{5/2}} \bigg).
+%\end{align*}
+%Here, we use the inequality~\eqref{bnd} on the bound of $|\widehat{d}_{j}-d_{j}|$ and the fact that $h_{1}(d_{j})$ is monotonically increasing and bounded function over $d_{j}>0$. \\
+Now, we control the second term in the equality~\eqref{Decompos}.
+\begin{align}
+    \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}\big(\mathcal{I}_{2}^{\top}\mathcal{I}_{2}\big)\bigg]
+    &= \lambda_{n}^{2} n^{2} \cdot \mathbb{E}_{\mathbf{E}|\mathbf{K}}\bigg[\textbf{tr}
+    \big(\boldsymbol{\Theta^\star}^{\top} \mathbf{K}^{\top} \big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-2}\mathbf{K}\boldsymbol{\Theta^\star} \big) \bigg] \nonumber \\
+    &= \lambda_{n}^{2} n^{2} \cdot \textbf{tr}\big(\boldsymbol{\Theta^\star} \boldsymbol{\Theta^\star}^{\top} \mathbf{K}^{\top} \big(\mathbf{X}^{\top}\mathbf{X}+\lambda_{n}n\mathbf{K}\big)^{-2}\mathbf{K} \big) \nonumber \\
+    &= \lambda_{n}^{2} n^{2} \cdot \textbf{tr}\big(\boldsymbol{\Theta^\star} \boldsymbol{\Theta^\star}^{\top} \widehat{\mathbf{U}}^{\text{LS}}\widehat{\mathbf{D}}^{\text{K}}\big(n\mathbf{I}_{p \times p}+\lambda_{n}n\big(\widehat{\mathbf{D}}^{\text{K}}\big)^{-1}\big)^{-2} \widehat{\mathbf{D}}^{\text{K}} \big(\widehat{\mathbf{U}}^{\text{LS}}\big)^{\top}\big) \nonumber \\
+    &\leq \sum_{j=1}^{\widehat{r}}\bigg( \frac{\lambda_{n}\omega_{j}}{\widehat{d}_{j}+\lambda_{n}\omega_{j}} \bigg)^{2} \big(d_{j}^{\star}\big)^{2}.
+    \label{tr2}
+\end{align}
+In the last inequality, we use $\textbf{tr}\big(\mathbf{A}^{\top}\mathbf{B}\big)\leq \sum_{j=1}^{p}\sigma_{j}\big(\mathbf{A}\big)\sigma_{j}\big(\mathbf{B}\big)$ for positive semi-definite matrices $\mathbf{A}:=\boldsymbol{\Theta^\star} \boldsymbol{\Theta^\star}^{\top}$ and $\mathbf{B}:=\widehat{\mathbf{U}}^{\text{LS}}\widehat{\mathbf{D}}^{\text{K}}\big(n\mathbf{I}_{p \times p}+\lambda_{n}n\big(\widehat{\mathbf{D}}^{\text{K}}\big)^{-1}\big)^{-2} \widehat{\mathbf{D}}^{\text{K}} \big(\widehat{\mathbf{U}}^{\text{LS}}\big)^{\top}$.
+See~\citet{ruhe1970perturbation}.
+\end{proof}
+
+We denote the bound relevant with the squared bias of conditional estimation error as $\mathcal{B}^{2}$ and the bound corresponding with the variance component of the error as $\mathcal{V}$.
+Admittedly, the bound is not tight in a minimax sense~\citep{negahban2011estimation,koltchinskii2011nuclear}
+This is because of the introduction of surrogate estimator $\widehat{\mathbf{\Theta}}^{\text{SR}}$.
+
+Each component consists of two terms: (\RN{1}) the first one is a function of the first $\widehat{r}$ singular values of $\mathbf{K}$ in~\eqref{K},
+and (\RN{2}) the second one is a function of the remaining $(p-\widehat{r})$ singular values of $\mathbf{K}$. 
+Note that the second component in each terms, $\mathcal{B}^{2}$ and $\mathcal{V}$, can be controlled arbitrarily small, with a small choice of $\xi>0$ and large choices of weights over the indices $j\in\{\widehat{r}+1,\dots,p\}$.
+This is consistent with the result from Proposition~\ref{surrogate} that the smaller $\xi$ is and the larger $\omega_{\widehat{r}+1},\dots,\omega_{p}$s are, the closer $\widehat{\mathbf{\Theta}}^{\text{SR}}$ gets to $\widehat{\mathbf{\Theta}}$, by making the last $(p-\widehat{r})$ singular values of $\widehat{\mathbf{\Theta}}^{\text{SR}}$ close to $0$.
+Recall in Proposition~\ref{surrogate}, we get the result that under orthogonal design, the first $\widehat{r}$ singular values of $\widehat{\mathbf{\Theta}}^{\text{SR}}$ coincide with those of $\widehat{\mathbf{\Theta}}$. 
+Furthermore, if the estimated rank of $\widehat{r}$ is equal to the rank of $\boldsymbol{\Theta}^{\star}$ (i.e., $\widehat{r}=r^{\star}$), the second term in $\mathcal{B}^{2}$ vanishes.
+
+Under the setting where $\widehat{r}=r^{\star}$, we can focus on the effects of weights on the bound in Theorem~\ref{Thm2}.
+Specifically, we can see how the weighted penalization on the singular values affects the flexible trade-off between bias and variance of conditional estimation error.
+It is easy to see the $j^{\text{th}}$ summands in $\mathcal{B}^{2}$ and $\mathcal{V}$, respectively, are increasing and decreasing functions of $j^{\text{th}}$ weight, $\omega_{j}$.
+This indicates that small weights allow the bias of the estimation error to be small, whereas large weights make the variance of the error small.  
+It is also interesting to note that the large values on $\omega_{\widehat{r}+1},\dots,\omega_{p}$ only make the second term in $\mathcal{V}$ smaller, whereas they have no impacts on bias when the estimator $\widehat{\boldsymbol{\Theta}}$ is rank consistent. 
+
+\end{document}
+
+
+
+
