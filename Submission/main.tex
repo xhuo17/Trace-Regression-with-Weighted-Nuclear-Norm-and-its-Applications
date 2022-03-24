@@ -149,14 +149,14 @@ The algorithm we propose consists of solving a sequence of WNN problems, where t
 Regarding a choice of hyper-tuning parameter $\boldsymbol{\lambda}_{n}$, we adopt a generalized cross-validation (GCV) type of criterion.
 This is enabled through the development of a surrogate function (equation \eqref{closed_form}), whose solution can be closely approximated to the solution of~\eqref{WMVR}. The solution also allows us to approximate the degrees of freedom of the original multivariate linear regression problem,  and this set-up makes the GCV type statistic computable.
 
-%\begin{figure}
-%  \includegraphics[width=150mm]{Figure/Fig1.pdf}
-%  \centering
-%  \caption{ Three panels display the plots of estimated sigular values versus ground truth singular values $\sigma{\star}_{j}$.
-%  The first two panels $(A)$ and $(B)$ are results from WMVR-ADMM algorithm with one weight update iteration under $n=250$.
-%  The panel $(C)$ exhibits the result when the estimator is obtained from SNN penalized least square under $n=1000$. }
-%  \label{Fig1}
-%\end{figure}
+\begin{figure}
+  \includegraphics[width=150mm]{Figure/Fig1.pdf}
+  \centering
+  \caption{Three panels display the plots of estimated sigular values versus ground truth singular values $\sigma{\star}_{j}$.
+  The first two panels $(A)$ and $(B)$ are results from WMVR-ADMM algorithm with one weight update iteration under $n=250$.
+  The panel $(C)$ exhibits the result when the estimator is obtained from SNN penalized least square under $n=1000$. }
+  \label{Fig1}
+\end{figure}
 
 In order to highlight the contributions of our work, we present a small empirical study which can manifest some of the aforementioned statements.
 In this example, we consider a setting of coefficient matrix $\boldsymbol{\Theta}^{\star}\in\mathbb{R}^{250 \times 250}$ with $r^{\star}=50$ and generate $\boldsymbol{A}, \boldsymbol{B} \in \mathbb{R}^{250 \times 50}$ with each entry from $\mathcal{N}(0,1)$ and set $\boldsymbol{\Theta}^{\star}=\boldsymbol{AB^{\top}}$.
@@ -796,13 +796,13 @@ and plugging this equality in~\eqref{Singular} for $j\in\{1,\dots,\widehat{r}\}$
 $\Box$
 \end{proof}
 
-%\begin{figure} [b!]
-%  \includegraphics[width=120mm]{Figure/Fig2.pdf}
-%  \centering
-%  \caption{ Under non-orthogonal $\boldsymbol{X}$, panel (A) displays the plot of the first $50$ singular values of $\widehat{\boldsymbol{\Theta}}$ versus $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$.
-%  Panel (B) exhibits the plot of the remaining $200$ singular values of $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$ versus $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$.}
-%  \label{Fig2}
-%\end{figure}
+\begin{figure} [b!]
+  \includegraphics[width=120mm]{Figure/Fig2.pdf}
+  \centering
+  \caption{ Under non-orthogonal $\boldsymbol{X}$, panel (A) displays the plot of the first $50$ singular values of $\widehat{\boldsymbol{\Theta}}$ versus $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$.
+  Panel (B) exhibits the plot of the remaining $200$ singular values of $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$ versus $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$.}
+  \label{Fig2}
+\end{figure}
 
 Note that as long as $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$ is a full-rank, $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ is a full-rank matrix whose first $\widehat{r}$ singular values are identical to those of $\widehat{\boldsymbol{\Theta}}$, and remaining $(p-\widehat{r})$ singular values are equal to the  corresponding singular values of $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$.
 Although the result of Proposition~\ref{surrogate} is stated under orthogonal design assumption, we also empirically demonstrate that the same results hold under non-orthogonal design in Figure~\ref{Fig2}.
@@ -862,13 +862,13 @@ The convergences can be observed through the following two quantities:
     \end{align*}
 \end{enumerate}
 
-%\begin{figure} [t!]
-%  \includegraphics[width=120mm]{Figure/Fig4.pdf}
-%  \centering
-%  \caption{ Convergences of $R^{(k)}$ (panel (A)) and $O^{(k)}$ (panel (B)) over the algorithm iteration index $k$.
-%  Regardless of random initializations, $R^{(k)}$ and $O^{(k)}$ converge to $0$ and to a same objective function value, %respectively.}
-%  \label{Fig4}
-%\end{figure}
+\begin{figure} [t!]
+  \includegraphics[width=120mm]{Figure/Fig4.pdf}
+  \centering
+  \caption{Convergences of $R^{(k)}$ (panel (A)) and $O^{(k)}$ (panel (B)) over the algorithm iteration index $k$.
+  Regardless of random initializations, $R^{(k)}$ and $O^{(k)}$ converge to $0$ and to a same objective function value, respectively.}
+  \label{Fig4}
+\end{figure}
 
 Under exactly the same simulation setting as that from the experiment for Figure~\ref{Fig1} with $n=250$, we vary the initialized tuple matrix values $(\boldsymbol{\Theta}^{(0)},\boldsymbol{\Gamma}^{(0)},\boldsymbol{\Lambda}^{(0)})$ of WMVR-ADMM in Algorithm \ref{alg:1}. Each entries of three matrices are sampled from $\mathcal{N}(0,\nu^{2})$, where $\nu=\{0,0.1,0.2,0.5,1,1.5\}$. Weights $\{\omega_j\}_{j=1}^{p}$ are updated once, and with the updated weights, $R^{(k)}$ and $O^{(k)}$ are calculated with the same data set $(\boldsymbol{X},\boldsymbol{Y})$ over all simulation scenarios. The resulting  $R^{(k)}$ and $O^{(k)}$ values are demonstrated in Figure~\ref{Fig4}, and the figure shows that both $R^{(k)}$ and $O^{(k)}$ converge to 0 as $k$ increases, regardless of the initializations of algorithm.  This observation is consistent with the claims in Theorem~\ref{Thm1}, and implies that the the converged solutions from WMVR-ADMM have the same objective value on the non-convex landscape of problem~\eqref{WMVR}.
 
@@ -899,13 +899,13 @@ The second to fourth rows of Figures~\ref{Fig_S4_Ex1} presents the RMSE results 
 Additionally, the panels in Figure~\ref{Fig_S4_Ex1} demonstrate that the RMSEs from the proposed estimator decrease to $0$ as the sample size increases.
 This shows the consistency property of the proposed estimator empirically.
 
-%\begin{figure} [b!]
-%  \includegraphics[width=120mm]{Figure/Fig5.pdf}
-%  \centering
-%  \caption{ Two sequences of weights in~\eqref{weight_comp} used for the estimation (panel (A)) and the resulting RMSEs (panel (B)).
-%  Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with %RMSEs of ANN weights.}
-%  \label{Fig5}
-%\end{figure}
+\begin{figure}[b!]
+  \includegraphics[width=120mm]{Figure/Fig5.pdf}
+  \centering
+%\caption{Two sequences of weights in~\eqref{weight_comp} used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
+\caption{Two sequences of weights in ??? used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
+  \label{Fig5}
+\end{figure}
 
 To show the effectiveness of the proposed weight updating scheme in section~\ref{parameter_selection},
 we compare the weight setting suggested in~\citet{chen2013reduced} with our method.
@@ -926,21 +926,21 @@ In Figure~\ref{Fig5}, panel (A) shows the two sequences of averaged weights $\{\
 and panel (B) exhibits 100 RMSEs with the respective weight scheme.
 While the difference of the first $50$ weights between two weight schemes is negligible, the effect of WNN-weight scheme is dramatized for penalizing the remaining $200$ singular values in comparison to ANN-weight scheme, and this results in lower RMSEs in panel (B).
 
-%\begin{figure}[htbp!]
-%\includegraphics[width=90mm]{Figure/S5_P1.pdf}
-%\centering
-%\caption{The plots demonstrates the comparisons of estimation errors in terms of RMSEs from the proposed method with ANN and SNN methods under different simulation settings. The three figures in the first row (A) $\sim$ (C) are the comparison results from sample size 30, 300, and 3000, respectively, under the true rank $r^{\star} = 2$. Analogously, Figures (D) $\sim$ (F) (second row) are the results from $r^{\star} = 5,$ Figures (G) $\sim$ (I) (third row) are the results from $r^{\star} = 8,$ and Figures (J) $\sim$ (L) (fourth row) are the results from $r^{\star} = 11.$  }
-%\label{Fig_S4_Ex1}
-%\end{figure}
+\begin{figure}[htbp!]
+\includegraphics[width=90mm]{Figure/S5_P1.pdf}
+\centering
+\caption{The plots demonstrates the comparisons of estimation errors in terms of RMSEs from the proposed method with ANN and SNN methods under different simulation settings. The three figures in the first row (A) $\sim$ (C) are the comparison results from sample size 30, 300, and 3000, respectively, under the true rank $r^{\star} = 2$. Analogously, Figures (D) $\sim$ (F) (second row) are the results from $r^{\star} = 5,$ Figures (G) $\sim$ (I) (third row) are the results from $r^{\star} = 8,$ and Figures (J) $\sim$ (L) (fourth row) are the results from $r^{\star} = 11.$  }
+\label{Fig_S4_Ex1}
+\end{figure}
 
 \section{Application to A Real Dataset}
 
-%\begin{figure}[b!]
-%    \centering
-%    \includegraphics[width = 120mm]{Figure/S6_P1.pdf}
-%    \caption{Demonstration of the mixture components of the PAHs ($\boldsymbol{Y}$) and the electronic absorption spectrum of the %25 samples ($\boldsymbol{X}$)}
-%    \label{fig:Realdata_XY}
-%\end{figure}
+\begin{figure}[b!]
+    \centering
+    \includegraphics[width = 120mm]{Figure/S6_P1.pdf}
+    \caption{Demonstration of the mixture components of the PAHs ($\boldsymbol{Y}$) and the electronic absorption spectrum of the 25 samples ($\boldsymbol{X}$)}
+    \label{fig:Realdata_XY}
+\end{figure}
 
 Although there are many applications of multivariate linear regression (\ref{MVR}) in the literature, these applications are usually analyzed by assuming a full rank model and least square method for estimating.
 In this section, we demonstrate an important application of model (\ref{MVR}) without the full rank assumption through the proposed WMVR-ADMM method.
@@ -949,12 +949,12 @@ The application is about a study of Polycyclic Aromatic Hydrocarbons (PAHs) from
 PAHs are ubiquitous environmental contaminants generated primarily during the incomplete combustion of some organic substances, such as coal, oil, rubbish, and wood. They are linked with the causes of tumors and their effects on reproduction. PAHs are widely used in industry or medicines to make dyes, plastics, and pesticides. In the dataset, 10 PAHs, including pyrene (Py), acenaphthene (Ace), anthracene (Anth), acenaphthylene (Acy), chrysene (Chry), benzanthracene (Benz), fluoranthene (Fluora), fluorene (Fluore), naphthalene (Nap), phenanthracene (Phen), and 25 complex mixtures of certain concentrations (with unit milligrams per liter) of these PAHs were recorded, which indicates $n = 25$ and $d_{1} = 10$ in model (\ref{MVR}). The mean and range values of these mixtures of certain concentrations are plotted in Panel (A) of Figure \ref{fig:Realdata_XY}.
 From each of these mixtures, an electronic absorption spectrum is computed, The spectrum are digitized at 5 nm intervals 27 wavelength channels from 220 nm to 350 nm, as shown in in Panel (B) of Figure \ref{fig:Realdata_XY}.  This means there are 27 columns for $\boldsymbol{X}_{2}$ in model (\ref{MVR}) ($d_{2}  = 27$). More details about the dataset can be found in Section 5.1.2 of \citet{brereton2003chemometrics} and Section 2.2.2 of \citet{isenmann2008modern}.
 
-%\begin{figure}[hbt!]
-%    \centering
-%    \includegraphics[width = 95mm]{Figure/S6_P2.pdf}
-%    \caption{(A) GCV Score Versus Tuning Parameters $\boldsymbol{\lambda}$, (B) Solution Path, (C) Estimated Coefficient Matrix.}
-%    \label{fig:Realdata_GCV}
-%\end{figure}
+\begin{figure}[hbt!]
+    \centering
+    \includegraphics[width = 95mm]{Figure/S6_P2.pdf}
+    \caption{(A) GCV Score Versus Tuning Parameters $\boldsymbol{\lambda}$, (B) Solution Path, (C) Estimated Coefficient Matrix.}
+    \label{fig:Realdata_GCV}
+\end{figure}
 
 We are mainly interested in using WMVR-ADMM to understand the association between the concentrations from PAHs (Figure
 \ref{fig:Realdata_XY} (A)) and the electronic absorption spectrum  (Figure \ref{fig:Realdata_XY} (B)) through model (\ref{MVR}). The method is conducted by following Algorithm 1, and the optimal tuning parameter $\boldsymbol{\lambda}_{n}$ and weights $\boldsymbol{w}$ are selected by the proposed GCV criterion described in Section 4.
@@ -979,12 +979,12 @@ $(III)$ the effect of our suggested weight updating scheme is verified through t
 Lastly the application to the real data set shows the effectiveness of our method.
 Nonetheless, there are several remaining open questions which require further investigations in the future.
 We summarize them as follows.
-%\begin{figure} [t!]
-%  \includegraphics[width=130mm]{Figure/Fig3.pdf}
-%  \centering
-%  \caption{ Panel (A) exhibits the intersected region of $\mathcal{W} \leq 3$ and $\frac{1}{2} < \omega_{1} \leq \dots \leq \omega_{p}$. Panel (B) magnifies the intersected region on grid $(\omega_{1},\omega_{p})\in[1,1.5] \times [1,1.5]$. }
-%  \label{Fig6}
-%\end{figure}
+\begin{figure} [t!]
+  \includegraphics[width=130mm]{Figure/Fig3.pdf}
+  \centering
+  \caption{Panel (A) exhibits the intersected region of $\mathcal{W} \leq 3$ and $\frac{1}{2} < \omega_{1} \leq \dots \leq \omega_{p}$. Panel (B) magnifies the intersected region on grid $(\omega_{1},\omega_{p})\in[1,1.5] \times [1,1.5]$. }
+  \label{Fig6}
+\end{figure}
 
 \begin{enumerate}
     \item Although empirical evidences on the convergence of WMVR-ADMM are provided in section~\ref{SC5}, they still cannot verify the existence of saddle points in $\mathcal{L}_{0}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda}\big)$, which is a crucial assumption for ensuring the global convergence of algorithm.
@@ -1312,8 +1312,8 @@ the inequality (\ref{eq: new main_0}) implies
     \label{eq: new main_1}
 \end{align}
 
-%\subsection{Proof of Theorem~\ref{thm2}} 
-\subsection{Proof of Theorem ???} 
+%\subsection{Proof of Theorem~\ref{thm2}}
+\subsection{Proof of Theorem ???}
 \label{pf_thm_3_2}
 First, recall the basic inequality~\eqref{eq: apn_pre}, transformation of weighted nuclear norm~\eqref{eq: wnn_diff} and duality of operator and nuclear norm~\eqref{holder_ineq}.
 Then, we have
