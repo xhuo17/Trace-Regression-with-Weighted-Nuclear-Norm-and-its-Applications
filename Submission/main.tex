@@ -72,22 +72,22 @@
 \fundinginfo{Funder One, Funder One Department, Grant/Award Number: 123456, 123457 and 123458; Funder Two, Funder Two Department, Grant/Award Number: 123459}
 
 % Include the name of the author that should appear in the running header
-\runningauthor{Namjoon Suh et al.}
+\runningauthor{Suh, Lin, Huo}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-We consider a low-rank matrix estimation problem when the data is assumed to be generated from the multivariate linear regression model.
-To induce the low-rank coefficient matrix, we employ the weighted nuclear norm (WNN) defined as the weighted sum of singular value.
-The weights are naturally set in the non-decreasing order, and this order is known to yield the non-convexity of the WNN function in parameter space.
-We provide an efficient algorithm under the framework of alternative directional method of multipliers (ADMM) for estimating the coefficient matrix.
-Under the lagrangian saddle point assumption, the suggested algorithm can find the global minimizer in the non-convex landscape of the objective function.
-Furthermore, an optimal convergence guarantee of the algorithm facilitates the statistical analysis of the obtained estimator, including understanding the influence of the weights on the estimation and deriving the minimax rate of the estimation error. We also propose a generalized cross-validation (GCV) type of criterion for the selection of the tuning parameter, and suggest an iterative algorithm for updating the weights.
+We consider a low-rank matrix estimation problem when the data is assumed to be generated from the multivariate linear regression model. To induce the low-rank coefficient matrix, we employ the weighted nuclear norm (WNN) defined as the weighted sum of singular values. 
+The weights are naturally set in the non-decreasing order, and this order is known to yield the non-convexity of the WNN function in the parameter space. 
+We provide an efficient algorithm under the framework of alternative directional method of multipliers (ADMM) for estimating the coefficient matrix. 
+The estimator from suggested algorithm converges to a stationary point of augmented Lagrangian function.
+Under orthogonal design setting, effects of the weights for estimating singular values of ground-truth coefficient matrix are given.
+Under Gaussian design setting, a minimax convergence rate on the estimation error is derived. 
+We also propose a generalized cross-validation (GCV) criterion for the selection of the tuning parameter, and suggest an iterative algorithm for updating the weights.
 Simulations and a real data analysis demonstrate competitive performance of our new method.
 
-% used in the next iteration via the estimated singular values of current solution
 % Please include a maximum of seven keywords
 \keywords{Weighted Nuclear Norm, Low-rank Matrix, Non-convex optimization, Generalized Cross Validation}
 \end{abstract}
@@ -101,7 +101,7 @@ Here, $\boldsymbol{Y}=(y_{1},\dots,y_{n})^{\top}$ is an $n \times d_{2}$ matrix,
 The vectors $\{e_{j}\}_{j=1}^{n}$ are independently sampled from $\mathcal{N}(0,\sigma^{2} \cdot \mathcal{I}_{d_{2}\times d_{2}})$ with variance parameter $\sigma^{2}>0$.
 Throughout the paper, we write $p:=\text{min}(d_{1},d_{2})$, $r^{\star}:=\text{rank}(\boldsymbol{\Theta}^{\star})$ and $\mathcal{I}_{m \times m}$ as an $m \times m$ identity matrix.
 
-The observational model~\eqref{MVR} is referred to as a multivariate linear regression model in literature.
+The observational model~\eqref{MVR} is referred to as a multivariate linear regression model in the statistics literature.
 This model is particularly attractive when there exists a dependence structure in the multivariate response, where the response matrix $\boldsymbol{Y}$ can be represented with a linear combination of only a small number of linearly transformed predictors.
 The situation is induced from the assumption that the coefficient matrix $\boldsymbol{\Theta}^{\star}$ has a low rank, that is $r^{\star} \ll p$.
 
@@ -126,13 +126,13 @@ where $\sigma_{j}(\boldsymbol{\Theta})$ means the $j^{\text{th}}$ largest singul
 Specifically, it is a well-known fact that the landscape of~\eqref{WMVR} is non-convex when the weights are in non-decreasing order, $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$.
 Hereafter, our paper only considers the case of non-decreasing weights.
 See the simple example provided in~\citet{chen2013reduced} which shows that~\eqref{WNN} is neither convex nor concave function when the weights are in the non-decreasing order.
-Under this setting, we briefly summarize the contributions of our paper subsequently.
+Under this setting, we briefly summarize the contributions of our paper.
 
 \subsection{Contributions}
-We apply the classical alternative direction method of multipliers (ADMM) algorithm in~\eqref{WMVR} and show that the suggested algorithm can indeed achieve the global minimizer of non-convex optimization problem~\eqref{WMVR}.
+We apply the classical alternative direction method of multipliers (ADMM) algorithm~\citep{boyd2011distributed} in~\eqref{WMVR} and show that the sequence of tuples generated from the suggested algorithm converges uniquely to a stationary point of augmented Lagrangain function. 
 We refer our algorithm as WMVR-ADMM where the WMVR stands for weighted multivariate regression.
-This should be contrasted with the result from~\citet{chen2013reduced}, in which they provide the closed form solution of the
-$\widehat{\boldsymbol{\Theta}}$ of~\eqref{WMVR}, not with the penalization $||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$ but
+This should be contrasted with the result from~\citet{chen2013reduced}, in which they provide the closed form solution of the 
+$\widehat{\boldsymbol{\Theta}}$ of~\eqref{WMVR}, not with the penalization $||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$ but 
 with $||\boldsymbol{X\Theta}||_{\boldsymbol{\omega,\star}}$.
 See Corollary $1$ in their paper.
 Furthermore, the theoretical analysis of~\citet{chen2013reduced} is focused on the behavior of prediction error, not the estimation error which is one of the theoretical objects of interest in our paper.
@@ -140,26 +140,26 @@ Furthermore, the theoretical analysis of~\citet{chen2013reduced} is focused on t
 Our paper provides a theoretical explanation on the role of weights for estimating the ground-truth coefficient matrix.
 Motivated from~\citet{yuan2007dimension}, under the orthogonal design setting, we derive the closed-form solution of the minimizer $\widehat{\boldsymbol{\Theta}}$ and provide a non-asymptotic convergence rate of its singular values to its ground-truth counterparts.
 We show that the smaller weights compared to $2\sigma$ are desirable for estimating the non-zero $\sigma_{j}(\boldsymbol{\Theta}^{\star})$s, whereas the larger weights than $2\sigma$ are required for estimating zero $\sigma_{j}(\boldsymbol{\Theta}^{\star})$s under a proper choice of $\boldsymbol{\lambda}_{n}$.
-Under a general gaussian random design setting, we derive the minimax rate of the estimation error by adopting the technique used by~\citet{negahban2011estimation} under high-dimensional regime (i.e., $n \ll d_{1}d_{2}$).
+Under a Gaussian random design setting, we derive the minimax rate of the estimation error by adopting the technique used by~\citet{negahban2011estimation} under high-dimensional regime (i.e., $n \ll d_{1}d_{2}$).
 We will elaborate their work in the following sections in the context of our work.
 
 Finally, we develop a data-driven method for choosing tuning parameters in the model.
 For updating the weights on the singular value, we borrow the idea from the seminal work of~\citet{candes2008enhancing}.
 The algorithm we propose consists of solving a sequence of WNN problems, where the weights used for the next iteration are computed from the singular values of the current solution from~\eqref{WMVR}.
 Regarding a choice of hyper-tuning parameter $\boldsymbol{\lambda}_{n}$, we adopt a generalized cross-validation (GCV) type of criterion.
-This is enabled through the development of a surrogate function (equation \eqref{closed_form}), whose solution can be closely approximated to the solution of~\eqref{WMVR}. The solution also allows us to approximate the degrees of freedom of the original multivariate linear regression problem,  and this set-up makes the GCV type statistic computable.
+This is enabled through the development of a surrogate function (equation \eqref{closed_form}), whose solution can be closely approximated to the solution of~\eqref{WMVR}. The solution also allows us to approximate the degrees of freedom of the original multivariate linear regression problem,  and this set-up makes the GCV statistic computable.
 
 \begin{figure}
   \includegraphics[width=150mm]{Figure/Fig1.pdf}
   \centering
-  \caption{Three panels display the plots of estimated sigular values versus ground truth singular values $\sigma{\star}_{j}$.
+  \caption{Three panels display the plots of estimated sigular values versus ground truth singular values $\sigma^{\star}_{j}$.
   The first two panels $(A)$ and $(B)$ are results from WMVR-ADMM algorithm with one weight update iteration under $n=250$.
   The panel $(C)$ exhibits the result when the estimator is obtained from SNN penalized least square under $n=1000$. }
   \label{Fig1}
 \end{figure}
 
-In order to highlight the contributions of our work, we present a small empirical study which can manifest some of the aforementioned statements.
-In this example, we consider a setting of coefficient matrix $\boldsymbol{\Theta}^{\star}\in\mathbb{R}^{250 \times 250}$ with $r^{\star}=50$ and generate $\boldsymbol{A}, \boldsymbol{B} \in \mathbb{R}^{250 \times 50}$ with each entry from $\mathcal{N}(0,1)$ and set $\boldsymbol{\Theta}^{\star}=\boldsymbol{AB^{\top}}$.
+A following example demonstrates the sample efficiency of our proposed method for estimating the singular values of $\boldsymbol{\Theta^{\star}}$ when it is compared with the traditional SNN method.
+We consider a setting of coefficient matrix $\boldsymbol{\Theta}^{\star}\in\mathbb{R}^{250 \times 250}$ with $r^{\star}=50$ and generate $\boldsymbol{A}, \boldsymbol{B} \in \mathbb{R}^{250 \times 50}$ with each entry from $\mathcal{N}(0,1)$ and set $\boldsymbol{\Theta}^{\star}=\boldsymbol{AB^{\top}}$.
 Each entry of $\boldsymbol{X}\in\mathbb{R}^{n \times d_{1}}$ is sampled from $\mathcal{N}(0,1)$.
 Variance parameter $\sigma$ is set as $1$, and hyper-tuning parameter $\boldsymbol{\lambda}_{n}$ is set as $5\sqrt{\frac{d_{1}+d_{2}}{n}}$, where $d_{1}=d_{2}=250$.
 Panels in Figure~\ref{Fig1} display the plots of singular values of the minimizer $\widehat{\boldsymbol{\Theta}}$ in~\eqref{WMVR} against the singular values of ground-truth matrix $\boldsymbol{\Theta^{\star}}$.
@@ -176,7 +176,7 @@ However, from the statistical viewpoint, we are not aware of many works that app
 In contrast, there are a myriad of papers which studied the statistical properties of SNN penalized least square problem under even a more general model than multivariate linear regression.
 We only mention a subset of the long list.
 \citet{bach2008consistency} provided necessary and sufficient conditions for the asymptotic rank consistency of SNN problem, and later~\citet{lee2015model} worked on proving the non-asymptotic rank consistency of the estimator from SNN under the irrepresentable assumption on design matrix.
-Under the sub-gaussian noise assumption,~\citet{negahban2011estimation} derived a minimax optimal rate of the estimation error of trace regression model when $\boldsymbol{\Theta}^{\star}$ is either approximately or exactly low rank matrix through the employment of the notion of restricted strong convexity (RSC) of the cost function.
+Under the sub-Gaussian noise assumption,~\citet{negahban2011estimation} derived a minimax optimal rate of the estimation error of trace regression model when $\boldsymbol{\Theta}^{\star}$ is either approximately or exactly low rank matrix through the employment of the notion of restricted strong convexity (RSC) of the cost function.
 Similarly, \citet{koltchinskii2011nuclear} established a sharp oracle inequality of the trace regression estimator under the restricted isometry condition of design matrix $\boldsymbol{X}$.
 In the subsequent work,~\citet{fan2019generalized} investigated the SNN problem under generalized trace regression problems for categorical responses.
 Recently, \citet{fan2021shrinkage} worked on obtaining the same minimax rate of trace regression problem with~\citet{negahban2011estimation} under the heavy-tail assumption on design matrix and observational noise.
@@ -189,18 +189,18 @@ The main idea of their paper is to simply update the weights as the inverse of t
 
 \subsection{Organizations}
 The rest of the paper is organized as follows.
-In section $2$, we introduce the details of WMVR-ADMM and provide a theorem on the algorithm's global convergence guarantees.
-In section $3$, statistical properties of the estimator are provided.
-First, in the orthogonal design setting, the non-asymptotic convergence rate of the eigen values from the proposed estimator  $\{\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)\}_{j=1}^{p}$ is provided.
-Second, under a gaussian random design, we obtain the minimax rate of the estimation error.
-In section $4$, a two-stage data-driven method for updating weights and choosing the regularization parameter is detailed.
-In section $5$, we compare the performance of our estimator with SNN and an estimator from~\citet{chen2013reduced} in terms of estimation error under various model parameter settings.
-In section $6$, we apply our algorithm to a real data set to demonstrate the validity of WMVR-ADMM in practice.
+In Section $2$, we introduce the details of WMVR-ADMM and provide a theorem on the algorithm's convergence guarantees.
+In Section $3$, statistical properties of the estimator are provided.
+First, in the orthogonal design setting, the non-asymptotic convergence rate of the singular values from the proposed estimator  $\{\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)\}_{j=1}^{p}$ is provided.
+Second, under a Gaussian random design, we obtain the minimax rate of the estimation error.
+In Section $4$, a two-stage data-driven method for updating weights and choosing the regularization parameter is detailed.
+In Section $5$, we compare the performance of our estimator with SNN and an estimator from~\citet{chen2013reduced} in terms of estimation error under various model parameter settings.
+In Section $6$, we apply our algorithm to a real data set to demonstrate the validity of WMVR-ADMM in practice.
 Finally, we conclude our paper with the discussion section.
 
-\section{WMVR-ADMM and Global Convergence}
+\section{WMVR-ADMM and Convergence Analysis}
 In the first subsection, we describe the implementation of WMVR-ADMM algorithm for solving the non-convex optimization  problem~\eqref{WMVR}.
-Then, in the next subsection, we present a theorem that the converged solution $\widehat{\boldsymbol{\Theta}}$ from WMVR-ADMM is indeed a global minimizer of the~\eqref{WMVR} under a lagrangian saddle point assumption.
+Then, in the next subsection, we present a convergence theorem of WMVR-ADMM algorithm.
 
 \subsection{ADMM for Weighted Multivariate Regression} \label{WMVR-ADMM}
 We start with reformulating~\eqref{WMVR} as follows:
@@ -208,14 +208,14 @@ We start with reformulating~\eqref{WMVR} as follows:
     \min_{\Theta, \boldsymbol{\Gamma}} \bigg\{ f(\boldsymbol{\Theta}) + g(\boldsymbol{\Gamma}) \bigg\}
     \qquad \textbf{s.t.} \qquad \boldsymbol{\Theta} = \boldsymbol{\Gamma} \in \mathbb{R}^{d_{1}\times d_{2}},
 \end{align}
-by letting $f(\boldsymbol{\Theta}):=-\frac{1}{n}\textbf{tr}\big( \boldsymbol{Y}^{\top}\boldsymbol{X}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\|\boldsymbol{X}\boldsymbol{\Gamma}\|_{\text{F}}^{2}$.
-This reformulation naturally leads to the construction of an augmented lagrangian function $\mathcal{L}_{\rho}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda}\big)$ : For any $\rho>0$ and dual variable $\boldsymbol{\Lambda} \in \mathbb{R}^{d_{1}\times d_{2}}$, we define,
+by letting $f(\boldsymbol{\Theta}):=\boldsymbol{\lambda}_{n}||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\|\boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Gamma}\|_{\text{F}}^{2}$.
+This reformulation naturally leads to the construction of an augmented lagrangian function $\mathcal{L}_{\rho}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda}\big)$ : For any $\rho>0$ and dual variable $\boldsymbol{\Lambda} \in \mathbb{R}^{d_{1}\times d_{2}}$, we define, 
 \begin{align} \label{Lagrangian}
     \mathcal{L}_{\rho}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda}\big):=
     f(\boldsymbol{\Theta}) + g(\boldsymbol{\Gamma}) + \textbf{tr}\big( \boldsymbol{\Lambda}^{\top}\big( \boldsymbol{\Theta}-\boldsymbol{\Gamma} \big)\big)
     + \frac{\rho}{2} || \boldsymbol{\Theta}-\boldsymbol{\Gamma} ||_{\text{F}}^{2}.
 \end{align}
-Then, we solve following three optimization problems repeatedly until primal and dual feasibility condition hold; that is,
+Then, we solve following three optimization problems repeatedly until primal and dual feasibility condition hold; that is, 
 repeat \textbf{Steps 1-3},
 \begin{align*}
     &\textbf{Step 1.} \quad \boldsymbol{\Theta}^{(k+1)} = \argmin_{\Theta \in \mathbb{R}^{d_{1} \times d_{2}}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big), \\
@@ -224,64 +224,63 @@ repeat \textbf{Steps 1-3},
 \end{align*}
 until $|| \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)} ||_{\text{F}}\leq 10^{-7}$ and $|| \boldsymbol{\Gamma}^{(k+1)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}\leq 10^{-7}$.
 Here, we denote the tuple $(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)})$ as the updated parameters at $k^{\text{th}}$ iteration of the algorithm.
-Note that the non-convexity of the landscape of the objective function in \textbf{Step 1} arises from the WNN  (i.e., $\|\cdot\|_{\omega,\star}$) over $\boldsymbol{\Theta}$ with fixed $\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}$, whereas the objective function in \textbf{Step 2} is a simple quadratic function of $\boldsymbol{\Gamma}$ with fixed $\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Lambda}^{(k)}$.
+Note that the non-convexity of the landscape of the objective function in \textbf{Step 1} arises from the WNN  ( i.e., $\|\cdot\|_{\omega,\star}$) over $\boldsymbol{\Theta}$ with fixed $\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}$, whereas the objective function in \textbf{Step 2} is a simple quadratic function of $\boldsymbol{\Gamma}$ with fixed $\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Lambda}^{(k)}$. 
 
 We start the algorithm by initializing  $\boldsymbol{\Theta}^{(0)}=\boldsymbol{\Gamma}^{(0)}=\boldsymbol{\Lambda}^{(0)}=\boldsymbol{0} \in\mathbb{R}^{d_{1}\times d_{2}}$.
-Next, the key of our algorithm is that a closed-form solution of \textbf{Step 1} can be obtained uniquely, even if it is a non-convex problem.
+Next, the key of our algorithm is that a closed-form solution of \textbf{Step 1} can be obtained uniquely, even if it is a non-convex problem. 
 We state the result in the following Lemma.
 \begin{lemma} \label{Lemma2.1}
     Let $\boldsymbol{\Theta}^{(k+1)}$ be the minimizer of \textbf{Step 1}.
-    Denote $\boldsymbol{B}^{(k)}:=\frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{Y}-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$ and its SVD as $\boldsymbol{U}^{\textbf{B}}\boldsymbol{D}^{\textbf{B}}\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}$.
-    Then, for any fixed $\boldsymbol{\lambda}_{n}, \rho \geq 0 $ and $0\leq \omega_{1} \leq \dots \leq \omega_{p}$,
+    Denote $\boldsymbol{B}^{(k)}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$ and its SVD as $\boldsymbol{U}^{\textbf{B}}\boldsymbol{D}^{\textbf{B}}\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}$.
+    Then, for any fixed $\boldsymbol{\lambda}_{n}, \rho \geq 0 $ and $0\leq \omega_{1} \leq \dots \leq \omega_{p}$, 
     \begin{align*}
-        &\boldsymbol{\Theta}^{(k+1)} = \boldsymbol{U}^{\textbf{B}}\mathcal{S}_{\boldsymbol{\lambda}_{n}\omega}\big(\boldsymbol{D}^{\textbf{B}}\big)\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}, \\
+        &\boldsymbol{\Theta}^{(k+1)} = \boldsymbol{U}^{\textbf{B}}\mathcal{S}_{\boldsymbol{\lambda}_{n}\omega}\big(\boldsymbol{D}^{\textbf{B}}\big)\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}, \\ 
         &\mathcal{S}_{\boldsymbol{\lambda}_{n}\omega}\big(\boldsymbol{D}^{\textbf{B}}\big) = \text{diag}\bigg\{ \max\bigg\{\frac{1}{\rho}\big(\sigma_{j}(\boldsymbol{B}^{(k)}\big)-\boldsymbol{\lambda}_{n} w_{j}\big),0 \bigg\},  j=1,\dots,p \bigg\}.
     \end{align*}
     Furthermore, if all the non-zero singular values of $\boldsymbol{B}^{(k)}$ are distinct, then the solution $\boldsymbol{\Theta}^{(k+1)}$ is unique.
 \end{lemma}
 
 \begin{proof}
-For simplicity, denote $\boldsymbol{B}^{(k)}:=\frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{Y}-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$, then we can solve the optimization problem in $\textbf{Step}\ \boldsymbol{1}$ as follows:
+For simplicity, denote $\boldsymbol{B}^{(k)}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$, then we can solve the optimization problem in $\textbf{Step}\ \boldsymbol{1}$ as follows:
 \begin{align}
-    \boldsymbol{\Theta}^{(k+1)}
+    \boldsymbol{\Theta}^{(k+1)} 
     &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) \nonumber \\
     &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}}  \bigg\{ f(\boldsymbol{\Theta}) + \textbf{tr}\big(\boldsymbol{\Lambda}^{(k) \top}\boldsymbol{\Theta}\big) + \frac{\rho}{2} || \boldsymbol{\Theta}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \bigg\}  \nonumber \\
     &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2}\sigma_{j}(\boldsymbol{\Theta})^{2} + \boldsymbol{\lambda}_{n} \omega_{j} \cdot\sigma_{j}(\boldsymbol{\Theta}) \bigg) -\textbf{tr} \big( \boldsymbol{B}^{(k) \top}\boldsymbol{\Theta} \big) \bigg\} \label{eq: step1_orig}.
 \end{align}
-We plugged-in $f(\boldsymbol{\Theta})=-\frac{1}{n}\textbf{tr}\big( \boldsymbol{Y}^{\top}\boldsymbol{X}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$,
+We plugged-in $f(\boldsymbol{\Theta})=\boldsymbol{\lambda}_{n}||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$, 
 used $\textbf{tr}\big(\boldsymbol{\Theta}\boldsymbol{\Theta}^{\top}\big)=\sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{\Theta}\big)^{2}$ and the definition of $\boldsymbol{B}^{(k)}$ for deriving the last equality.
-For further convenience of notation, let $\{d_{j}\}_{j=1}^{p}:=\{\sigma_{j}\big(\boldsymbol{\Theta}\big)\}_{j=1}^{p}$ and
-denote $\boldsymbol{\Theta}=\boldsymbol{UDV^{\top}}$ where
+For further convenience of notation, let $\{d_{j}\}_{j=1}^{p}:=\{\sigma_{j}\big(\boldsymbol{\Theta}\big)\}_{j=1}^{p}$ and 
+denote $\boldsymbol{\Theta}=\boldsymbol{UDV^{\top}}$ where 
 $\boldsymbol{U}$ and $\boldsymbol{V}$ are the left and right singular matrices of $\boldsymbol{\Theta}$ and $\boldsymbol{D}:=\text{diag}\big(\{d_{1},d_{2},\dots,d_{p}\}\big)$.
-Note that the entries in $\boldsymbol{D}$ are in non-increasing order. (i.e. $d_{1} \geq d_{2} \dots \geq d_{p} \geq 0$)
+Note that the entries in $\boldsymbol{D}$ are in non-increasing order. ( i.e. $d_{1} \geq d_{2} \dots \geq d_{p} \geq 0$)
 Then, we can rewrite the optimization problem in~\eqref{eq: step1_orig} as follows:
 \begin{align}
-    \boldsymbol{\Theta}^{(k+1)}
-    &= \argmin_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \boldsymbol{\lambda}_{n}\omega_{j}d_{j} \bigg) - \max_{\boldsymbol{U}^{\top}\boldsymbol{U} = \mathcal{I}_{d_{1}}, \boldsymbol{V}^{\top}\boldsymbol{V} = \mathcal{I}_{d_{2}}} \textbf{tr}\big(\boldsymbol{B}^{(k)\top}\boldsymbol{\Theta}\big) \bigg\} \label{eq: step1_sec}
+    \boldsymbol{\Theta}^{(k+1)} 
+    &= \argmin_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \boldsymbol{\lambda}_{n}\omega_{j}d_{j} \bigg) - \max_{\boldsymbol{U}^{\top}\boldsymbol{U} = \mathcal{I}_{d_{1}}, \boldsymbol{V}^{\top}\boldsymbol{V} = \mathcal{I}_{d_{2}}} \textbf{tr}\big(\boldsymbol{B}^{(k)\top}\boldsymbol{\Theta}\big) \bigg\} \label{eq: step1_sec} 
 \end{align}
-The maximum of second term in~\eqref{eq: step1_sec} can be achieved when $\boldsymbol{U}$ and $\boldsymbol{V}$ coincide with
+The maximum of second term in~\eqref{eq: step1_sec} can be achieved when $\boldsymbol{U}$ and $\boldsymbol{V}$ coincide with 
 left and right singular matrices of $\boldsymbol{B}^{(k)}$ respectively, giving us the maximized value as $\sum_{j=1}^{p}\sigma_{j}(\boldsymbol{B}^{(k)})d_{j}$.
 This is a well-known Von Neumann's trace inequality.
-See \cite{von1937some,mirsky1975trace}.
-Then, the final form of the optimization problem~\eqref{eq: step1_sec} reduces to obtaining the diagonal entries of the matrix $\boldsymbol{D}$ by minimizing a following :
+See \cite{von1937some,mirsky1975trace}. 
+Then, the final form of the optimization problem~\eqref{eq: step1_sec} reduces to obtaining the diagonal entries of the matrix $\boldsymbol{D}$ by minimizing a following : 
 \begin{align}
     \min_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \big( \boldsymbol{\lambda}_{n} \omega_{j}-\sigma_{j}(\boldsymbol{B}^{(k)}) \big) d_{j} \bigg)  \bigg\}. \label{eq: step1}
 \end{align}
 The objective function~\eqref{eq: step1} is completely decompsable coordinate-wise and is minimized at $d_{j}=\max\big\{\frac{1}{\rho}\big(\sigma_{j}(\boldsymbol{B}^{(k)}\big)-\boldsymbol{\lambda}_{n} \omega_{j}\big),0 \big\}$ for $j=1,\dots,p$.
 Since $\sigma_{1}(\boldsymbol{B}^{(k)})\geq\sigma_{2}(\boldsymbol{B}^{(k)})\dots\geq\sigma_{p}(\boldsymbol{B}^{(k)})$ and $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$, the solution is feasible.
-Furthermore, we have an unique minimizer due to the equality condition of von-Neumann's trace inequality when $\boldsymbol{B}^{(k)}$ has distinct non-zero singular values, and the uniqueness of strict convex optimization  of~\eqref{eq: step1} in $d_{j}$ for $j=1,\dots,p$.
-\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
-\qquad \qquad \qquad \qquad \qquad \qquad \quad $\Box$
+Furthermore, we have an unique minimizer due to the equality condition of von-Neumann's trace inequality when $\boldsymbol{B}^{(k)}$ has distinct non-zero singular values, and the uniqueness of strict convex optimization  of~\eqref{eq: step1} in $d_{j}$ for $j=1,\dots,p$. 
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad 
+\qquad \qquad \qquad \qquad \qquad \qquad \quad \quad $\Box$
 \end{proof}
 
 Now, we turn our attention on minimizing the convex program in \textbf{Step 2}.
-It is easy to rewrite and solve the problem in \textbf{Step 2} as follows:
+It is easy to rewrite and solve the problem in \textbf{Step 2} as follows: 
 \begin{align}
-    \boldsymbol{\Gamma}^{(k+1)}
+    \boldsymbol{\Gamma}^{(k+1)} 
     &= \argmin_{\boldsymbol{\Gamma}\in\mathbb{R}^{d_{1} \times d_{2}}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma},\boldsymbol{\Lambda}^{(k)} \big) \nonumber \\
-    &= \argmin_{\boldsymbol{\Gamma}\in\mathbb{R}^{d_{1} \times d_{2}}} \bigg\{ g(\boldsymbol{\Gamma}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\boldsymbol{\Gamma}\big) + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma} ||_{F}^{2} \bigg\} \nonumber  \\
-    &= \argmin_{\boldsymbol{\Gamma}\in\mathbb{R}^{d_{1} \times d_{2}}} \bigg\{ \textbf{tr} \bigg( \boldsymbol{\Gamma}^{\top}\bigg(\frac{1}{2n}\boldsymbol{X}^{\top}\boldsymbol{X} + \frac{\rho}{2} \cdot \mathcal{I}_{d_{1} \times d_{1}} \bigg) \boldsymbol{\Gamma} - \big( \rho \cdot \boldsymbol{\Theta}^{(k+1)} + \boldsymbol{\Lambda}^{(k)} \big)^{\top} \boldsymbol{\Gamma} \bigg) \bigg\} \label{eq: step2} \\
-    &= \bigg( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}+\rho\cdot\mathcal{I}_{d_{1} \times d_{1}} \bigg)^{-1}\big( \rho \cdot \boldsymbol{\Theta}^{(k+1)} + \boldsymbol{\Lambda}^{(k)} \big). \label{eq: step2_sol}
+    &= \argmin_{\boldsymbol{\Gamma}\in\mathbb{R}^{d_{1} \times d_{2}}} \bigg\{ \textbf{tr} \bigg( \boldsymbol{\Gamma}^{\top}\bigg(\frac{1}{2n}\boldsymbol{X}^{\top}\boldsymbol{X} + \frac{\rho}{2} \cdot \mathcal{I}_{d_{1} \times d_{1}} \bigg) \boldsymbol{\Gamma} - \bigg( \frac{1}{n}\boldsymbol{Y}^{\top}\boldsymbol{X} + \rho \cdot \boldsymbol{\Theta}^{(k+1)} + \boldsymbol{\Lambda}^{(k)} \bigg)^{\top} \boldsymbol{\Gamma} \bigg) \bigg\} \label{eq: step2} \\ 
+    &= \bigg( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}+\rho\cdot\mathcal{I}_{d_{1} \times d_{1}} \bigg)^{-1}\bigg( \frac{1}{n}\boldsymbol{Y}^{\top}\boldsymbol{X} +\rho \cdot \boldsymbol{\Theta}^{(k+1)} + \boldsymbol{\Lambda}^{(k)} \bigg). \label{eq: step2_sol} 
 \end{align}
 Note that the quadratic equation~\eqref{eq: step2} always has an unique minimizer~\eqref{eq: step2_sol} as long as $\rho>0$.
 With the updated $\boldsymbol{\Theta}^{(k+1)}$ and $\boldsymbol{\Gamma}^{(k+1)}$ from $\textbf{Steps 1}, \textbf{2}$, we can easily update $\boldsymbol{\Lambda}^{(k)}$ to $\boldsymbol{\Lambda}^{(k+1)}$ through $\textbf{Step 3}$.
@@ -289,19 +288,19 @@ The final output of WMVR-ADMM is a minimizer of $\mathcal{L}_{\rho} \big( \bolds
 Therefore, as long as all the non-zero singular values of $\boldsymbol{B}^{(\mathcal{T})}$ are distinct, then the WMVR-ADMM has an unique solution.
 The entire implementation of WMVR-ADMM is summarized in Algorithm~\ref{alg:1}.
 
-\begin{algorithm}[t]
+\begin{algorithm}[t] 
     \textbf{Input} : A measurement pair $\big( \boldsymbol{X}, \boldsymbol{Y} \big)$, $\boldsymbol{\lambda}_{n} \geq 0$ and $0\leq \omega_{1} \leq \dots \leq \omega_{p}$. \\
     \textbf{Initialization} : $\boldsymbol{\Theta}^{(0)}=\boldsymbol{\Gamma}^{(0)}=\boldsymbol{\Lambda}^{(0)}=\boldsymbol{0} \in\mathbb{R}^{d_{1}\times d_{2}}$. \\
     {\bf Repeat following Steps :} \\
-    \qquad {\bf Step 1.} Let $\boldsymbol{B^{(k)}}:=\frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{Y}-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$.
+    \qquad {\bf Step 1.} Let $\boldsymbol{B^{(k)}}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$.
     \quad $\boldsymbol{B^{(k)}}=\boldsymbol{U}^{\textbf{B}}\boldsymbol{D}^{\textbf{B}}\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}$. \\
     \qquad \qquad \qquad Set $\mathcal{S}_{\boldsymbol{\lambda}_{n}\omega}\big(\boldsymbol{D}^{\textbf{B}}\big)=\textbf{diag}\bigg\{ \max\bigg\{\frac{1}{\rho}\big(\sigma_{j}(\boldsymbol{B}^{(k)}\big)-\boldsymbol{\lambda}_{n} w_{j}\big),0 \bigg\}$ for $j=1,\dots,p \bigg\}$.  \\
     \qquad \qquad \qquad $\boldsymbol{\Theta}^{(k+1)} = \boldsymbol{U}^{\textbf{B}}\mathcal{S}_{\boldsymbol{\lambda}_{n}\omega}\big(\boldsymbol{D}^{\textbf{B}}\big)\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}$ \\
-    \qquad {\bf Step 2.}
-    $\boldsymbol{\Gamma}^{(k+1)} = \big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}+\rho\cdot\mathcal{I}_{d_{1} \times d_{1}} \big)^{-1}\big( \rho \cdot \boldsymbol{\Theta}^{(k+1)} + \boldsymbol{\Lambda}^{(k)} \big).$\\
+    \qquad {\bf Step 2.} 
+    $\boldsymbol{\Gamma}^{(k+1)} = \big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}+\rho\cdot\mathcal{I}_{d_{1} \times d_{1}} \big)^{-1}\big( \frac{1}{n}\boldsymbol{Y}^{\top}\boldsymbol{X} + \rho \cdot \boldsymbol{\Theta}^{(k+1)} + \boldsymbol{\Lambda}^{(k)} \big).$\\
     \qquad {\bf Step 3.} $\boldsymbol{\Lambda}^{(k+1)} = \boldsymbol{\Lambda}^{(k)} + \rho\big( \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)} \big)$.\\
     {\bf Until} $|| \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)} ||_{\text{F}}\leq 10^{-7}$ and $|| \boldsymbol{\Gamma}^{(k+1)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}\leq 10^{-7}$. \\
-    \textbf{Output} : $\widehat{\boldsymbol{\Theta}}=\boldsymbol{\Theta}^{(k+1)}$.
+    \textbf{Output} : $\widehat{\boldsymbol{\Theta}}=\boldsymbol{\Theta}^{(k+1)}$. 
     \caption{ADMM for Weighted Multi-Variate Regression. (WMVR-ADMM)}
     \label{alg:1}
 \end{algorithm}
@@ -312,173 +311,45 @@ In order for the concise presentation of the paper, we defer the detailed descri
 \end{remark}
 
 \subsection{Convergence of WMVR-ADMM}
+In this subsection, the Theorem~\ref{convergence} on the convergence of WMVR-ADMM is presented with some remarks.
+Then, two lemmas for proof of the theorems are provided.
+Finally, we conclude the subsection with the proof of Theorem~\ref{convergence}.
 
+\begin{theorem} \label{convergence}
+    Set $\rho>2L_{\nabla g}$ with $L_{\nabla g}:=\sigma_{1}\big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\big)$.
+    The sequence $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)})\}_{k \geq 1}$ from WMVR-ADMM converges globally to the unique stationary point of $\mathcal{L}_{\rho}(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda})$.
+\end{theorem}
+
+The threshold for penalty parameter $\rho$ can be computed from data.
+Here, ``globally'' means regardless of where the initial point under non-convex landscape of~\eqref{Lagrangian}.
+This is verified numerically in subsection~\ref{conv_exp}.
+The uniqueness claim is due from the fact that the augmented lagrangian function~\eqref{Lagrangian} is a Kurdyka-Lojasiewicz (KL) function.
+This is further elaborated in sub-subsection~\ref{proof_conv} with relevant references.
+The proof of Theorem~\ref{convergence} is motivated from~\citet{wang2019global} and~\citet{kim2020cauchy}.
+The key two ingredients are provided as follows.
+The detailed proofs of following two Lemmas are in the Appendix. 
 \begin{lemma} \label{Lemma2.3}
 Set $\rho>2L_{\nabla g}$ with $L_{\nabla g}:=\sigma_{1}\big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\big)$.
-Then, the iterates $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)})\}_{k \geq 1}$ generated from WMVR-ADMM satisfy followings :
+Then, the iterates $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)})\}_{k \geq 1}$ generated from WMVR-ADMM satisfy followings : 
 \begin{enumerate}
     \item $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ is lower-bounded and non-increasing over $k \geq 1$.
     \item $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)})\}_{k \geq 1}$ is bounded.
+    \item $\left\| \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \right\|_{\text{F}}\rightarrow{0}$ \quad and 
+    \quad $\left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{\text{F}}\rightarrow{0}$, \quad as
+    $k\rightarrow{\infty}$.
 \end{enumerate}
 \end{lemma}
 
-\begin{proof}
-By the result of Lemma~\ref{Lemma2.1}, we have
-\begin{align} \label{ineq1}
-    \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
-    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
-    \geq 0.
-\end{align}
-Now, we control the following difference term.
-\begin{align} \label{ineq2}
-    &\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
-    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k)} \big) \nonumber \\
-    &\qquad = g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k)}\big)\big)
-    +\frac{\rho}{2}\left\| \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k)} \right\|_{F}^{2} \nonumber \\
-    &\qquad \qquad - g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big)
-    -\frac{\rho}{2}\left\| \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2} \nonumber \\
-    &\qquad = g(\boldsymbol{\Gamma}^{(k)})-g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) \nonumber \\
-    &\qquad \qquad - \rho \cdot \textbf{tr}\big( \big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)^{\top}
-    \big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big) \big) + \frac{\rho}{2}\left\| \boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2}  \nonumber \\
-    &\qquad = g(\boldsymbol{\Gamma}^{(k)})-g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k+1)\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) + \frac{\rho}{2}\left\| \boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2}.
-\end{align}
-Note that we use $\boldsymbol{\Lambda}^{(k+1)}=\boldsymbol{\Lambda}^{(k)}+\rho\big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)$ in the last equality.
-Recall the definition of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ from~\eqref{Lagrangian} and $\boldsymbol{\Lambda}^{(k+1)}=\boldsymbol{\Lambda}^{(k)}+\rho\big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)$.
-Then, we have
-\begin{align} \label{ineq3}
-    \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k)} \big)
-    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
-    = -\frac{1}{\rho}\left\| \boldsymbol{\Lambda}^{(k)}-\boldsymbol{\Lambda}^{(k+1)} \right\|_{F}^{2}.
-\end{align}
-By combining~\eqref{ineq2} and~\eqref{ineq3}, we have
-\begin{align} \label{ineq4}
-    &\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
-    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big) \nonumber \\
-    &\qquad = g(\boldsymbol{\Gamma}^{(k)})-g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k+1)\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) \nonumber \\
-    &\qquad \qquad \qquad \qquad \qquad \qquad \qquad
-    + \frac{\rho}{2}\left\| \boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2} -\frac{1}{\rho}\left\| \boldsymbol{\Lambda}^{(k)}-\boldsymbol{\Lambda}^{(k+1)} \right\|_{F}^{2}.
-\end{align}
-Recall the definition of $\boldsymbol{\Gamma}^{(k+1)}$ from \textbf{Step 2} of WMVR-ADMM.
-\begin{align*}
-    \boldsymbol{\Gamma}^{(k+1)} = \argmin_{\boldsymbol{\Gamma} \in \mathbb{R}^{d_{1} \times d_{2}}}
-    \bigg\{ g(\boldsymbol{\Gamma}) - \textbf{tr}\big(\boldsymbol{\Lambda}^{(k)\top}\boldsymbol{\Gamma}\big)+\frac{\rho}{2}\left\|\boldsymbol{\Gamma}-\boldsymbol{\Theta}^{(k+1)} \right\|_{F}^{2} \bigg\}.
-\end{align*}
-Since $\boldsymbol{\Gamma}^{(k+1)}$ is a stationary point of the above optimization problem, we have
-\begin{align*}
-    \nabla g\big( \boldsymbol{\Gamma}^{(k+1)} \big)
-    = \boldsymbol{\Lambda}^{(k)} + \rho\big( \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)} \big)
-    = \boldsymbol{\Lambda}^{(k+1)},
-\end{align*}
-where $\nabla g (\cdot)$ is a gradient of $g$.
-Likewise, we get $\nabla g\big( \boldsymbol{\Gamma}^{(k)} \big) = \boldsymbol{\Lambda}^{(k)}$.
-Recall the definition of $g(\cdot)$, then we can easily have
-\begin{align} \label{ineq5}
-    \left\|\boldsymbol{\Lambda}^{(k+1)}-\boldsymbol{\Lambda}^{(k)}\right\|_{F} =
-    \left\|\nabla g\big( \boldsymbol{\Gamma}^{(k+1)} \big)
-    - \nabla g\big( \boldsymbol{\Gamma}^{(k)} \big)\right\|_{F}
-    \leq \sigma_{1}\bigg( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\bigg)
-    \cdot
-    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{F}.
-\end{align}
-Function $g$ is Lipschitz smooth with constant $L_{\nabla g}:=\sigma_{1}\bigg( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\bigg)$.
-Then, we have
-\begin{align} \label{ineq6}
-    g(\boldsymbol{\Gamma}^{(k)}) - g(\boldsymbol{\Gamma}^{(k+1)})
-    - \textbf{tr}\bigg(\nabla g\big(\boldsymbol{\Gamma}^{(k+1)}\big)^\top
-    \big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\bigg) \geq -\frac{L_{\nabla g}}{2}
-    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{F}^{2}.
-\end{align}
-Recall $\nabla g\big( \boldsymbol{\Gamma}^{(k+1)} \big) = \boldsymbol{\Lambda}^{(k+1)}$, combining~\eqref{ineq1},~\eqref{ineq4},~\eqref{ineq5}, and~\eqref{ineq6} yields
-\begin{align*}
-    \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
-    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
-    \geq \bigg(  -\frac{L_{\nabla g}}{2} -\frac{1}{\rho} L_{\nabla g}^{2} + \frac{\rho}{2} \bigg) \cdot
-    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{F}^{2}.
-\end{align*}
-Setting $\rho>2L_{\nabla g}$ makes $C_{1}:=-\frac{L_{\nabla g}}{2} -\frac{1}{\rho} L_{\nabla g}^{2} + \frac{\rho}{2}>0$, which implies that $\mathcal{L}_{\rho}\big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ is non-increasing over $k\in\mathbb{R}\cup \{0\}$.
-Now, we will prove $ \mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\big)$ is bounded below over $k\in\mathbb{N}\cup\{0\}$.
-\begin{align*}
-    \mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\big)
-    &= f(\boldsymbol{\Theta}^{(k)}) + g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\big( \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \big)\big)
-    + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
-    &= f(\boldsymbol{\Theta}^{(k)}) + g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \nabla g(\boldsymbol{\Gamma}^{(k)})^\top\big( \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \big)\big)
-    + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
-    &\geq g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \nabla g(\boldsymbol{\Gamma}^{(k)})^\top\big( \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \big)\big)
-    + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
-    &\geq g(\boldsymbol{\Theta}^{(k)}) -\frac{L_{\nabla g}}{2}|| \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
-    &\geq g(\boldsymbol{\Theta}^{(k)})
-    :=\frac{1}{2n}\left\|\boldsymbol{Y}-\boldsymbol{X\Theta}^{(k)}\right\|_{\text{F}}^{2}.
-\end{align*}
-In the first inequality, $f(\boldsymbol{\Theta}^{(k)}) \geq 0$ is used.
-In the second inequality, Lipschitz smoothness of $g$ with constant $L_{\nabla g}$ is used, and in the last inequality, the choice on $\rho>2L_{\nabla g}$ is used.
-It is obvious that $g(\boldsymbol{\Theta}^{(k)})$ is bounded below from $0$.
-\\ \\
-As long as $\{(\boldsymbol{\Theta}^{(0)},\boldsymbol{\Gamma}^{(0)},\boldsymbol{\Lambda}^{(0)})\}$ is bounded, it is easy to see the generated sequence $\{\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\}_{k \geq 1}$ is bounded as well.
-Since the minimizers of \textbf{Step 1.} and \textbf{Step 2.} have explicit closed form solution, the pair $\{\boldsymbol{\Theta}^{(1)},\boldsymbol{\Gamma}^{(1)}\}$ is bounded, and by~\textbf{Step 3.}, the boundedness of $\boldsymbol{\Lambda}^{(1)}$ is automatically ensured.
-Applying the same logic over the $k \geq 2$ yields the claim.
-\end{proof}
-
-\newpage
 \begin{lemma} \label{Lemma2.4}
 For $k\geq 1$, there exist a constant $C_{2}>0$ and $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ such that $\|p^{(k+1)}\|_{\text{F}}\leq C_{2} \| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \|_{\text{F}}$.
 \end{lemma}
 
-\begin{proof}
-Let us define the partial derivative of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ as
-\begin{align*}
-    \partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
-    := \big( \partial_{\Gamma} \mathcal{L}_{\rho}, \nabla_{\Gamma} \mathcal{L}_{\rho}, \nabla_{\Lambda} \mathcal{L}_{\rho} \big)\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big).
-\end{align*}
-It is easy to see followings:
-\begin{align*}
-    &\nabla_{\Gamma} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
-    = \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \\
-    &\nabla_{\Lambda} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
-    = \frac{1}{\rho} \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \big).
-\end{align*}
-Since $\boldsymbol{\Theta}^{(k+1)}$ is a minimizer of \textbf{Step 1.}, it satisfies a following stationary condition.
-\begin{align} \label{subgradient}
-    \boldsymbol{0} \in \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k)} + \rho (\boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k)}).
-\end{align}
-Then, we are interested in getting a subdifferential of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ with respect to $\boldsymbol{\Theta}$, which can be calculated as follows:
-\begin{align*}
-    \partial_{\boldsymbol{\Theta}}\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
-    &= \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k+1)} + \rho (\boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k+1)}) \\
-    &= \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k)} + \rho (\boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k)}) \\
-    &\qquad \qquad \qquad \qquad + (\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}) + \rho (\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} ).
-\end{align*}
-Then, by~\eqref{subgradient}, we have
-\begin{align*}
-    (\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}) + \rho (\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} )
-    \in \partial_{\boldsymbol{\Theta}}\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big).
-\end{align*}
-If we define $p^{(k+1)}$ as
-\begin{align} \label{subgradient1}
-    p^{(k+1)}
-    &:=\bigg( (\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}) + \rho (\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} ),
-    \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}, \frac{1}{\rho} \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \big) \bigg),
-\end{align}
-then $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$.
-Furthermore, its Frobenious norm can be bounded by combining~\eqref{ineq5} and~\eqref{subgradient1} as follows:
-\begin{align*}
-    \left\| p^{(k+1)} \right\|_{\text{F}} \leq
-    \bigg( \rho + \big(2+\frac{1}{\rho}\big)L_{\nabla g} \bigg) \cdot
-    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{\text{F}}.
-\end{align*}
-Setting $C_{2}:=\rho + \big(2+\frac{1}{\rho}\big)L_{\nabla g}$ yields the claim.
-\end{proof}
-
-\newpage
-\begin{theorem} \label{convergence}
-    Let $\rho>2L_{\nabla g}$ with $L_{\nabla g}:=\sigma_{1}\big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\big)$.
-    The sequence $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)})\}_{k \geq 1}$ from WMVR-ADMM
-    converges globally to the unique stationary point of $\mathcal{L}_{\rho}(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda})$.
-\end{theorem}
-\begin{proof}
-The proof is divided into four steps. We provide each steps sequentially.\\ \\
+\subsubsection{Proof of Theorem~\ref{convergence}} \label{proof_conv}
+The proof of Theorem~\ref{convergence} is divided into five steps. 
+We provide each steps sequentially.\\ \\
 {\textbf{Step 1.}}
 By Bolzano-Weierstrass threorem, we know the bounded sequence $\{\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\}_{k \geq 0}$ has a convergent subsequence
-$\{\boldsymbol{\Theta}^{(k_{s})},\boldsymbol{\Gamma}^{(k_{s})},\boldsymbol{\Lambda}^{(k_{s})}\}_{s \geq 1}$, and denote its limit point as $(\boldsymbol{\Theta}^{*},\boldsymbol{\Gamma}^{*},\boldsymbol{\Lambda}^{*})$.
+$\{\boldsymbol{\Theta}^{(k_{s})},\boldsymbol{\Gamma}^{(k_{s})},\boldsymbol{\Lambda}^{(k_{s})}\}_{s \geq 1}$, and denote its limit point as $(\boldsymbol{\Theta}^{*},\boldsymbol{\Gamma}^{*},\boldsymbol{\Lambda}^{*})$. 
 \\ \\
 {\textbf{Step 2.}}
 Since the augmented lagrangian function $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ is non-increasing and bounded from below,
@@ -491,31 +362,31 @@ By continuity of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol
     = \lim_{s\rightarrow{\infty}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k_{s})},\boldsymbol{\Gamma}^{(k_{s})},\boldsymbol{\Lambda}^{(k_{s})} \big)
     = \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{*},\boldsymbol{\Gamma}^{*},\boldsymbol{\Lambda}^{*} \big).
 \end{align*}
-
 \noindent {\textbf{Step 4.}}
-By the result of Lemma ~, there exists $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ such that $\left\|p^{(k+1)}\right\|_{\text{F}}\rightarrow{0}$ as $k\rightarrow{\infty}$.
+By the result of Lemma $2.4$, there exists $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ such that $\left\|p^{(k+1)}\right\|_{\text{F}}\rightarrow{0}$ as $k\rightarrow{\infty}$.
 Consequently, we conclude the following:
 \begin{align*}
     p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big) \rightarrow{ \boldsymbol{0}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{*},\boldsymbol{\Gamma}^{*},\boldsymbol{\Lambda}^{*} \big)}, \quad
     k\rightarrow{\infty}.
 \end{align*}
-
 \noindent {\textbf{Step 5.}}
 It remains to prove $\mathcal{L}_{\rho}$ is a Kurdyka-Lojasiewicz (KL) function for ensuring the generated sequence
-$\{\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\}_{k \geq 0}$ converges globally to the unique point
+$\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)}$,\\
+$\boldsymbol{\Lambda}^{(k)})\}_{k \geq 0}$ converges globally to the unique point 
 $\{\boldsymbol{\Theta}^{*},\boldsymbol{\Gamma}^{*},\boldsymbol{\Lambda}^{*}\}$.
 See Proposition $2$ in~\citet{wang2019global} and Theorem $2.9$ in~\citet{attouch2013convergence}.
 If a function is semi-algebraic, then it is known to be a KL function~\citep{attouch2013convergence,sun2017global}.
 Refer~\citet{sun2017global} for the definition of semi-algebraic function.
 Since $\frac{1}{2n}\left\| \boldsymbol{Y}-\boldsymbol{X\Gamma} \right\|_{\text{F}}^{2}+\textbf{tr}\big( \boldsymbol{\Lambda}^{\top}\big( \boldsymbol{\Theta}-\boldsymbol{\Gamma} \big)\big)$ is a real-polynomial function, it is semi-algebraic.
-Since the finite sum of semi-algebraic functions are semi-algebraic~\citep{attouch2013convergence}, it remains to prove $\lambda_{n}\|\boldsymbol{\Theta}\|_{\omega,*}$ is a semi-algebraic.
-In proposition $3$ of~\citet{sun2017global}, it is proved that the singular value of the matrix $\boldsymbol{\Theta}$, $\sigma_{j}(\boldsymbol{\Theta})$, is a semi-algebraic.
-Therefore, the weighted singular value $\omega_{j}\sigma_{j}(\boldsymbol{\Theta})$ is also a semi-algebraic function, and finally, summing rule gives that $\lambda_{n}\|\boldsymbol{\Theta}\|_{\omega,*}$ is a semi-algebraic function.
-\end{proof}
+Since the finite sum of semi-algebraic functions are semi-algebraic~\citep{attouch2013convergence}, it remains to prove $\lambda_{n}\|\boldsymbol{\Theta}\|_{\omega,*}$ is a semi-algebraic. 
+In proposition $3$ of~\citet{sun2017global}, it is proved that each singular value of the matrix $\boldsymbol{\Theta}$, $\sigma_{j}(\boldsymbol{\Theta})$, is a semi-algebraic.
+Therefore, the weighted singular value $\omega_{j}\sigma_{j}(\boldsymbol{\Theta})$ is also a semi-algebraic function, and finally, summing rule gives that $\lambda_{n}\|\boldsymbol{\Theta}\|_{\omega,*}$ is a semi-algebraic function. 
+\qquad \qquad $\Box$
 
 \section{Statistical Properties of the Estimator}
-In this section, we explore the statistical properties of the proposed estimator.
-In section 3.1, the non-asymptotical property of the proposed estimator under orthogonal design setting is studied, which sheds light on understanding the role of weights on the estimation. In section 3.2, the minimax convergence rate of the estimation error is derived under a more general random design setting.
+In this section, we explore statistical properties of the proposed estimator.
+In subsection $3.1$, the non-asymptotic property of the proposed estimator under orthogonal design setting is studied, which sheds lights on understanding the role of weights on the estimation of singular values. 
+In subsection $3.2$, the minimax convergence rate of the estimation error is derived under a Gaussian design setting.
 
 \subsection{Statistical Properties of $\widehat{\boldsymbol{\Theta}}$ under Orthogonal Design}
 We first study the convergent rate of estimated eigenvalues $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$ for $j = 1, \cdots, p$.
@@ -601,7 +472,7 @@ This is consistent with our intuition that we need small weights for estimating 
 We further study the estimation error in Frobenius norm (i.e., $\| \widehat{\boldsymbol{\Theta}} - \boldsymbol{\Theta^{\star}} \|_{\text{F}}^{2}$)  under a random design assumption.
 Specifically, we begin this subsection by providing the additional assumptions on model, which will be used for stating our theorem.
 Then, with a brief introduction of the framework on which our theorem is based, an important Lemma on the subset $\mathcal{C}$, where the error matrix $\widehat{\boldsymbol{\Theta}}-\boldsymbol{\Theta^{\star}}$ belongs, is provided.
-Finally, we state our main theorem.
+Finally, we state our main Theorem.
 
 \subsubsection{Additional Assumptions}
 A design matrix $\boldsymbol{X}$ is assumed to be random, whose rows are independently sampled from $d_{1}$-variate $\mathcal{N}(0,\boldsymbol{\Sigma})$ distribution for some positive definite covariance matrix $\boldsymbol{\Sigma}\in\mathbb{R}^{d_{1} \times d_{1}}$.
@@ -614,6 +485,7 @@ Specifically, for a parameter $q\in[0,1]$ and a radius $r^{\star}$, we assume th
     \bigg\}.
 \end{align*}
 Note that when $q=0$, the set $\mathbb{B}_{q}(r^{\star})$ becomes the set of matrices with rank at most $r^{\star}$.
+Additionally, we assume that $\boldsymbol{\widehat{\Theta}}$ is a global minimizer of~\eqref{WMVR}.
 
 \subsubsection{General Framework and Characterization of Subset $\mathcal{C}$} \label{GF}
 There are two key ingredients that will be used for studying the estimation errors : $(\RN{1})$ restricted strong convexity of the cost function $\mathcal{L}_{n}(\boldsymbol{\Theta}):= \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta} \right\|_{\text{F}}^{2}$ around $\Theta^\star$ and
@@ -627,7 +499,7 @@ This notion is neatly expressed as follows: for some positive constant $\kappa>0
 \end{align}
 where $\mathcal{E}_{n}\big(\boldsymbol{\widehat{\Delta}})$ denotes the first order Taylor-expansion error of $\mathcal{L}_{n}(\cdot)$ around $\boldsymbol{\Theta}^\star$.
 In other words, we call $\mathcal{E}_{n}\big(\boldsymbol{\widehat{\Delta}})$ succeeds \textit{``restricted strong convexity''} (RSC) over the set $\mathcal{C}$ if there exists $\kappa>0$.
-Fortunately, under multivariate regression model with gaussian ensemble, we can prove that the RSC condition indeed holds with $\kappa=\sigma_{\text{min}}(\boldsymbol{\Sigma})/18$ in high probability over $\mathbb{R}^{d_{1} \times d_{2}}$,
+Fortunately, under multivariate regression model with Gaussian ensemble, we can prove that the RSC condition indeed holds with $\kappa=\frac{\sigma_{\text{min}}(\boldsymbol{\Sigma})}{18}$ in high probability over $\mathbb{R}^{d_{1} \times d_{2}}$,
 \footnote{See Lemma $2$ in~\citet{negahban2011estimation} and Appendix~\ref{pf_thm_3_2} of our paper for the proof on this fact.} where $\sigma_{\text{min}}(\boldsymbol{\Sigma})$ denotes a minimum eigenvalue of $\boldsymbol{\Sigma}$.
 
 Before we formally state the Lemma which characterizes the set $\mathcal{C}$, let us introduce relevant notations.
@@ -670,8 +542,8 @@ Now, we state some remarks on the Lemma.
     Nonetheless, as previously mentioned, since strong convexity of $\mathcal{L}_{n}(\boldsymbol{\Theta})$ holds globally in our problem setting, the constraint $||\boldsymbol{\widehat{\Delta}}||_{\text{F}} \geq \delta$ is not required.
 
     \item A detailed proof of the Lemma is deferred in the Appendix.
-    In this remark, we only provide key ideas for the proof :
-    With the help of Theorem~\ref{Thm1}, basic inequality can be employed at the beginning of the proof,
+    In this remark, we only provide key ideas for the proof.
+    Given that the global minimizer of~\eqref{WMVR} is obtainable, basic inequality can be employed at the beginning of the proof,
     which is a standard technique for obtaining the estimation error in various statistical models.
     However, a technical difficulty for proving the Lemma~\ref{Cone_like_set} arises from the fact that the function $|| \cdot ||_{w,\star}$ is neither convex nor concave in $0\leq \omega_{1}\leq\dots \leq \omega_{p}$.
     We circumvent this problem by rewriting $|| \cdot ||_{\omega,\star}$ as the difference of two convex functions: that is,
@@ -705,7 +577,7 @@ convergence rate of the estimation error becomes $\mathcal{O}\big( \mathcal{W}^{
 The quantity $r^{\star} (d_{1}+d_{2})$ counts the degrees of freedom in the model, and the rate is known to be minimax optimal for estimating a $d_{1} \times d_{2}$ matrix with rank $r^{\star}$.
 See~\citet{negahban2011estimation,koltchinskii2011nuclear,rohde2011estimation}.
 It is worth noting that the information on weights is solely encoded in factor $\mathcal{W}$.
-This factor allows a natural comparison of estimation rates between SNN and WNN, and we defer the discussion on this comparison to section~\ref{Disc}.
+This factor allows a natural comparison of estimation rates between SNN and WNN, and we defer the discussion on this comparison to Section~\ref{Disc}.
 
 \section{Data-driven Model Selections} \label{parameter_selection}
 In the first subsection, we introduce a surrogate estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$, which approximates the estimator $\widehat{\boldsymbol{\Theta}}$.
@@ -811,7 +683,7 @@ In this experiment, the minimum absolute off-diagonal entry of $\boldsymbol{X}^{
 The result in Figure~\ref{Fig2} is consistent with the statement in Proposition~\ref{surrogate}.
 
 \subsection{GCV Statistic and Weight Updates}
-We divide the process for tuning $\lambda_{n}$ and weights $w_{1}, \cdots, w_{p}$ into two procedures.
+We divide the process for tuning $\boldsymbol{\lambda_{n}}$ and weights $\omega_{1}, \cdots, \omega_{p}$ into two procedures.
 In the first procedure, we propose a following iterative algorithm that alternates between estimating $\boldsymbol{\Theta}^{\star}$ and updating weights.
 \begin{enumerate}
     \item[(I)] Set the iteration count $\ell$ to $0$ and weights $\omega_{1}^{(0)}=\dots=\omega_{p}^{(0)}=1$.
@@ -827,10 +699,10 @@ In the first procedure, we propose a following iterative algorithm that alternat
 The introduced parameter $\epsilon>0$ in step {\bf(III)} guarantees that, for any $j\in\{1,\dots,p\}$,
 the $(\ell+1)^{\text{th}}$ updated weight $\omega_{j}^{(\ell+1)}$ is computable, even when $\sigma_{j}(\widehat{\boldsymbol{\Theta}}^{(\ell)})=0$.
 The recovery process of $\boldsymbol{\Theta}^{\star}$ is reasonably robust to the choice of $\epsilon$, and we set $\epsilon=10^{-3}$ hereafter.
-The choice $\epsilon=10^{-3}$ may appear a little bit arbitrary, but works well in practice. The resulting estimator from the first procedure is denoted by $\boldsymbol{\text{W}}(\lambda_{n})$. We use a superscript $\boldsymbol{\text{W}}$ in $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\lambda_{n})$ to indicate that the estimator is a converged solution from weight updating procedure introduced above, and use $\lambda_{n}$ to denote the estimator is obtained from a fixed hyper-tuning parameter  $\lambda_{n}$.
+The choice $\epsilon=10^{-3}$ may appear a little bit arbitrary, but works well in practice. The resulting estimator from the first procedure is denoted by $\boldsymbol{\text{W}}(\boldsymbol{\lambda_{n}})$. We use a superscript $\boldsymbol{\text{W}}$ in $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\boldsymbol{\lambda_{n}})$ to indicate that the estimator is a converged solution from weight updating procedure introduced above, and use $\boldsymbol{\lambda_{n}}$ to denote the estimator is obtained from a fixed hyper-tuning parameter  $\boldsymbol{\lambda_{n}}$.
 
-The second procedure is designed for choosing parameter $\boldsymbol{\lambda}_{n}$. We develop a GCV type of statistic~\citep{golub1979generalized}, which is more computationally efficient than the ordinary CV (Cross Validation) method, especially in large scale problems. This can be done by using the surrogate estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ for approximating the degrees of freedom of $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\lambda_{n})$ from the first procedure. That is, given $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\lambda_{n})$, we can construct $\boldsymbol{K}^{\text{W}}$ from (\ref{K}).
-Then, by proposition \ref{surrogate}, we can define the projection matrix (hat matrix) for the regression problem~\eqref{closed_form} by $\boldsymbol{X} \big(\boldsymbol{X}^{\top}\boldsymbol{X}+\boldsymbol{\lambda}_{n}n\boldsymbol{K}^{\text{W}}\big)^{-1}\boldsymbol{X}^{\top}$ and approximate the degrees of freedom of $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\lambda_{n})$ as
+The second procedure is designed for choosing parameter $\boldsymbol{\lambda_{n}}$. We develop a GCV type of statistic~\citep{golub1979generalized}, which is more computationally efficient than the ordinary CV (Cross Validation) method, especially in large scale problems. This can be done by using the surrogate estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ for approximating the degrees of freedom of $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\boldsymbol{\lambda_{n}})$ from the first procedure. That is, given $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\boldsymbol{\lambda_{n}})$, we can construct $\boldsymbol{K}^{\text{W}}$ from (\ref{K}).
+Then, by proposition \ref{surrogate}, we can define the projection matrix (hat matrix) for the regression problem~\eqref{closed_form} by $\boldsymbol{X} \big(\boldsymbol{X}^{\top}\boldsymbol{X}+\boldsymbol{\lambda}_{n}n\boldsymbol{K}^{\text{W}}\big)^{-1}\boldsymbol{X}^{\top}$ and approximate the degrees of freedom of $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\boldsymbol{\lambda_{n}})$ as
 \begin{align}
     \text{df}(\boldsymbol{\lambda}_{n}) \approx d_{2} \textbf{tr}\big(\boldsymbol{X} \big(\boldsymbol{X}^{\top}\boldsymbol{X}+\boldsymbol{\lambda}_{n}n\boldsymbol{K}^{\text{W}}\big)^{-1}\boldsymbol{X}^{\top}\big).
 \end{align}
@@ -841,14 +713,14 @@ Thus, the GCV score for $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\lambda_{n})$ 
 and the optimal $\boldsymbol{\lambda}_{n}^{\star}$ for which GCV($\boldsymbol{\lambda}_{n}$) is obtained by minimizing the GCV score (\ref{GCV}) over the search range $\boldsymbol{\lambda}_{n}\in [0,\mathcal{T}]$.
 
 \section{Simulation Study} \label{SC5}
-In subsection $5.1$, we empirically demonstrate three convergences stated in Theorem~\ref{Thm1}.
+In subsection $5.1$, we empirically demonstrate convergence results stated in Theorem~\ref{convergence}.
 In subsection $5.2$, we compare our methods with the existing methods in terms of estimation error.
 Specifically, SNN method (\citet{yuan2007dimension}) and the estimator introduced by~\citet{chen2013reduced} are used for the comparisons.
 Hereafter, we refer the estimator in~\citet{chen2013reduced} as Adpative Nuclear Norm estimator (i.e., ANN estimator).
 Moreover, we provide an experiment showing the effectiveness of our weight updating scheme~\eqref{weight} in comparison to weight setting in~\citet{chen2013reduced}.
 
-\subsection{Convergence of WMVR-ADMM}
-The convergences can be observed through the following two quantities:
+\subsection{Convergence of WMVR-ADMM} \label{conv_exp}
+The convergences of WMVR-ADMM can be observed through the following two quantities:
 \begin{enumerate}
     \item For checking the Primal residual convergence (i.e., $\boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)}\rightarrow{0}$ as $k\rightarrow{\infty}$),
     and $\boldsymbol{\Gamma}^{(k)}$ convergence (i.e., $\boldsymbol{\Gamma}^{(k+1)}-\boldsymbol{\Gamma}^{(k)}\rightarrow{0}$ as $k\rightarrow{\infty}$), we consider
@@ -870,7 +742,11 @@ The convergences can be observed through the following two quantities:
   \label{Fig4}
 \end{figure}
 
-Under exactly the same simulation setting as that from the experiment for Figure~\ref{Fig1} with $n=250$, we vary the initialized tuple matrix values $(\boldsymbol{\Theta}^{(0)},\boldsymbol{\Gamma}^{(0)},\boldsymbol{\Lambda}^{(0)})$ of WMVR-ADMM in Algorithm \ref{alg:1}. Each entries of three matrices are sampled from $\mathcal{N}(0,\nu^{2})$, where $\nu=\{0,0.1,0.2,0.5,1,1.5\}$. Weights $\{\omega_j\}_{j=1}^{p}$ are updated once, and with the updated weights, $R^{(k)}$ and $O^{(k)}$ are calculated with the same data set $(\boldsymbol{X},\boldsymbol{Y})$ over all simulation scenarios. The resulting  $R^{(k)}$ and $O^{(k)}$ values are demonstrated in Figure~\ref{Fig4}, and the figure shows that both $R^{(k)}$ and $O^{(k)}$ converge to 0 as $k$ increases, regardless of the initializations of algorithm.  This observation is consistent with the claims in Theorem~\ref{Thm1}, and implies that the the converged solutions from WMVR-ADMM have the same objective value on the non-convex landscape of problem~\eqref{WMVR}.
+Under the exactly same simulation setting as that from the experiment for Figure~\ref{Fig1} with $n=250$, we vary the initialized tuple matrix values $(\boldsymbol{\Theta}^{(0)},\boldsymbol{\Gamma}^{(0)},\boldsymbol{\Lambda}^{(0)})$ of WMVR-ADMM in Algorithm \ref{alg:1}. 
+Entries of three matrices are sampled from $\mathcal{N}(0,\nu^{2})$, where $\nu=\{0,0.1,0.2,0.5,1,1.5\}$. 
+Weights $\{\omega_j\}_{j=1}^{p}$ are updated once, and with the updated weights, $R^{(k)}$ and $O^{(k)}$ are calculated with the same data set $(\boldsymbol{X},\boldsymbol{Y})$ over all simulation scenarios. 
+The resulting  $R^{(k)}$ and $O^{(k)}$ values are demonstrated in Figure~\ref{Fig4}, and the figure shows that both $R^{(k)}$ and $O^{(k)}$ converge to 0 as $k$ increases, regardless of the initializations of algorithm.  
+This observation is consistent with the claims in Theorem~\ref{convergence}, and implies that the the converged solutions from WMVR-ADMM have the same objective value on the non-convex landscape of problem~\eqref{WMVR}.
 
 \subsection{Comparisons of Estimation Error with Other Methods}
 
@@ -880,7 +756,7 @@ The value $r^{\star}$ is the rank of the ground truth matrix and is chosen to be
 The design matrix $\boldsymbol{X}$ are chosen randomly from a normal distribution $\mathcal{N}(0, \mathcal{I}_{ d_{1} \times d_{1}})$, and the noise matrix $\boldsymbol{E}$ are independently chosen from another $\mathcal{N}(0, \mathcal{I}_{ d_{2} \times d_{2}})$.
 The sample sizes $n$ are set to be 30, 300, and 3000, and the simulation is repeated 100 times.
 
-The estimation errors of the proposed method are recorded in terms of the root mean square errors (RMSE) between the estimated coefficient matrix and the ground-truth matrix for each simulation.
+The estimation errors of the proposed method are recorded in terms of the root mean squared errors (RMSE) between the estimated coefficient matrix and the ground-truth matrix for each simulation.
 The results are compared with those from SNN and ANN methods.
 Recall SNN estimator is equivalent to the model~\eqref{MVR} with $\{\omega_{j}\}_{j=1}^{p}$.
 As for ANN estimator, let $\widehat{\boldsymbol{U}}^{\text{XLS}}\widehat{\boldsymbol{D}}^{\text{XLS}}\big(\widehat{\boldsymbol{V}}^{\text{XLS}}\big)^{\top}$ be SVD of the matrix $\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}:=\boldsymbol{X}\big(\boldsymbol{X}^{\top}\boldsymbol{X}\big)^{-1}\boldsymbol{X}^{\top}\boldsymbol{Y}$.
@@ -902,9 +778,17 @@ This shows the consistency property of the proposed estimator empirically.
 \begin{figure}[b!]
   \includegraphics[width=120mm]{Figure/Fig5.pdf}
   \centering
-%\caption{Two sequences of weights in~\eqref{weight_comp} used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
-\caption{Two sequences of weights in ??? used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
+  \caption{Two sequences of weights in~\eqref{weight_comp} used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
   \label{Fig5}
+\end{figure}
+
+\begin{figure}[htbp!]
+\includegraphics[width=95mm]{Figure/S5_P1.pdf}
+\centering
+\caption{The plots demonstrates the comparisons of estimation errors in terms of RMSEs from the proposed method with ANN and SNN methods under different simulation settings. 
+The three figures in the first row (A) $\sim$ (C) are the comparison results from sample size 30, 300, and 3000, respectively, under the true rank $r^{\star} = 2$. 
+Analogously, Figures (D) $\sim$ (F) (second row) are the results from $r^{\star} = 5,$ Figures (G) $\sim$ (I) (third row) are the results from $r^{\star} = 8,$ and Figures (J) $\sim$ (L) (fourth row) are the results from $r^{\star} = 11.$  }
+\label{Fig_S4_Ex1}
 \end{figure}
 
 To show the effectiveness of the proposed weight updating scheme in section~\ref{parameter_selection},
@@ -921,17 +805,12 @@ Then, we have
     \sigma_{j}\big( \boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)^{-2},
     \qquad j=1,\dots,250.
 \end{align}
+
+
 For the fair comparison, we use WMVR-ADMM estimator.
 In Figure~\ref{Fig5}, panel (A) shows the two sequences of averaged weights $\{\omega_{j}\}_{j=1}^{250}$ in~\eqref{weight_comp} used for the estimation in logarithmic scale,
 and panel (B) exhibits 100 RMSEs with the respective weight scheme.
 While the difference of the first $50$ weights between two weight schemes is negligible, the effect of WNN-weight scheme is dramatized for penalizing the remaining $200$ singular values in comparison to ANN-weight scheme, and this results in lower RMSEs in panel (B).
-
-\begin{figure}[htbp!]
-\includegraphics[width=90mm]{Figure/S5_P1.pdf}
-\centering
-\caption{The plots demonstrates the comparisons of estimation errors in terms of RMSEs from the proposed method with ANN and SNN methods under different simulation settings. The three figures in the first row (A) $\sim$ (C) are the comparison results from sample size 30, 300, and 3000, respectively, under the true rank $r^{\star} = 2$. Analogously, Figures (D) $\sim$ (F) (second row) are the results from $r^{\star} = 5,$ Figures (G) $\sim$ (I) (third row) are the results from $r^{\star} = 8,$ and Figures (J) $\sim$ (L) (fourth row) are the results from $r^{\star} = 11.$  }
-\label{Fig_S4_Ex1}
-\end{figure}
 
 \section{Application to A Real Dataset}
 
@@ -967,43 +846,43 @@ Thus, the channels with smaller wavelengths are more important than larger wavel
 
 \section{Conclusion and Discussion} \label{Disc}
 We propose an ADMM-based method for solving the multivariate regression problem with WNN penalty.
-Under non-decreasing order of weights, the WNN is a non-convex function, and induce non-convexity of WNN penalized least-square
+Under non-decreasing order of weights, the WNN is a non-convex function, and induce non-convexity of WNN penalized least-square 
 problem in~\eqref{MVR} over the parameter space.
-Under the lagrangian saddle point assumption, the provided algorithm is shown to achieve the global convergence over the non-convex landscape.
+The provided algorithm is shown to converge uniquely to one of stationary points of augmented Lagrangian function. 
 The statistical properties of the estimator are investigated under orthogonal design, providing some insights on the choices of weights for the estimation.
-Furthermore, the minimax convergence rate of the estimation error is derived under random gaussian design setting.
-In simulation studies, we demonstrate followings:
-$(I)$  minimizers of~\eqref{WMVR} via WMVR-ADMM converges to certain estimators whose objective values are same under random initializations,
+Furthermore, the minimax convergence rate of the estimation error is derived under random Gaussian design setting.
+In simulation studies, we demonstrate followings: 
+$(I)$  under random initializations, solutions of~\eqref{WMVR} via WMVR-ADMM algorithm converge to a certain estimator whose objective values are same
 $(II)$ the WNN method outperforms SNN~\citep{yuan2007dimension} and ANN~\citep{chen2013reduced} under synthetic settings,
 $(III)$ the effect of our suggested weight updating scheme is verified through the comparison with the weight setting by~\citet{chen2013reduced}.
-Lastly the application to the real data set shows the effectiveness of our method.
+Lastly the application to the real data set shows the effectiveness of our method. 
 Nonetheless, there are several remaining open questions which require further investigations in the future.
 We summarize them as follows.
 \begin{figure} [t!]
   \includegraphics[width=130mm]{Figure/Fig3.pdf}
   \centering
-  \caption{Panel (A) exhibits the intersected region of $\mathcal{W} \leq 3$ and $\frac{1}{2} < \omega_{1} \leq \dots \leq \omega_{p}$. Panel (B) magnifies the intersected region on grid $(\omega_{1},\omega_{p})\in[1,1.5] \times [1,1.5]$. }
+  \caption{ Panel (A) exhibits the intersected region of $\mathcal{W} \leq 3$ and $\frac{1}{2} < \omega_{1} \leq \dots \leq \omega_{p}$. Panel (B) magnifies the intersected region on grid $(\omega_{1},\omega_{p})\in[1,1.5] \times [1,1.5]$. }
   \label{Fig6}
 \end{figure}
 
 \begin{enumerate}
-    \item Although empirical evidences on the convergence of WMVR-ADMM are provided in section~\ref{SC5}, they still cannot verify the existence of saddle points in $\mathcal{L}_{0}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda}\big)$, which is a crucial assumption for ensuring the global convergence of algorithm.
-    We leave both empirical and theoretical justifications for the assumption $1$ as important open problems.
-    Recently,~\citet{shang2021regularization} showed that there exists a primal-dual pair of~\eqref{WMVR} which satisfies the strong duality under SNN setting.
-    For the proof, they employed the machinery of KKT and slater's conditions under the convex setting of SNN.
-    Nonetheless, we need further investigation whether this conditions can be used under our WNN setting with non-decreasing weights.
+    \item A question on whether the non-convex ADMM can achieve the global minimizer of~\eqref{WMVR} is a huge open question.
+    Although empirical results on the convergence of WMVR-ADMM are provided in section~\ref{SC5}, they still cannot verify the converged solution is a global minimizer of~\eqref{WMVR}. 
+    We leave both empirical and theoretical justifications on this issue as important open problems. 
+    Under SNN setting, it is proved that there exists a primal-dual pair of~\eqref{WMVR} which satisfies the strong duality~\citep{shang2021regularization}.
+    Therefore, the existence of saddle point on $\mathcal{L}_{0}$ can be ensured, so that the global minimizer of~\eqref{WMVR} can be proved through the classical techniques in~\citet{boyd2011distributed}.
+    Nonetheless, we need further investigation whether these conditions can be used under our WNN setting with non-decreasing weights.
 
-    \item From our current results, we find out several interesting but challenged further research topics.
-    For example, as previously mentioned in the remark of Theorem~\ref{thm2}, $\mathcal{W}:= w_{p}\big(2w_{p}-w_{1}+\frac{1}{2}\big)/(w_{1}-\frac{1}{2})$ is a sole factor that accounts for the effects of weights in the convergence rate of~\eqref{Rate}.
+    \item As previously mentioned in the remark of Theorem~\ref{thm2}, $\mathcal{W}:= w_{p}\big(2w_{p}-w_{1}+\frac{1}{2}\big)/(w_{1}-\frac{1}{2})$ is a sole factor that accounts for the effects of weights in the convergence rate of~\eqref{Rate}.
     This result naturally leads us to ask the question; ``Under which pair of $(\omega_{1},\omega_{p})$, does the estimator from WNN have a faster convergence rate than the one from SNN?''.
-    Under the same choices of tuning parameter $\boldsymbol{\lambda}_{n}$, a naive way for the comparison is to plug $\omega_{1}=\omega_{p}=1$ in $\mathcal{W}$.
+    Under the same choices of tuning parameter $\boldsymbol{\lambda}_{n}$, a naive way for the comparison is to plug $\omega_{1}=\omega_{p}=1$ in $\mathcal{W}$. 
     That is, we want to find a pair of $(\omega_{1},\omega_{p})$ for which $\mathcal{W} \leq 3$ and $\frac{1}{2} < \omega_{1} \leq \dots \leq \omega_{p}$.
     The intersected region is illustrated in Figure~\ref{Fig6}.
     From our empirical experiences, the region of $(\omega_{1},\omega_{p})$, for which WNN is superior than SNN in terms of estimation, is much larger than it is presented in Figure~\ref{Fig6}.
     This problem arises from the tightness of the subset $\mathcal{C}$ we derive in Lemma~\ref{Cone_like_set}.
     In order to avoid this problem, we suspect that the different approach from using RSC condition of cost function is needed.
     A paper~\citet{law2021rank}, recently appeared on arXiv, introduces a technique which takes the advantage of controlling the covering number of projection operators corresponding to the subspaces spanned by the design.
-    They consider a problem of solving nuclear norm penalized least square problem, and their technique is independent from RSC condition.
+    They consider a problem of solving nuclear norm penalized least square problem, and their technique is independent from RSC condition. 
     It would be an interesting open problem if their technique can be employed in our problem for obtaining a bigger intersected region than that in Figure~\ref{Fig6}.
 \end{enumerate}
 
@@ -1013,7 +892,7 @@ We summarize them as follows.
 \section{Appendix}
 In this section, an extended algorithm of WMVR-ADMM to trace regression model is proposed in Section 8.1.
 %Then, we provide a noition of decomposability of nuclear norm with respect to a pair of specially designed matrix subspaces.
-Subsequently, proofs on Theorem~\ref{Thm1}, Lemma~\ref{Cone_like_set}, and Theorem~\ref{thm2} are provided in Sections 8.2, 8.3, and 8.4, respectively.
+Subsequently, proofs on Lemma~\ref{Lemma2.3}, Lemma~\ref{Lemma2.4}, Theorem~\ref{convergence}, Lemma~\ref{Cone_like_set}, and Theorem~\ref{thm2} are provided in Sections $8.2$, $8.3$, $8.4$, and $8.5$, respectively.
 
 \subsection{Extension of WMVR-ADMM to Trace Regression Model} \label{tr_algo}
 First, let us consider a following trace regression problem :
@@ -1047,122 +926,144 @@ With this notation, the algorithm is summarized in the Algorithm~\ref{trace_algo
 The presented algorithm can be derived easily by using exactly the same techniques employed in subsection~\ref{WMVR-ADMM} by plugging $f(\boldsymbol{\Theta}):=-\frac{1}{n}\textbf{tr}\big( \big(\sum_{j=1}^{n}y_{i}\boldsymbol{X}_{i}\big)^{\top}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\sum_{j=1}^{n}\textbf{tr}\big(\boldsymbol{X_i^\top}\boldsymbol{\Gamma}\big)^{2}$ in~\eqref{reform},
 and we omit the detailed derivation.
 
+\subsection{Proof of Lemma~\ref{Lemma2.3}}
+By the result of Lemma~\ref{Lemma2.1}, we have
+\begin{align} \label{ineq1}
+    \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) 
+    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
+    \geq 0.
+\end{align}
+Now, we control the following difference term.
+\begin{align} \label{ineq2}
+    &\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k)} \big) \nonumber \\
+    &\qquad = g(\boldsymbol{\Gamma}^{(k)})-g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) \nonumber \\
+    &\qquad \qquad - \rho \cdot \textbf{tr}\big( \big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)^{\top}
+    \big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big) \big) + \frac{\rho}{2}\left\| \boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2}  \nonumber \\
+    &\qquad = g(\boldsymbol{\Gamma}^{(k)})-g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k+1)\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) + \frac{\rho}{2}\left\| \boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2}.
+\end{align}
+Note that we use $\boldsymbol{\Lambda}^{(k+1)}=\boldsymbol{\Lambda}^{(k)}+\rho\big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)$ in the last equality.
+Recall the definition of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ from~\eqref{Lagrangian} and $\boldsymbol{\Lambda}^{(k+1)}=\boldsymbol{\Lambda}^{(k)}+\rho\big(\boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}\big)$.
+Then, we have
+\begin{align} \label{ineq3}
+    \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k)} \big) 
+    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big) 
+    = -\frac{1}{\rho}\left\| \boldsymbol{\Lambda}^{(k)}-\boldsymbol{\Lambda}^{(k+1)} \right\|_{F}^{2}.
+\end{align}
+By combining~\eqref{ineq2} and~\eqref{ineq3}, we have
+\begin{align} \label{ineq4}
+    &\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) 
+    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big) \nonumber \\
+    &\qquad = g(\boldsymbol{\Gamma}^{(k)})-g(\boldsymbol{\Gamma}^{(k+1)}) - \textbf{tr}\big( \boldsymbol{\Lambda}^{(k+1)\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) \nonumber \\
+    &\qquad \qquad \qquad \qquad \qquad \qquad \qquad
+    + \frac{\rho}{2}\left\| \boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)} \right\|_{F}^{2} -\frac{1}{\rho}\left\| \boldsymbol{\Lambda}^{(k)}-\boldsymbol{\Lambda}^{(k+1)} \right\|_{F}^{2}.
+\end{align}
+Recall the definition of $\boldsymbol{\Gamma}^{(k+1)}$ from \textbf{Step 2} of WMVR-ADMM.
+\begin{align*}
+    \boldsymbol{\Gamma}^{(k+1)} = \argmin_{\boldsymbol{\Gamma} \in \mathbb{R}^{d_{1} \times d_{2}}}
+    \bigg\{ g(\boldsymbol{\Gamma}) - \textbf{tr}\big(\boldsymbol{\Lambda}^{(k)\top}\boldsymbol{\Gamma}\big)+\frac{\rho}{2}\left\|\boldsymbol{\Gamma}-\boldsymbol{\Theta}^{(k+1)} \right\|_{F}^{2} \bigg\}.
+\end{align*}
+Since $\boldsymbol{\Gamma}^{(k+1)}$ is a stationary point of the above optimization problem, we have
+\begin{align*}
+    \nabla g\big( \boldsymbol{\Gamma}^{(k+1)} \big)
+    = \boldsymbol{\Lambda}^{(k)} + \rho\big( \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)} \big)
+    = \boldsymbol{\Lambda}^{(k+1)},
+\end{align*}
+where $\nabla g (\cdot)$ is a gradient of $g$.
+Likewise, we get $\nabla g\big( \boldsymbol{\Gamma}^{(k)} \big) = \boldsymbol{\Lambda}^{(k)}$.
+Recall the definition of $g(\cdot)$, then we can easily have
+\begin{align} \label{ineq5}
+    \left\|\boldsymbol{\Lambda}^{(k+1)}-\boldsymbol{\Lambda}^{(k)}\right\|_{F} =
+    \left\|\nabla g\big( \boldsymbol{\Gamma}^{(k+1)} \big)
+    - \nabla g\big( \boldsymbol{\Gamma}^{(k)} \big)\right\|_{F}
+    \leq \sigma_{1}\bigg( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\bigg)
+    \cdot 
+    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{F}.
+\end{align}
+Function $g$ is Lipschitz smooth with constant $L_{\nabla g}:=\sigma_{1}\bigg( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\bigg)$.
+Then, we have 
+\begin{align} \label{ineq6}
+    g(\boldsymbol{\Gamma}^{(k)}) - g(\boldsymbol{\Gamma}^{(k+1)})
+    - \textbf{tr}\bigg(\nabla g\big(\boldsymbol{\Gamma}^{(k+1)}\big)^\top
+    \big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\bigg) \geq -\frac{L_{\nabla g}}{2}
+    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{F}^{2}.
+\end{align}
+Recall $\nabla g\big( \boldsymbol{\Gamma}^{(k+1)} \big) = \boldsymbol{\Lambda}^{(k+1)}$, combining~\eqref{ineq1},~\eqref{ineq4},~\eqref{ineq5}, and~\eqref{ineq6} yields 
+\begin{align*}
+    \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) 
+    - \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
+    \geq \bigg(  -\frac{L_{\nabla g}}{2} -\frac{1}{\rho} L_{\nabla g}^{2} + \frac{\rho}{2} \bigg) \cdot 
+    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{F}^{2}.
+\end{align*}
+Setting $\rho>2L_{\nabla g}$ makes $C_{1}:=-\frac{L_{\nabla g}}{2} -\frac{1}{\rho} L_{\nabla g}^{2} + \frac{\rho}{2}>0$, which implies that $\mathcal{L}_{\rho}\big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ is non-increasing over $k\in\mathbb{R}\cup \{0\}$.
+Now, we will prove $ \mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\big)$ is bounded below over $k\in\mathbb{N}\cup\{0\}$.
+\begin{align*}
+    \mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\big)
+    &= f(\boldsymbol{\Theta}^{(k)}) + g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \boldsymbol{\Lambda}^{(k)\top}\big( \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \big)\big)
+    + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
+    &= f(\boldsymbol{\Theta}^{(k)}) + g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \nabla g(\boldsymbol{\Gamma}^{(k)})^\top\big( \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \big)\big)
+    + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
+    &\geq g(\boldsymbol{\Gamma}^{(k)}) + \textbf{tr}\big( \nabla g(\boldsymbol{\Gamma}^{(k)})^\top\big( \boldsymbol{\Theta}^{(k)} - \boldsymbol{\Gamma}^{(k)} \big)\big)
+    + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
+    &\geq g(\boldsymbol{\Theta}^{(k)}) -\frac{L_{\nabla g}}{2}|| \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} + \frac{\rho}{2} || \boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)} ||_{\text{F}}^{2} \\
+    &\geq g(\boldsymbol{\Theta}^{(k)})
+    :=\frac{1}{2n}\left\|\boldsymbol{Y}-\boldsymbol{X\Theta}^{(k)}\right\|_{\text{F}}^{2}.
+\end{align*}
+In the first inequality, $f(\boldsymbol{\Theta}^{(k)}) \geq 0$ is used. 
+In the second inequality, Lipschitz smoothness of $g$ with constant $L_{\nabla g}$ is used, and in the last inequality, the choice on $\rho>2L_{\nabla g}$ is used.
+It is obvious that $g(\boldsymbol{\Theta}^{(k)})$ is bounded below from $0$.
+\\ \\
+As long as $\{(\boldsymbol{\Theta}^{(0)},\boldsymbol{\Gamma}^{(0)},\boldsymbol{\Lambda}^{(0)})\}$ is bounded, it is easy to see the generated sequence $\{\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}\}_{k \geq 1}$ is bounded as well. 
+Since the minimizers of \textbf{Step 1.} and \textbf{Step 2.} have explicit closed form solution, the pair $\{\boldsymbol{\Theta}^{(1)},\boldsymbol{\Gamma}^{(1)}\}$ is bounded, and by~\textbf{Step 3.}, the boundedness of $\boldsymbol{\Lambda}^{(1)}$ is automatically ensured.
+Applying the same logic over the $k \geq 2$ yields the claim.
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \quad $\Box$
+
+\subsection{Proof of Lemma~\ref{Lemma2.4}}
+Let us define the partial derivative of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ as
+\begin{align*}
+    \partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
+    := \big( \partial_{\Theta} \mathcal{L}_{\rho}, \nabla_{\Gamma} \mathcal{L}_{\rho}, \nabla_{\Lambda} \mathcal{L}_{\rho} \big)\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big).
+\end{align*}
+It is easy to see followings:
+\begin{align*}
+    &\nabla_{\Gamma} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
+    = \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \\
+    &\nabla_{\Lambda} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
+    = \frac{1}{\rho} \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \big).
+\end{align*}
+Since $\boldsymbol{\Theta}^{(k+1)}$ is a minimizer of \textbf{Step 1.}, it satisfies a following stationary condition. 
+\begin{align} \label{subgradient}
+    \boldsymbol{0} \in \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k)} + \rho (\boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k)}).
+\end{align}
+Then, we are interested in getting a subdifferential of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ with respect to $\boldsymbol{\Theta}$, which can be calculated as follows:
+\begin{align*}
+    \partial_{\boldsymbol{\Theta}}\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
+    &= \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k+1)} + \rho (\boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k+1)}) \\
+    &= \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k)} + \rho (\boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k)})
+    + (\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}) + \rho (\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} ).
+\end{align*}
+Then, by~\eqref{subgradient}, we have
+\begin{align*}
+    (\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}) + \rho (\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} )
+    \in \partial_{\boldsymbol{\Theta}}\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big).
+\end{align*}
+If we define $p^{(k+1)}$ as
+\begin{align} \label{subgradient1}
+    p^{(k+1)} 
+    &:=\bigg( (\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}) + \rho (\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} ),  
+    \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)}, \frac{1}{\rho} \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \big) \bigg),
+\end{align}
+then $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$.
+Furthermore, its Frobenious norm can be bounded by combining~\eqref{ineq5} and~\eqref{subgradient1} as follows:
+\begin{align*}
+    \left\| p^{(k+1)} \right\|_{\text{F}} \leq 
+    \bigg( \rho + \big(2+\frac{1}{\rho}\big)L_{\nabla g} \bigg) \cdot 
+    \left\| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \right\|_{\text{F}}.
+\end{align*}
+Setting $C_{2}:=\rho + \big(2+\frac{1}{\rho}\big)L_{\nabla g}$ yields the claim.
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad $\Box$
+
 %\subsection{Proof of Theorem \ref{Thm1}}
-\subsection{Proof of Theorem ???}
-
-Recall that the $\boldsymbol{\Theta}^{(k+1)}$ is a minimizer of the lagrangian function $\mathcal{L}_{\rho}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$, and let us denote $\partial\mathcal{L}_{\rho}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)$ as the sub-differential of  $\mathcal{L}_{\rho}\big(\cdot\big)$ with respect to $\boldsymbol{\Theta}$ with the fixed $\boldsymbol{\Gamma}^{(k)}$ and $\boldsymbol{\Lambda}^{(k)}$.
-Then, we have
-\begin{align*}
-    \boldsymbol{0} \in
-    \partial\mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big)
-    &= \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k)} + \rho\big( \boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \big) \\
-    &= \partial f(\boldsymbol{\Theta}^{(k+1)}) + \boldsymbol{\Lambda}^{(k+1)} + \rho\big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \big),
-\end{align*}
-where we plug-in $\boldsymbol{\Lambda}^{(k)}=\boldsymbol{\Lambda}^{(k+1)}-\rho\big( \boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k+1)} \big)$ in the first equality.
-This implies that $\boldsymbol{\Theta}^{(k+1)}$ minimizes a following function :
-\begin{align} \label{f}
-    f(\boldsymbol{\Theta}) + \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)} - \rho\big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big) \big) ^{\top} \boldsymbol{\Theta} \big).
-\end{align}
-Similarly, recall that the $\boldsymbol{\Gamma}^{(k+1)}$ is a minimizer of the lagrangian function $\mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma},\boldsymbol{\Lambda}^{(k)} \big)$, and denote $\partial\mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma},\boldsymbol{\Lambda}^{(k)}\big)$ as the sub-differential of  $\mathcal{L}_{\rho}\big(\cdot\big)$ with respect to $\boldsymbol{\Gamma}$ with the fixed $\boldsymbol{\Theta}^{(k+1)}$ and $\boldsymbol{\Lambda}^{(k)}$.
-Then, we have
-\begin{align*}
-    \boldsymbol{0} \in
-    \partial\mathcal{L}_{\rho}\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k)} \big)
-    &= \partial g(\boldsymbol{\Gamma}^{(k+1)}) - \boldsymbol{\Lambda}^{(k)} + \rho\big( \boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k+1)} \big) \\
-    &= \partial g(\boldsymbol{\Gamma}^{(k+1)}) - \boldsymbol{\Lambda}^{(k+1)},
-\end{align*}
-where we plug-in $\boldsymbol{\Lambda}^{(k)}=\boldsymbol{\Lambda}^{(k+1)}-\rho\big( \boldsymbol{\Theta}^{(k+1)} - \boldsymbol{\Gamma}^{(k+1)} \big)$ in the first equality.
-This implies that $\boldsymbol{\Gamma}^{(k+1)}$ minimizes a following function :
-\begin{align} \label{g}
-    g(\boldsymbol{\Gamma}) - \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \boldsymbol{\Gamma} \big).
-\end{align}
-By using the fact that the pairs $\big( \boldsymbol{\Theta}^{(k+1)}, \boldsymbol{\Gamma}^{(k+1)} \big)$ and $\big( \boldsymbol{\Theta^{G}}, \boldsymbol{\Gamma}^{G} \big)$ are minimizers and feasible solutions of~\eqref{f} and~\eqref{g} respectively, we have
-\begin{align}
-    p^{(k+1)}-p^{G}
-    &\leq \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{G} \big) \big) + \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \big( \boldsymbol{\Theta}^{G} - \boldsymbol{\Theta}^{(k+1)}  \big) \big) \nonumber \\
-    & \qquad - \rho \textbf{tr} \big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top} \big( \boldsymbol{\Theta}^{G} - \boldsymbol{\Theta}^{(k+1)} \big) \big) \nonumber \\
-    &= \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Theta}^{(k+1)} \big) \big) + \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \big( \boldsymbol{\Theta}^{G} - \boldsymbol{\Gamma}^{G}  \big) \big) \nonumber \\
-    & \qquad - \rho \textbf{tr} \big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top} \big( \boldsymbol{\Theta}^{G} - \boldsymbol{\Theta}^{(k+1)} \big) \big) \nonumber \\
-    &= - \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \boldsymbol{R}^{(k+1)} \big) \nonumber \\
-    & \qquad - \rho \textbf{tr} \big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top} \big( - \boldsymbol{R}^{(k+1)} - \big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{G} \big) \big) \big),  \label{Ineq1}
-\end{align}
-where in the second inequality, we use $\boldsymbol{\Theta}^{G} = \boldsymbol{\Gamma}^{G}$ and plug-in $\boldsymbol{R}^{(k+1)} := \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}$ to get the third inequality.
-
-Since a tuple $(\boldsymbol{\Theta}^{G}, \boldsymbol{\Gamma}^{G}, \boldsymbol{\Lambda}^{G})$ is a saddle point of the lagrangian function $\mathcal{L}_{0}\big(\boldsymbol{\Theta},\boldsymbol{\Gamma},\boldsymbol{\Lambda} \big)$, we have a following inequality,
-\begin{align*}
-    \mathcal{L}_{0}\big(\boldsymbol{\Theta}^{G},\boldsymbol{\Gamma}^{G},\boldsymbol{\Lambda}^{G} \big) \leq  \mathcal{L}_{0}\big(\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{G} \big).
-\end{align*}
-Using $\boldsymbol{\Theta}^{G} = \boldsymbol{\Gamma}^{G}$, the left-hand side of the inequality is $p^{G}$.
-With $p^{(k+1)}=f(\boldsymbol{\Theta}^{(k+1)})+g(\boldsymbol{\Gamma}^{(k+1)})$ and  $\boldsymbol{R}^{(k+1)}:= \boldsymbol{\Theta}^{(k+1)}-\boldsymbol{\Gamma}^{(k+1)}$, we have
-\begin{align} \label{Ineq2}
-    p^{G} \leq p^{(k+1)} + \textbf{tr}\big(\big( \boldsymbol{\Lambda}^{G}\big)^{\top}\boldsymbol{R}^{(k+1)} \big).
-\end{align}
-Adding~\eqref{Ineq1} and~\eqref{Ineq2}, regrouping terms, and multiplying by $2$ gives :
-\begin{align} \label{sum_Ineq}
-    &2\textbf{tr}\big( \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{G} \big)^{\top}\boldsymbol{R}^{(k+1)} \big)
-    -2 \rho \textbf{tr}\big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top}\boldsymbol{R}^{(k+1)} \big) \nonumber \\
-    &\qquad -2\rho \textbf{tr}\big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top}\big(
-    \boldsymbol{\Gamma}^{(k+1)}-\boldsymbol{\Gamma}^{G}\big) \big) \leq 0.
-\end{align}
-We control the first term on the left-hand side of~\eqref{sum_Ineq} as follows:
-\begin{align}
-    &2\textbf{tr}\big( \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{G} \big)^{\top}\boldsymbol{R}^{(k+1)} \big) \nonumber \\
-    &\qquad= 2\textbf{tr}\big( \big( \boldsymbol{\Lambda}^{(k)} - \boldsymbol{\Lambda}^{G} \big)^{\top}\boldsymbol{R}^{(k+1)} \big)
-    + 2\rho \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2} \nonumber \\
-    &\qquad = \frac{2}{\rho}\textbf{tr}\big( \big( \boldsymbol{\Lambda}^{(k)} - \boldsymbol{\Lambda}^{G} \big)^{\top}\big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \big) \big) + \frac{1}{\rho} \| \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \|_{\text{F}}^{2}
-    + \rho \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2}, \label{firsterm}
-\end{align}
-where in the first equality, we plug-in $\boldsymbol{\Lambda}^{(k+1)}=\boldsymbol{\Lambda}^{(k)}+\rho \boldsymbol{R}^{(k+1)}$, and in the second equality, we plug-in $\boldsymbol{R}^{(k+1)}=\frac{1}{\rho}\big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} \big)$.
-Substituting $\boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{(k)} = \big( \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{G} \big) + \big( \boldsymbol{\Lambda}^{G} - \boldsymbol{\Lambda}^{(k)} \big)$ in~\eqref{firsterm} gives
-\begin{align}
-    \frac{1}{\rho} \| \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{G} \|_{\text{F}}^{2} - \frac{1}{\rho} \| \boldsymbol{\Lambda}^{(k)} - \boldsymbol{\Lambda}^{G} \|_{\text{F}}^{2} + \rho \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2}. \label{secondterm}
-\end{align}
-Now, we re-write the remaining terms in the left-hand side of~\eqref{sum_Ineq} with the addition of the term $\rho \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2}$ in~\eqref{secondterm} as
-\begin{align} \label{Ineq}
-    \rho \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2} -2 \rho \textbf{tr}\big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top}\boldsymbol{R}^{(k+1)} \big)
-    -2\rho \textbf{tr}\big( \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)^{\top}\big(\boldsymbol{\Gamma}^{(k+1)}-\boldsymbol{\Gamma}^{G}\big) \big).
-\end{align}
-Substituting $\boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{G} = \big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \big) + \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{G} \big)$ in the last term of~\eqref{Ineq} gives
-\begin{align*}
-    \rho \| \boldsymbol{R}^{(k+1)} - \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big) \|_{\text{F}}^{2}
-    + \rho \| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \|_{\text{F}}^{2} + 2 \rho \textbf{tr}\big( \big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \big)^{\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{G}\big) \big).
-\end{align*}
-Substituting $\boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} = \big( \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{G} \big) + \big( \boldsymbol{\Gamma}^{G} - \boldsymbol{\Gamma}^{(k)} \big)$ in the second and the third term of the above equation gives
-\begin{align*}
-    \rho \| \boldsymbol{R}^{(k+1)} - \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big) \|_{\text{F}}^{2}
-    + \rho \bigg( \| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{G} \|_{\text{F}}^{2}
-    - \| \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{G} \|_{\text{F}}^{2} \bigg).
-\end{align*}
-Back to~\eqref{sum_Ineq}, we have a following :
-\begin{align*}
-    &\frac{1}{\rho} \| \boldsymbol{\Lambda}^{(k+1)} - \boldsymbol{\Lambda}^{G} \|_{\text{F}}^{2} - \frac{1}{\rho} \| \boldsymbol{\Lambda}^{(k)} - \boldsymbol{\Lambda}^{G} \|_{\text{F}}^{2}
-    + \rho \bigg( \| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{G} \|_{\text{F}}^{2}
-    - \| \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{G} \|_{\text{F}}^{2} \bigg) \\
-    &\qquad + \rho \| \boldsymbol{R}^{(k+1)} - \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big) \|_{\text{F}}^{2} \leq 0.
-\end{align*}
-Here, denote $V^{(k)}:=\frac{1}{\rho} \| \boldsymbol{\Lambda}^{(k)} - \boldsymbol{\Lambda}^{G} \|_{\text{F}}^{2} + \rho \| \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{G} \|_{\text{F}}^{2}$.
-Then, we re-write the above inequality by re-arranging the terms as follows:
-\begin{align} \label{V}
-    V^{(k+1)} \leq V^{(k)} - \rho \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2} - \rho \| \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \|_{\text{F}}^{2} + 2 \rho \textbf{tr}\big( \big( \boldsymbol{R}^{(k+1)} \big)^{\top} \big( \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \big)\big).
-\end{align}
-Recall that by~\eqref{g}, $\boldsymbol{\Gamma}^{(k)}$ is a minimizer of
-$g(\boldsymbol{\Gamma}) - \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k)}\big)^{\top} \boldsymbol{\Gamma} \big)$ and
-$\boldsymbol{\Gamma}^{(k+1)}$ is a minimizer of
-$g(\boldsymbol{\Gamma}) - \textbf{tr} \big( \big( \boldsymbol{\Lambda}^{(k+1)}\big)^{\top} \boldsymbol{\Gamma} \big)$.
-Then, with $\boldsymbol{\Lambda}^{(k+1)}-\boldsymbol{\Lambda}^{(k)}=\rho\boldsymbol{R}^{(k+1)}$, we have
-\begin{align} \label{Last_term}
-    \rho\textbf{tr}\big(\big(\boldsymbol{R}^{(k+1)}\big)^{\top}\big(\boldsymbol{\Gamma}^{(k)}-\boldsymbol{\Gamma}^{(k+1)}\big)\big) \leq 0.
-\end{align}
-By combining~\eqref{V} and~\eqref{Last_term} and then using a telescoping sum, we have
-\begin{align}
-    \rho \sum_{k=0}^{\infty}\bigg( \| \boldsymbol{R}^{(k+1)} \|_{\text{F}}^{2} + \| \boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)} \|_{\text{F}}^{2} \bigg) \leq V^{(0)}.
-\end{align}
-Since we initialize $\boldsymbol{\Gamma}^{(0)}=\boldsymbol{\Lambda}^{(0)}=\boldsymbol{0} \in \mathbb{R}^{d_{1} \times d_{2}}$, we know that $V^{(0)}$ is finite.
-This implies that $\boldsymbol{R}^{(k)}=\boldsymbol{\Theta}^{(k)}-\boldsymbol{\Gamma}^{(k)}\rightarrow{0}$ and $\boldsymbol{\Gamma}^{(k)} - \boldsymbol{\Gamma}^{(k+1)}\rightarrow{0}$ as $k\rightarrow{\infty}$.
-Equipped with these convergences, the inequalities~\eqref{Ineq1} and~\eqref{Ineq2} imply $\lim_{k\rightarrow{\infty}}p^{(k)}\rightarrow{p^{\star}}$.
-
-%\subsection{Proof of Lemma~\ref{Cone_like_set}}
-\subsection{Proof of Lemma ???}
+\subsection{Proof of Lemma~\ref{Cone_like_set}}
 
 Since $\widehat{\boldsymbol{\Theta}}$ is a minimizer and $\boldsymbol{\Theta^{\star}}$ is a feasible solution of the optimization problem in~\eqref{WMVR} respectively, we have a following basic inequality:
 \begin{eqnarray} \label{basic_eq}
@@ -1313,7 +1214,7 @@ the inequality (\ref{eq: new main_0}) implies
 \end{align}
 
 %\subsection{Proof of Theorem~\ref{thm2}}
-\subsection{Proof of Theorem ???}
+\subsection{Proof of Theorem~\ref{convergence}}
 \label{pf_thm_3_2}
 First, recall the basic inequality~\eqref{eq: apn_pre}, transformation of weighted nuclear norm~\eqref{eq: wnn_diff} and duality of operator and nuclear norm~\eqref{holder_ineq}.
 Then, we have
