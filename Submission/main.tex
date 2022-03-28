@@ -344,7 +344,7 @@ Then, the iterates $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\bold
 For $k\geq 1$, there exist a constant $C_{2}>0$ and $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ such that $\|p^{(k+1)}\|_{\text{F}}\leq C_{2} \| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \|_{\text{F}}$.
 \end{lemma}
 
-\subsubsection{Proof of Theorem~\ref{convergence}} \label{proof_conv}
+\subsubsection{Proof of Theorem 2} \label{proof_conv}
 The proof of Theorem~\ref{convergence} is divided into five steps. 
 We provide each steps sequentially.\\ \\
 {\textbf{Step 1.}}
@@ -598,7 +598,6 @@ Then, we define a following matrix $\boldsymbol{K}\in\mathbb{R}^{d_{1}\times d_{
     \widehat{\boldsymbol{U}}_{j}^{\text{LS}} \big(\widehat{\boldsymbol{U}}_{j}^{\text{LS}}\big)^{\top},
 \end{align}
 where $\widehat{r}$ denotes the cardinality of a set $\{j : \widehat{d}_{j}>0 \}$.
-%and $\xi$ is a small positive real number, whose role will be specified subsequently.
 We provide a following proposition.
 \begin{proposition} \label{surrogate}
     For a fixed $\boldsymbol{K}$, we denote $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ as the minimizer of a following surrogate optimization problem :
@@ -778,7 +777,7 @@ This shows the consistency property of the proposed estimator empirically.
 \begin{figure}[b!]
   \includegraphics[width=120mm]{Figure/Fig5.pdf}
   \centering
-  \caption{Two sequences of weights in~\eqref{weight_comp} used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
+  \caption{Two sequences of weights in (30) used for the estimation (panel (A)) and the resulting RMSEs (panel (B)). Low RMSEs of WNN weights arise from the high penalization on the remaining $200$ singular values, when they are compared with RMSEs of ANN weights.}
   \label{Fig5}
 \end{figure}
 
@@ -926,7 +925,7 @@ With this notation, the algorithm is summarized in the Algorithm~\ref{trace_algo
 The presented algorithm can be derived easily by using exactly the same techniques employed in subsection~\ref{WMVR-ADMM} by plugging $f(\boldsymbol{\Theta}):=-\frac{1}{n}\textbf{tr}\big( \big(\sum_{j=1}^{n}y_{i}\boldsymbol{X}_{i}\big)^{\top}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}||\boldsymbol{\Theta}||_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\sum_{j=1}^{n}\textbf{tr}\big(\boldsymbol{X_i^\top}\boldsymbol{\Gamma}\big)^{2}$ in~\eqref{reform},
 and we omit the detailed derivation.
 
-\subsection{Proof of Lemma~\ref{Lemma2.3}}
+\subsection{Proof of Lemma 3}
 By the result of Lemma~\ref{Lemma2.1}, we have
 \begin{align} \label{ineq1}
     \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) 
@@ -1017,7 +1016,7 @@ Since the minimizers of \textbf{Step 1.} and \textbf{Step 2.} have explicit clos
 Applying the same logic over the $k \geq 2$ yields the claim.
 \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \quad $\Box$
 
-\subsection{Proof of Lemma~\ref{Lemma2.4}}
+\subsection{Proof of Lemma 4}
 Let us define the partial derivative of $\mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ as
 \begin{align*}
     \partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)
@@ -1063,8 +1062,7 @@ Setting $C_{2}:=\rho + \big(2+\frac{1}{\rho}\big)L_{\nabla g}$ yields the claim.
 \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad $\Box$
 
 %\subsection{Proof of Theorem \ref{Thm1}}
-\subsection{Proof of Lemma~\ref{Cone_like_set}}
-
+\subsection{Proof of Lemma 6}
 Since $\widehat{\boldsymbol{\Theta}}$ is a minimizer and $\boldsymbol{\Theta^{\star}}$ is a feasible solution of the optimization problem in~\eqref{WMVR} respectively, we have a following basic inequality:
 \begin{eqnarray} \label{basic_eq}
     & & \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\widehat{\Theta}} \right\|_{\text{F}}^{2} + \boldsymbol{\lambda}_{n}||\widehat{\boldsymbol{\Theta}}||_{w,\star} \leq \frac{1}{2n}\left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta^{\star}} \right\|_{\text{F}}^{2} + \boldsymbol{\lambda}_{n}||\boldsymbol{\Theta^{\star}}||_{w,\star}.
@@ -1214,7 +1212,7 @@ the inequality (\ref{eq: new main_0}) implies
 \end{align}
 
 %\subsection{Proof of Theorem~\ref{thm2}}
-\subsection{Proof of Theorem~\ref{convergence}}
+\subsection{Proof of Theorem 2}
 \label{pf_thm_3_2}
 First, recall the basic inequality~\eqref{eq: apn_pre}, transformation of weighted nuclear norm~\eqref{eq: wnn_diff} and duality of operator and nuclear norm~\eqref{holder_ineq}.
 Then, we have
