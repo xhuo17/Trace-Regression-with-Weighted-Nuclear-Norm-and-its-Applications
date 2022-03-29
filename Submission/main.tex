@@ -80,12 +80,12 @@
 
 \begin{abstract}
 We consider a low-rank matrix estimation problem when the data is assumed to be generated from the multivariate linear regression model. To induce the low-rank coefficient matrix, we employ the weighted nuclear norm (WNN) defined as the weighted sum of singular values. 
-The weights are naturally set in the non-decreasing order, and this order is known to yield the non-convexity of the WNN function in the parameter space. 
-We provide an efficient algorithm under the framework of alternative directional method of multipliers (ADMM) for estimating the coefficient matrix. 
-The estimator from suggested algorithm converges to a stationary point of augmented Lagrangian function.
-Under orthogonal design setting, effects of the weights for estimating singular values of ground-truth coefficient matrix are given.
-Under Gaussian design setting, a minimax convergence rate on the estimation error is derived. 
-We also propose a generalized cross-validation (GCV) criterion for the selection of the tuning parameter, and suggest an iterative algorithm for updating the weights.
+The weights are set in a non-decreasing order, and this order is known to yield the non-convexity of the WNN objective function in the parameter space. 
+We provide an efficient algorithm under the framework of alternative directional method of multipliers (ADMM) to estimate the coefficient matrix. 
+The estimator from the suggested algorithm converges to a stationary point of an augmented Lagrangian function.
+Under the orthogonal design setting, effects of the weights for estimating singular values of ground-truth coefficient matrix are derived.
+Under the Gaussian design setting, a minimax convergence rate on the estimation error is derived. 
+We also propose a generalized cross-validation (GCV) criterion for selecting the tuning parameter and an iterative algorithm for updating the weights.
 Simulations and a real data analysis demonstrate competitive performance of our new method.
 
 % Please include a maximum of seven keywords
@@ -93,7 +93,7 @@ Simulations and a real data analysis demonstrate competitive performance of our 
 \end{abstract}
 
 \section{Introduction}
-We consider the problem of recovering an unknown coefficient matrix $\boldsymbol{\Theta^\star}\in \boldsymbol{R}^{d_{1} \times d_{2}}$ from $n$ observations of the response vector $y_{i} \in \mathbb{R}^{d_{2}}$ and predictor $x_{i}\in\mathbb{R}^{d_{1}}$, where the ground truth model is as follows:
+We consider the problem of recovering an unknown coefficient matrix $\boldsymbol{\Theta^\star}\in \boldsymbol{R}^{d_{1} \times d_{2}}$ from $n$ observations of the response vector $y_{i} \in \mathbb{R}^{d_{2}}$, $1\le i\le n$, and predictor $x_{i}\in\mathbb{R}^{d_{1}}$, where the ground truth model is as follows:
 \begin{equation}
     \boldsymbol{Y} = \boldsymbol{X}\boldsymbol{\Theta}^{\star} + \boldsymbol{E}. \label{MVR}
 \end{equation}
