@@ -202,7 +202,7 @@ Finally, we conclude our paper with the discussion section.
 In the first subsection, we describe the WMVR-ADMM algorithm for solving the non-convex optimization  problem~\eqref{WMVR}.
 In the second subsection, we present a convergence theorem of the WMVR-ADMM algorithm.
 
-\subsection{ADMM for Weighted Multivariate Regression} \label{WMVR-ADMM}
+\subsection{ADMM for the Weighted Multivariate Regression} \label{WMVR-ADMM}
 We start with reformulating~\eqref{WMVR} as follows:
 \begin{align} \label{reform}
     \min_{\Theta, \boldsymbol{\Gamma}} \bigg\{ f(\boldsymbol{\Theta}) + g(\boldsymbol{\Gamma}) \bigg\}
@@ -215,7 +215,7 @@ This reformulation naturally leads to the construction of an augmented lagrangia
     f(\boldsymbol{\Theta}) + g(\boldsymbol{\Gamma}) + \textbf{tr}\big( \boldsymbol{\Lambda}^{\top}\big( \boldsymbol{\Theta}-\boldsymbol{\Gamma} \big)\big)
     + \frac{\rho}{2} \| \boldsymbol{\Theta}-\boldsymbol{\Gamma} \|_{\text{F}}^{2}.
 \end{align}
-Then, we solve following three optimization problems repeatedly until primal and dual feasibility condition hold; that is,
+Then, we solve the following three optimization problems repeatedly until primal and dual feasibility condition hold; that is,
 repeat \textbf{Steps 1-3},
 \begin{align*}
     &\textbf{Step 1.} \quad \boldsymbol{\Theta}^{(k+1)} = \argmin_{\Theta \in \mathbb{R}^{d_{1} \times d_{2}}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big), \\
@@ -227,7 +227,7 @@ Here, we denote the tuple $(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},
 Note that the non-convexity of the landscape of the objective function in \textbf{Step 1} arises from the WNN  ( i.e., $\|\cdot\|_{\omega,\star}$) over $\boldsymbol{\Theta}$ with fixed $\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)}$, whereas the objective function in \textbf{Step 2} is a simple quadratic function of $\boldsymbol{\Gamma}$ with fixed $\boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Lambda}^{(k)}$.
 
 We start the algorithm by initializing  $\boldsymbol{\Theta}^{(0)}=\boldsymbol{\Gamma}^{(0)}=\boldsymbol{\Lambda}^{(0)}=\boldsymbol{0} \in\mathbb{R}^{d_{1}\times d_{2}}$.
-Next, the key of our algorithm is that a closed-form solution of \textbf{Step 1} can be obtained uniquely, even if it is a non-convex problem.
+Next, the key of our algorithm is that a closed-form solution of \textbf{Step 1} can be obtained, even if it is a non-convex problem.
 We state the result in the following Lemma.
 \begin{lemma} \label{Lemma2.1}
     Let $\boldsymbol{\Theta}^{(k+1)}$ be the minimizer of \textbf{Step 1}.
@@ -289,7 +289,7 @@ Therefore, as long as all the non-zero singular values of $\boldsymbol{B}^{(\mat
 The entire implementation of WMVR-ADMM is summarized in Algorithm~\ref{alg:1}.
 
 \begin{algorithm}[t]
-    \textbf{Input} : A measurement pair $\big( \boldsymbol{X}, \boldsymbol{Y} \big)$, $\boldsymbol{\lambda}_{n} \geq 0$ and $0\leq \omega_{1} \leq \dots \leq \omega_{p}$. \\
+    \textbf{Input} : A measurement pair $\big( \boldsymbol{X}, \boldsymbol{Y} \big)$, $\boldsymbol{\lambda}_{n} \geq 0$ and weights $0\leq \omega_{1} \leq \dots \leq \omega_{p}$. \\
     \textbf{Initialization} : $\boldsymbol{\Theta}^{(0)}=\boldsymbol{\Gamma}^{(0)}=\boldsymbol{\Lambda}^{(0)}=\boldsymbol{0} \in\mathbb{R}^{d_{1}\times d_{2}}$. \\
     {\bf Repeat the following Steps :} \\
     \qquad {\bf Step 1.} Let $\boldsymbol{B^{(k)}}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$.
@@ -313,7 +313,7 @@ In order for the concise presentation of the paper, we defer the detailed descri
 \subsection{Convergence of WMVR-ADMM}
 In this subsection, the Theorem~\ref{convergence} on the convergence of WMVR-ADMM is presented with some remarks.
 Then, two lemmas for proof of the theorems are provided.
-Finally, we conclude the subsection with the proof of Theorem~\ref{convergence}.
+Finally, we conclude the subsection with a sketch of the proof of Theorem~\ref{convergence}.
 
 \begin{theorem} \label{convergence}
     Set $\rho>2L_{\nabla g}$ with $L_{\nabla g}:=\sigma_{1}\big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\big)$.
@@ -344,7 +344,7 @@ Then, the iterates $\{(\boldsymbol{\Theta}^{(k)},\boldsymbol{\Gamma}^{(k)},\bold
 For $k\geq 1$, there exist a constant $C_{2}>0$ and $p^{(k+1)}\in\partial \mathcal{L}_{\rho} \big( \boldsymbol{\Theta}^{(k+1)},\boldsymbol{\Gamma}^{(k+1)},\boldsymbol{\Lambda}^{(k+1)} \big)$ such that $\|p^{(k+1)}\|_{\text{F}}\leq C_{2} \| \boldsymbol{\Gamma}^{(k+1)} - \boldsymbol{\Gamma}^{(k)} \|_{\text{F}}$.
 \end{lemma}
 
-\subsubsection{Proof of Theorem 2} \label{proof_conv}
+\subsubsection{Sketch of the Proof of Theorem 2} \label{proof_conv}
 The proof of Theorem~\ref{convergence} is divided into five steps.
 We provide each steps sequentially.\\ \\
 {\textbf{Step 1.}}
@@ -388,8 +388,8 @@ In this section, we explore statistical properties of the proposed estimator.
 In subsection $3.1$, the non-asymptotic property of the proposed estimator under orthogonal design setting is studied, which sheds lights on understanding the role of weights on the estimation of singular values.
 In subsection $3.2$, the minimax convergence rate of the estimation error is derived under a Gaussian design setting.
 
-\subsection{Statistical Properties of $\widehat{\boldsymbol{\Theta}}$ under Orthogonal Design}
-We first study the convergent rate of estimated eigenvalues $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$ for $j = 1, \cdots, p$.
+\subsection{Statistical Properties of $\widehat{\boldsymbol{\Theta}}$ under the Orthogonal Design}
+We first study the convergent rate of the estimated eigenvalues $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$ for $j = 1, \cdots, p$.
 The result with its proof is provided below.
 
 \begin{proposition} \label{clsed-form}
@@ -469,8 +469,8 @@ That is, for the set of indices of $\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\b
 This is consistent with our intuition that we need small weights for estimating non-zero singular values of $\boldsymbol{\Theta}^{\star}$, whereas large weights are required for the consistent estimation of zero singular values of $\boldsymbol{\Theta}^{\star}$.
 
 \subsection{Estimation Error under Random Design}
-We further study the estimation error in Frobenius norm (i.e., $\| \widehat{\boldsymbol{\Theta}} - \boldsymbol{\Theta^{\star}} \|_{\text{F}}^{2}$)  under a random design assumption.
-Specifically, we begin this subsection by providing the additional assumptions on model, which will be used for stating our theorem.
+We further study the estimation error in the Frobenius norm (i.e., $\| \widehat{\boldsymbol{\Theta}} - \boldsymbol{\Theta^{\star}} \|_{\text{F}}^{2}$)  under a random design assumption.
+Specifically, we begin this subsection by providing the additional assumptions on a model, which will be used for stating our theorem.
 Then, with a brief introduction of the framework on which our theorem is based, an important Lemma on the subset $\mathcal{C}$, where the error matrix $\widehat{\boldsymbol{\Theta}}-\boldsymbol{\Theta^{\star}}$ belongs, is provided.
 Finally, we state our main Theorem.
 
@@ -502,7 +502,7 @@ In other words, we call $\mathcal{E}_{n}\big(\boldsymbol{\widehat{\Delta}})$ suc
 Fortunately, under multivariate regression model with Gaussian ensemble, we can prove that the RSC condition indeed holds with $\kappa=\frac{\sigma_{\text{min}}(\boldsymbol{\Sigma})}{18}$ in high probability over $\mathbb{R}^{d_{1} \times d_{2}}$,
 \footnote{See Lemma $2$ in~\citet{negahban2011estimation} and Appendix~\ref{pf_thm_3_2} of our paper for the proof on this fact.} where $\sigma_{\text{min}}(\boldsymbol{\Sigma})$ denotes a minimum eigenvalue of $\boldsymbol{\Sigma}$.
 
-Before we formally state the Lemma which characterizes the set $\mathcal{C}$, let us introduce relevant notations.
+Before we formally state the Lemma that characterizes the set $\mathcal{C}$, let us introduce relevant notations.
 Denote $\boldsymbol{U}^{\star}$ and $\boldsymbol{V}^{\star}$ as the left and right singular matrices of $\boldsymbol{\Theta}^{\star}$.
 The $\mathcal{M}_{r}\big( \mathcal{U}, \mathcal{V} \big)$ ( resp. $\overline{\mathcal{M}}_{r}^{\perp}\big( \mathcal{U}, \mathcal{V} \big)$ ) corresponds to subspace of matrices with non-zero left and right singular vectors associated with the first $r$ ( resp.  remaining $(p-r)$ ) columns of $\boldsymbol{U}^{\star}$ and $\boldsymbol{V}^{\star}$.
 That is, for any given integer $r\leq p$, we have
@@ -542,18 +542,18 @@ Now, we state some remarks on the Lemma.
     Nonetheless, as previously mentioned, since strong convexity of $\mathcal{L}_{n}(\boldsymbol{\Theta})$ holds globally in our problem setting, the constraint $\|\boldsymbol{\widehat{\Delta}}\|_{\text{F}} \geq \delta$ is not required.
 
     \item A detailed proof of the Lemma is deferred in the Appendix.
-    In this remark, we only provide key ideas for the proof.
+    In this remark, we only provide some key ideas of the proof.
     Given that the global minimizer of~\eqref{WMVR} is obtainable, basic inequality can be employed at the beginning of the proof,
     which is a standard technique for obtaining the estimation error in various statistical models.
-    However, a technical difficulty for proving the Lemma~\ref{Cone_like_set} arises from the fact that the function $\| \cdot \|_{w,\star}$ is neither convex nor concave in $0\leq \omega_{1}\leq\dots \leq \omega_{p}$.
-    We circumvent this problem by rewriting $\| \cdot \|_{\omega,\star}$ as the difference of two convex functions: that is,
+    However, a technical difficulty for proving the Lemma~\ref{Cone_like_set} arises from the fact that the function $\| \cdot \|_{w,\star}$ is neither convex nor concave under $0\leq \omega_{1}\leq\dots \leq \omega_{p}$.
+    We circumvent this difficulty by rewriting $\| \cdot \|_{\omega,\star}$ as the difference of two convex functions: that is,
     $\| \cdot \|_{\omega,\star} = \omega_{p} \| \cdot \|_{\star} - \| \cdot \|_{\omega_{p}-\omega,\star}$,
     where $\| \cdot \|_{w_{p}-w,\star}:=\sum_{j=1}^{p}(\omega_{p}-\omega_{j})\sigma_{j}(\cdot)$.
     Readers should note that since $\omega_{p}-\omega_{1} \geq \dots \geq \omega_{p}-\omega_{p-1}\geq 0$, the $\| \cdot \|_{\omega_{p}-\omega,\star}$ are convex function over the parameter space.
     See Theorem~$1$ of~\cite{chen2013reduced} to check this fact.
 \end{enumerate}
 
-With the RSC condition and Lemma 3.2, we can further show in the next subsection that the estimation error converges to $0$ in a minimax rate.
+With the RSC condition and Lemma 3.2, we can further show in the next subsection that the estimation error converges to $0$ at a minimax rate.
 
 \subsubsection{Convergence Rate of Estimation Error}
 %Under the random design setting with the RSC condition and Lemma 3.2, a theorem about the convergence rate of estimation error is summarized below.
@@ -585,7 +585,7 @@ It is worth noting that $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ has a ridge 
 In the next subsection, the closed form solution is used to calculate the GCV statistic for choosing the proper hyper-tuning parameter  $\boldsymbol{\lambda}_{n}$.
 Furthermore, a data-driven method for updating the weights is also provided.
 
-\subsection{Surrogate Estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ for GCV statistic}
+\subsection{Surrogate Estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ for the GCV statistic}
 From Proposition~\ref{clsed-form}, we know $\widehat{\boldsymbol{\Theta}} := \widehat{\boldsymbol{U}}^{\text{LS}}\widehat{\boldsymbol{D}}\big(\widehat{\boldsymbol{V}}^{\text{LS}}\big)^{\top}$,
 where the diagonal entry of $\widehat{\boldsymbol{D}}$ is: $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big) = \max \big(  \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} \omega_{j},0 \big)$ for $j\in\{1,\dots,p\}$.
 Hereafter, for the convenience of notation, we denote $\widehat{d}_{j}:=\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$, for $j\in\{1,\dots,p\}$.
