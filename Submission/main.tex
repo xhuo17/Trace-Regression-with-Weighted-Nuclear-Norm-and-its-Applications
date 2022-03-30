@@ -228,7 +228,7 @@ Note that the non-convexity of the landscape of the objective function in \textb
 
 We start the algorithm by initializing  $\boldsymbol{\Theta}^{(0)}=\boldsymbol{\Gamma}^{(0)}=\boldsymbol{\Lambda}^{(0)}=\boldsymbol{0} \in\mathbb{R}^{d_{1}\times d_{2}}$.
 Next, the key of our algorithm is that a closed-form solution of \textbf{Step 1} can be obtained, even if it is a non-convex problem.
-We state the result in the following Lemma.
+We state the result in the following Lemma whose proof is deferred in the Appendix.
 \begin{lemma} \label{Lemma2.1}
     Let $\boldsymbol{\Theta}^{(k+1)}$ be the minimizer of \textbf{Step 1}.
     Denote $\boldsymbol{B}^{(k)}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$ and its SVD as $\boldsymbol{U}^{\textbf{B}}\boldsymbol{D}^{\textbf{B}}\big(\boldsymbol{V}^{\textbf{B}}\big)^{\top}$.
@@ -239,40 +239,6 @@ We state the result in the following Lemma.
     \end{align*}
     Furthermore, if all the non-zero singular values of $\boldsymbol{B}^{(k)}$ are distinct, then the solution $\boldsymbol{\Theta}^{(k+1)}$ is unique.
 \end{lemma}
-
-\begin{proof}
-For simplicity, denote $\boldsymbol{B}^{(k)}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$, then we can solve the optimization problem in $\textbf{Step}\ \boldsymbol{1}$ as follows:
-\begin{align}
-    \boldsymbol{\Theta}^{(k+1)}
-    &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) \nonumber \\
-    &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}}  \bigg\{ f(\boldsymbol{\Theta}) + \textbf{tr}\big(\boldsymbol{\Lambda}^{(k) \top}\boldsymbol{\Theta}\big) + \frac{\rho}{2} \| \boldsymbol{\Theta}-\boldsymbol{\Gamma}^{(k)} \|_{\text{F}}^{2} \bigg\}  \nonumber \\
-    &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2}\sigma_{j}(\boldsymbol{\Theta})^{2} + \boldsymbol{\lambda}_{n} \omega_{j} \cdot\sigma_{j}(\boldsymbol{\Theta}) \bigg) -\textbf{tr} \big( \boldsymbol{B}^{(k) \top}\boldsymbol{\Theta} \big) \bigg\} \label{eq: step1_orig}.
-\end{align}
-We plugged-in $f(\boldsymbol{\Theta})=\boldsymbol{\lambda}_{n}\|\boldsymbol{\Theta}\|_{\boldsymbol{\omega,\star}}$,
-used $\textbf{tr}\big(\boldsymbol{\Theta}\boldsymbol{\Theta}^{\top}\big)=\sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{\Theta}\big)^{2}$ and the definition of $\boldsymbol{B}^{(k)}$ for deriving the last equality.
-For further convenience of notation, let $\{d_{j}\}_{j=1}^{p}:=\{\sigma_{j}\big(\boldsymbol{\Theta}\big)\}_{j=1}^{p}$ and
-denote $\boldsymbol{\Theta}=\boldsymbol{UDV^{\top}}$ where
-$\boldsymbol{U}$ and $\boldsymbol{V}$ are the left and right singular matrices of $\boldsymbol{\Theta}$ and $\boldsymbol{D}:=\text{diag}\big(\{d_{1},d_{2},\dots,d_{p}\}\big)$.
-Note that the entries in $\boldsymbol{D}$ are in non-increasing order. ( i.e. $d_{1} \geq d_{2} \dots \geq d_{p} \geq 0$)
-Then, we can rewrite the optimization problem in~\eqref{eq: step1_orig} as follows:
-\begin{align}
-    \boldsymbol{\Theta}^{(k+1)}
-    &= \argmin_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \boldsymbol{\lambda}_{n}\omega_{j}d_{j} \bigg) - \max_{\boldsymbol{U}^{\top}\boldsymbol{U} = \mathcal{I}_{d_{1}}, \boldsymbol{V}^{\top}\boldsymbol{V} = \mathcal{I}_{d_{2}}} \textbf{tr}\big(\boldsymbol{B}^{(k)\top}\boldsymbol{\Theta}\big) \bigg\} \label{eq: step1_sec}
-\end{align}
-The maximum of second term in~\eqref{eq: step1_sec} can be achieved when $\boldsymbol{U}$ and $\boldsymbol{V}$ coincide with
-left and right singular matrices of $\boldsymbol{B}^{(k)}$ respectively, giving us the maximized value as $\sum_{j=1}^{p}\sigma_{j}(\boldsymbol{B}^{(k)})d_{j}$.
-This is a well-known Von Neumann's trace inequality.
-See \cite{von1937some,mirsky1975trace}.
-Then, the final form of the optimization problem~\eqref{eq: step1_sec} reduces to obtaining the diagonal entries of the matrix $\boldsymbol{D}$ by minimizing the following :
-\begin{align}
-    \min_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \big( \boldsymbol{\lambda}_{n} \omega_{j}-\sigma_{j}(\boldsymbol{B}^{(k)}) \big) d_{j} \bigg)  \bigg\}. \label{eq: step1}
-\end{align}
-The objective function~\eqref{eq: step1} is completely decompsable coordinate-wise and is minimized at $d_{j}=\max\big\{\frac{1}{\rho}\big(\sigma_{j}(\boldsymbol{B}^{(k)}\big)-\boldsymbol{\lambda}_{n} \omega_{j}\big),0 \big\}$ for $j=1,\dots,p$.
-Since $\sigma_{1}(\boldsymbol{B}^{(k)})\geq\sigma_{2}(\boldsymbol{B}^{(k)})\dots\geq\sigma_{p}(\boldsymbol{B}^{(k)})$ and $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$, the solution is feasible.
-Furthermore, we have an unique minimizer due to the equality condition of von-Neumann's trace inequality when $\boldsymbol{B}^{(k)}$ has distinct non-zero singular values, and the uniqueness of strict convex optimization  of~\eqref{eq: step1} in $d_{j}$ for $j=1,\dots,p$.
-\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
-\qquad \qquad \qquad \qquad \qquad \qquad \quad \quad $\Box$
-\end{proof}
 
 Now, we turn our attention on minimizing the convex program in \textbf{Step 2}.
 It is easy to rewrite and solve the problem in \textbf{Step 2} as follows:
@@ -313,7 +279,7 @@ In order for the concise presentation of the paper, we defer the detailed descri
 \subsection{Convergence of WMVR-ADMM}
 In this subsection, the Theorem~\ref{convergence} on the convergence of WMVR-ADMM is presented with some remarks.
 Then, two lemmas for proof of the theorems are provided.
-Finally, we conclude the subsection with a sketch of the proof of Theorem~\ref{convergence}.
+Finally, we conclude the subsection with the proof of Theorem~\ref{convergence}.
 
 \begin{theorem} \label{convergence}
     Set $\rho>2L_{\nabla g}$ with $L_{\nabla g}:=\sigma_{1}\big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\big)$.
@@ -381,7 +347,7 @@ Since $\frac{1}{2n}\left\| \boldsymbol{Y}-\boldsymbol{X\Gamma} \right\|_{\text{F
 Since the finite sum of semi-algebraic functions are semi-algebraic~\citep{attouch2013convergence}, it remains to prove $\lambda_{n}\|\boldsymbol{\Theta}\|_{\omega,*}$ is a semi-algebraic.
 In proposition $3$ of~\citet{sun2017global}, it is proved that each singular value of the matrix $\boldsymbol{\Theta}$, $\sigma_{j}(\boldsymbol{\Theta})$, is a semi-algebraic.
 Therefore, the weighted singular value $\omega_{j}\sigma_{j}(\boldsymbol{\Theta})$ is also a semi-algebraic function, and finally, summing rule gives that $\lambda_{n}\|\boldsymbol{\Theta}\|_{\omega,*}$ is a semi-algebraic function.
-\qquad \qquad $\Box$
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \quad $\Box$
 
 \section{Statistical Properties of the Estimator}
 In this section, we explore statistical properties of the proposed estimator.
@@ -390,7 +356,6 @@ In subsection $3.2$, the minimax convergence rate of the estimation error is der
 
 \subsection{Statistical Properties of $\widehat{\boldsymbol{\Theta}}$ under the Orthogonal Design}
 We first study the convergent rate of the estimated eigenvalues $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$ for $j = 1, \cdots, p$.
-The result with its proof is provided below.
 
 \begin{proposition} \label{clsed-form}
     Suppose .
@@ -413,54 +378,8 @@ The result with its proof is provided below.
     \end{align}
     for $j$ such that $\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)=0$.
 \end{proposition}
-\begin{proof}
-The derivation on the closed-form solution of $\widehat{\boldsymbol{\Theta}}$ is exactly same with that of Lemma $1$ in~\citet{yuan2007dimension}, under the orthogonal design assumption.
-So we omit the proof.
-We only focus on controlling the distance between singular values of $\widehat{\boldsymbol{\Theta}}$ and $\boldsymbol{\Theta}^{\star}$.
-With the equality $\boldsymbol{Y}=\boldsymbol{X}\boldsymbol{\Theta}^{\star}+\boldsymbol{E}$ and $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$, we have
-\begin{align} \label{OLS}
-    \widehat{\boldsymbol{\Theta}}^{\text{LS}}=\big(\boldsymbol{X}^{\top}\boldsymbol{X}\big)^{-1}\boldsymbol{X}^{\top}\boldsymbol{Y} = \boldsymbol{\Theta^\star} + \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n}.
-\end{align}
-By the corollary of Weyl's Theorem and the equality~\eqref{OLS}, inequality
-\begin{align} \label{sing_ineq}
-    \max_{j=1,\dots,p}\left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) - \sigma_{j}\big(\boldsymbol{\Theta^\star}\big) \right|
-    \leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg).
-\end{align}
-can be obtained. Recall from our problem setting that the rows of $\boldsymbol{E}$ are independent from $\mathcal{N}(0,\sigma^{2}\boldsymbol{I}_{d_{2} \times d_{2}})$.
-Therefore, we know each entry of $\boldsymbol{X}^{\top}\boldsymbol{E}/\sigma\sqrt{n}$ follows $\mathcal{N}(0,1)$ and is independent with each other.
-Following Chapter $6$ in~\cite{wainwright2019high},
-with probability at least $1-2\exp(-(\sqrt{d_{1}}+\sqrt{d_{2}})^{2}/2)$, the right hand side of (\ref{sing_ineq}) satisfies
-\begin{align} \label{Singular_bnd}
-    \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) \leq 2\sigma \sqrt{\frac{d_{1}+d_{2}}{n}} .
-\end{align}
-Because $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big) = \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} w_{j}>0$ for $j=1,\dots,\widehat{r}$, with further combing (\ref{sing_ineq}) and (\ref{Singular_bnd}), we know  for $j\in\{1,\dots,\widehat{r}\}$
-\begin{align}
-    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
-    &= \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n}\omega_{j}
-    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| \nonumber \\
-    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
-    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \boldsymbol{\lambda}_{n}\omega_{j} \nonumber \\
-    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
-    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
-\end{align}
-where in the last inequality, we use~\eqref{Singular_bnd} and choose $\boldsymbol{\lambda}_{n}=\sqrt{\frac{d_{1}+d_{2}}{n}}$. For $j\in\{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) > 0$, the following inequalities hold
-\begin{align}
-    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
-    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
-    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \nonumber \\
-    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
-    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
-\end{align}
-where in the second inequality, we use~\eqref{sing_ineq} and $| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) |\leq \boldsymbol{\lambda}_{n}\omega_{j}$ for $j\in\{\widehat{r}+1,\dots,p\}$.
-For $j \in \{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) = 0$, we have the following result:
-\begin{align}\label{thrd_case}
-    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
-    &\leq \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \leq \boldsymbol{\lambda}_{n}\omega_{j}.
-\end{align}
-Using that the three inequalities~\eqref{sing_ineq},~\eqref{Singular_bnd}, and~\eqref{thrd_case} should hold at the same time, we can conclude the proof.
-\qquad $\Box$
-\end{proof}
 
+The proof of Proposition $5$ can be found in the Appendix.
 Based on the closed-form solution of $\widehat{\boldsymbol{\Theta}}$ in Proposition~\ref{clsed-form}, under the orthogonal design assumption, each estimated singular value has a form $\max \big( \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} \omega_{j},0 \big)$ for $j\in\{1,\dots,p\}$.
 Then, for the fixed $\boldsymbol{\lambda}_{n}$, it is easy to see that the large weights for small singular values of $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$ can induce the sparsity among the singular values of $\widehat{\boldsymbol{\Theta}}$.
 Furthermore, the proposition states that with an appropriate choice of tuning parameter $\boldsymbol{\lambda}_{n}$, the singular values of the $\widehat{\boldsymbol{\Theta}}$ are consistently estimated.
@@ -598,7 +517,7 @@ Then, we define the following matrix $\boldsymbol{K}\in\mathbb{R}^{d_{1}\times d
     \widehat{\boldsymbol{U}}_{j}^{\text{LS}} \big(\widehat{\boldsymbol{U}}_{j}^{\text{LS}}\big)^{\top},
 \end{align}
 where $\widehat{r}$ denotes the cardinality of a set $\{j : \widehat{d}_{j}>0 \}$.
-We provide the following proposition.
+We provide the following proposition, whose proof is deferred in the Appendix.
 \begin{proposition} \label{surrogate}
     For a fixed $\boldsymbol{K}$, we denote $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ as the minimizer of the following surrogate optimization problem :
     \begin{align} \label{closed_form}
@@ -617,55 +536,6 @@ We provide the following proposition.
         \end{cases}
     \end{align*}
 \end{proposition}
-\begin{proof}
-Let $\boldsymbol{\Theta}=\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}$ be the SVD of $\boldsymbol{\Theta}$.
-Then, we have
-\begin{align*}
-    \textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{K}\boldsymbol{\Theta}\big)
-    =\textbf{tr}\big(\boldsymbol{V}\boldsymbol{D}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}\big)
-    =\textbf{tr}\big(\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\big)
-    =\textbf{tr}\big(\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\big).
-\end{align*}
-Let $\boldsymbol{A}:=\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}$ and $\boldsymbol{B}:=\boldsymbol{K}$.
-As proved in~\cite{ruhe1970perturbation}, for two positive-semi definite matrices $\boldsymbol{A}$ and $\boldsymbol{B}$, we have
-\begin{align} \label{Upper_bnd}
-    \textbf{tr}\big(\boldsymbol{A}^{\top}\boldsymbol{B}\big)\geq \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big),
-\end{align}
-where $\sigma_{1}\big(\cdot\big)\geq\sigma_{2}\big(\cdot\big)\geq\dots\geq\sigma_{p}\big(\cdot\big)\geq0$.
-Denote $d_{j}:=\sigma_{j}\big(\boldsymbol{\Theta}\big)$ for $j\in\{1,\dots,p\}$.
-Given $0\leq \omega_{1} \leq \omega_{2} \leq \dots \leq \omega_{p}$, it is easy to see that
-\begin{align} \label{Lower_bnd}
-    \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big)
-    = \sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
-\end{align}
-Recalling the assumption $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$ and a simple fact $\big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top}\boldsymbol{X}=0$, we can rewrite the cost function in~\eqref{closed_form} as follows:
-\begin{align} \label{cost}
-    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta} \right\|_{\text{F}}^{2}
-    &= \frac{1}{2n} \textbf{tr}\big( \big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top} \big( \boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \big)
-    + \frac{1}{2} \textbf{tr}\big( \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big)^{\top} \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big) \big).
-\end{align}
-By combining~\eqref{Lower_bnd} and~\eqref{cost}, we can obtain the lower bound of the objective function in~\eqref{closed_form} as follows:
-\begin{align*}
-    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\Theta \right\|_{\text{F}}^{2} + \frac{\boldsymbol{\lambda}_{n}}{2}
-    \textbf{tr}\big(\boldsymbol{\Theta}^{\top} \boldsymbol{K} \boldsymbol{\Theta} \big) \geq
-    \frac{1}{2} \sum_{j=1}^{p} d_{j}^2 - \sum_{j=1}^{p} \sigma_{j}\big( \widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)d_{j}  + \frac{\boldsymbol{\lambda}_{n}}{2}\sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
-\end{align*}
-We use the equality $\textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{\Theta}\big)=\sum_{j=1}^{p}d_{j}^{2}$ and the inequality~\eqref{Upper_bnd} to get a lower bound.
-It also should be noted that the equality in the above lower bound holds when $\boldsymbol{U}=\widehat{\boldsymbol{U}}^{\text{LS}}$ and $\boldsymbol{V}=\widehat{\boldsymbol{V}}^{\text{LS}}$.
-Solving the quadratic equation yields the followings:
-\begin{align} \label{Singular}
-    &\widehat{\boldsymbol{D}}^{\text{SR}}_{jj} =
-    \begin{cases}
-        \frac{\widehat{d}_{j}\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big) }{\widehat{d}_{j} + \boldsymbol{\lambda}_{n}\omega_{j}}
-        \qquad \, j = 1,\dots,\widehat{r}, \\
-        \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)
-        \qquad \,\,\, j = \widehat{r}+1,\dots,p.
-    \end{cases}
-\end{align}
-Recall that $\widehat{d}_{j}=\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)-\boldsymbol{\lambda}_{n}\omega_{j}$ for $j=1,\dots,\widehat{r}$,
-and plugging this equality in~\eqref{Singular} for $j\in\{1,\dots,\widehat{r}\}$ yields the claim.
-$\Box$
-\end{proof}
 
 \begin{figure} [b!]
   \includegraphics[width=120mm]{Figure/Fig2.pdf}
@@ -924,6 +794,139 @@ With this notation, the algorithm is summarized in the Algorithm~\ref{trace_algo
 \end{algorithm}
 The presented algorithm can be derived easily by using exactly the same techniques employed in subsection~\ref{WMVR-ADMM} by plugging $f(\boldsymbol{\Theta}):=-\frac{1}{n}\textbf{tr}\big( \big(\sum_{j=1}^{n}y_{i}\boldsymbol{X}_{i}\big)^{\top}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}\|\boldsymbol{\Theta}\|_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\sum_{j=1}^{n}\textbf{tr}\big(\boldsymbol{X_i^\top}\boldsymbol{\Gamma}\big)^{2}$ in~\eqref{reform},
 and we omit the detailed derivation.
+
+\subsection{Proof of Lemma 1}
+For simplicity, denote $\boldsymbol{B}^{(k)}:=-\boldsymbol{\Lambda}^{(k)}+\rho \cdot \boldsymbol{\Gamma}^{(k)}$, then we can solve the optimization problem in $\textbf{Step}\ \boldsymbol{1}$ as follows:
+\begin{align}
+    \boldsymbol{\Theta}^{(k+1)}
+    &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \mathcal{L}_{\rho} \big( \boldsymbol{\Theta},\boldsymbol{\Gamma}^{(k)},\boldsymbol{\Lambda}^{(k)} \big) \nonumber \\
+    &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}}  \bigg\{ f(\boldsymbol{\Theta}) + \textbf{tr}\big(\boldsymbol{\Lambda}^{(k) \top}\boldsymbol{\Theta}\big) + \frac{\rho}{2} \| \boldsymbol{\Theta}-\boldsymbol{\Gamma}^{(k)} \|_{\text{F}}^{2} \bigg\}  \nonumber \\
+    &= \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2}\sigma_{j}(\boldsymbol{\Theta})^{2} + \boldsymbol{\lambda}_{n} \omega_{j} \cdot\sigma_{j}(\boldsymbol{\Theta}) \bigg) -\textbf{tr} \big( \boldsymbol{B}^{(k) \top}\boldsymbol{\Theta} \big) \bigg\} \label{eq: step1_orig}.
+\end{align}
+We plugged-in $f(\boldsymbol{\Theta})=\boldsymbol{\lambda}_{n}\|\boldsymbol{\Theta}\|_{\boldsymbol{\omega,\star}}$,
+used $\textbf{tr}\big(\boldsymbol{\Theta}\boldsymbol{\Theta}^{\top}\big)=\sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{\Theta}\big)^{2}$ and the definition of $\boldsymbol{B}^{(k)}$ for deriving the last equality.
+For further convenience of notation, let $\{d_{j}\}_{j=1}^{p}:=\{\sigma_{j}\big(\boldsymbol{\Theta}\big)\}_{j=1}^{p}$ and
+denote $\boldsymbol{\Theta}=\boldsymbol{UDV^{\top}}$ where
+$\boldsymbol{U}$ and $\boldsymbol{V}$ are the left and right singular matrices of $\boldsymbol{\Theta}$ and $\boldsymbol{D}:=\text{diag}\big(\{d_{1},d_{2},\dots,d_{p}\}\big)$.
+Note that the entries in $\boldsymbol{D}$ are in non-increasing order. ( i.e. $d_{1} \geq d_{2} \dots \geq d_{p} \geq 0$)
+Then, we can rewrite the optimization problem in~\eqref{eq: step1_orig} as follows:
+\begin{align}
+    \boldsymbol{\Theta}^{(k+1)}
+    &= \argmin_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \boldsymbol{\lambda}_{n}\omega_{j}d_{j} \bigg) - \max_{\boldsymbol{U}^{\top}\boldsymbol{U} = \mathcal{I}_{d_{1}}, \boldsymbol{V}^{\top}\boldsymbol{V} = \mathcal{I}_{d_{2}}} \textbf{tr}\big(\boldsymbol{B}^{(k)\top}\boldsymbol{\Theta}\big) \bigg\} \label{eq: step1_sec}
+\end{align}
+The maximum of second term in~\eqref{eq: step1_sec} can be achieved when $\boldsymbol{U}$ and $\boldsymbol{V}$ coincide with
+left and right singular matrices of $\boldsymbol{B}^{(k)}$ respectively, giving us the maximized value as $\sum_{j=1}^{p}\sigma_{j}(\boldsymbol{B}^{(k)})d_{j}$.
+This is a well-known Von Neumann's trace inequality.
+See \cite{von1937some,mirsky1975trace}.
+Then, the final form of the optimization problem~\eqref{eq: step1_sec} reduces to obtaining the diagonal entries of the matrix $\boldsymbol{D}$ by minimizing the following :
+\begin{align}
+    \min_{d_{1}\geq d_{2}\geq \dots \geq d_{p} \geq 0 }\bigg\{ \sum_{j=1}^{p} \bigg( \frac{\rho}{2} d_{j}^{2} + \big( \boldsymbol{\lambda}_{n} \omega_{j}-\sigma_{j}(\boldsymbol{B}^{(k)}) \big) d_{j} \bigg)  \bigg\}. \label{eq: step1}
+\end{align}
+The objective function~\eqref{eq: step1} is completely decompsable coordinate-wise and is minimized at $d_{j}=\max\big\{\frac{1}{\rho}\big(\sigma_{j}(\boldsymbol{B}^{(k)}\big)-\boldsymbol{\lambda}_{n} \omega_{j}\big),0 \big\}$ for $j=1,\dots,p$.
+Since $\sigma_{1}(\boldsymbol{B}^{(k)})\geq\sigma_{2}(\boldsymbol{B}^{(k)})\dots\geq\sigma_{p}(\boldsymbol{B}^{(k)})$ and $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$, the solution is feasible.
+Furthermore, we have an unique minimizer due to the equality condition of von-Neumann's trace inequality when $\boldsymbol{B}^{(k)}$ has distinct non-zero singular values, and the uniqueness of strict convex optimization  of~\eqref{eq: step1} in $d_{j}$ for $j=1,\dots,p$.
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
+\qquad \qquad \qquad \qquad \qquad \qquad \quad \quad $\Box$
+
+\subsection{Proof of Proposition 5}
+The derivation on the closed-form solution of $\widehat{\boldsymbol{\Theta}}$ is exactly same with that of Lemma $1$ in~\citet{yuan2007dimension}, under the orthogonal design assumption.
+So we omit the proof.
+We only focus on controlling the distance between singular values of $\widehat{\boldsymbol{\Theta}}$ and $\boldsymbol{\Theta}^{\star}$.
+With the equality $\boldsymbol{Y}=\boldsymbol{X}\boldsymbol{\Theta}^{\star}+\boldsymbol{E}$ and $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$, we have
+\begin{align} \label{OLS}
+    \widehat{\boldsymbol{\Theta}}^{\text{LS}}=\big(\boldsymbol{X}^{\top}\boldsymbol{X}\big)^{-1}\boldsymbol{X}^{\top}\boldsymbol{Y} = \boldsymbol{\Theta^\star} + \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n}.
+\end{align}
+By the corollary of Weyl's Theorem and the equality~\eqref{OLS}, inequality
+\begin{align} \label{sing_ineq}
+    \max_{j=1,\dots,p}\left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) - \sigma_{j}\big(\boldsymbol{\Theta^\star}\big) \right|
+    \leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg).
+\end{align}
+can be obtained. Recall from our problem setting that the rows of $\boldsymbol{E}$ are independent from $\mathcal{N}(0,\sigma^{2}\boldsymbol{I}_{d_{2} \times d_{2}})$.
+Therefore, we know each entry of $\boldsymbol{X}^{\top}\boldsymbol{E}/\sigma\sqrt{n}$ follows $\mathcal{N}(0,1)$ and is independent with each other.
+Following Chapter $6$ in~\cite{wainwright2019high},
+with probability at least $1-2\exp(-(\sqrt{d_{1}}+\sqrt{d_{2}})^{2}/2)$, the right hand side of (\ref{sing_ineq}) satisfies
+\begin{align} \label{Singular_bnd}
+    \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) \leq 2\sigma \sqrt{\frac{d_{1}+d_{2}}{n}} .
+\end{align}
+Because $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big) = \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} w_{j}>0$ for $j=1,\dots,\widehat{r}$, with further combing (\ref{sing_ineq}) and (\ref{Singular_bnd}), we know  for $j\in\{1,\dots,\widehat{r}\}$
+\begin{align}
+    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
+    &= \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n}\omega_{j}
+    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| \nonumber \\
+    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
+    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \boldsymbol{\lambda}_{n}\omega_{j} \nonumber \\
+    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
+    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
+\end{align}
+where in the last inequality, we use~\eqref{Singular_bnd} and choose $\boldsymbol{\lambda}_{n}=\sqrt{\frac{d_{1}+d_{2}}{n}}$. For $j\in\{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) > 0$, the following inequalities hold
+\begin{align}
+    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
+    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
+    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \nonumber \\
+    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
+    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
+\end{align}
+where in the second inequality, we use~\eqref{sing_ineq} and $| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) |\leq \boldsymbol{\lambda}_{n}\omega_{j}$ for $j\in\{\widehat{r}+1,\dots,p\}$.
+For $j \in \{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) = 0$, we have the following result:
+\begin{align}\label{thrd_case}
+    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
+    &\leq \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \leq \boldsymbol{\lambda}_{n}\omega_{j}.
+\end{align}
+Using that the three inequalities~\eqref{sing_ineq},~\eqref{Singular_bnd}, and~\eqref{thrd_case} should hold at the same time, we can conclude the proof.
+\qquad $\Box$
+
+\subsection{Proof of Proposition 8}
+
+Let $\boldsymbol{\Theta}=\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}$ be the SVD of $\boldsymbol{\Theta}$.
+Then, we have
+\begin{align*}
+    \textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{K}\boldsymbol{\Theta}\big)
+    =\textbf{tr}\big(\boldsymbol{V}\boldsymbol{D}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}\big)
+    =\textbf{tr}\big(\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\big)
+    =\textbf{tr}\big(\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\big).
+\end{align*}
+Let $\boldsymbol{A}:=\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}$ and $\boldsymbol{B}:=\boldsymbol{K}$.
+As proved in~\cite{ruhe1970perturbation}, for two positive-semi definite matrices $\boldsymbol{A}$ and $\boldsymbol{B}$, we have
+\begin{align} \label{Upper_bnd}
+    \textbf{tr}\big(\boldsymbol{A}^{\top}\boldsymbol{B}\big)\geq \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big),
+\end{align}
+where $\sigma_{1}\big(\cdot\big)\geq\sigma_{2}\big(\cdot\big)\geq\dots\geq\sigma_{p}\big(\cdot\big)\geq0$.
+Denote $d_{j}:=\sigma_{j}\big(\boldsymbol{\Theta}\big)$ for $j\in\{1,\dots,p\}$.
+Given $0\leq \omega_{1} \leq \omega_{2} \leq \dots \leq \omega_{p}$, it is easy to see that
+\begin{align} \label{Lower_bnd}
+    \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big)
+    = \sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
+\end{align}
+Recalling the assumption $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$ and a simple fact $\big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top}\boldsymbol{X}=0$, we can rewrite the cost function in~\eqref{closed_form} as follows:
+\begin{align} \label{cost}
+    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta} \right\|_{\text{F}}^{2}
+    &= \frac{1}{2n} \textbf{tr}\big( \big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top} \big( \boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \big)
+    + \frac{1}{2} \textbf{tr}\big( \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big)^{\top} \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big) \big).
+\end{align}
+By combining~\eqref{Lower_bnd} and~\eqref{cost}, we can obtain the lower bound of the objective function in~\eqref{closed_form} as follows:
+\begin{align*}
+    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\Theta \right\|_{\text{F}}^{2} + \frac{\boldsymbol{\lambda}_{n}}{2}
+    \textbf{tr}\big(\boldsymbol{\Theta}^{\top} \boldsymbol{K} \boldsymbol{\Theta} \big) \geq
+    \frac{1}{2} \sum_{j=1}^{p} d_{j}^2 - \sum_{j=1}^{p} \sigma_{j}\big( \widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)d_{j}  + \frac{\boldsymbol{\lambda}_{n}}{2}\sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
+\end{align*}
+We use the equality $\textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{\Theta}\big)=\sum_{j=1}^{p}d_{j}^{2}$ and the inequality~\eqref{Upper_bnd} to get a lower bound.
+It also should be noted that the equality in the above lower bound holds when $\boldsymbol{U}=\widehat{\boldsymbol{U}}^{\text{LS}}$ and $\boldsymbol{V}=\widehat{\boldsymbol{V}}^{\text{LS}}$.
+Solving the quadratic equation yields the followings:
+\begin{align} \label{Singular}
+    &\widehat{\boldsymbol{D}}^{\text{SR}}_{jj} =
+    \begin{cases}
+        \frac{\widehat{d}_{j}\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big) }{\widehat{d}_{j} + \boldsymbol{\lambda}_{n}\omega_{j}}
+        \qquad \, j = 1,\dots,\widehat{r}, \\
+        \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)
+        \qquad \,\,\, j = \widehat{r}+1,\dots,p.
+    \end{cases}
+\end{align}
+Recall that $\widehat{d}_{j}=\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)-\boldsymbol{\lambda}_{n}\omega_{j}$ for $j=1,\dots,\widehat{r}$,
+and plugging this equality in~\eqref{Singular} for $j\in\{1,\dots,\widehat{r}\}$ yields the claim.
+$\Box$
+
+
+
 
 \subsection{Proof of Lemma 3}
 By the result of Lemma~\ref{Lemma2.1}, we have
