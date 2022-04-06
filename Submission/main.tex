@@ -118,7 +118,7 @@ Along this line of research, we consider the statistical estimation problem with
 \begin{equation}  \label{WMVR}
     \widehat{\boldsymbol{\Theta}} := \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1}\times d_{2}}} \bigg\{ \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta} \right\|_{\text{F}}^{2} + \boldsymbol{\lambda}_{n} \left\| \boldsymbol{\Theta}\right\|_{\boldsymbol{\omega,\star}} \bigg\}
 \end{equation}
-with the weighted nuclear norm: 
+with the weighted nuclear norm:
 \begin{equation} \label{WNN}
      \left\| \boldsymbol{\Theta} \right\|_{\boldsymbol{\omega,\star}} =\sum^{p}_{j=1} \omega_{j}\sigma_{j}(\boldsymbol{\Theta}),
 \end{equation}
@@ -288,11 +288,11 @@ Finally, we conclude the subsection with the proof of Theorem~\ref{convergence}.
 
 The threshold for penalty parameter $\rho$ can be computed from data.
 Here, ``globally'' means regardless of where the initial point under non-convex landscape of~\eqref{Lagrangian}.
-This is verified numerically in subsection~\ref{conv_exp}.
+This is verified numerically in Section~\ref{conv_exp}.
 The uniqueness claim is due from the fact that the augmented lagrangian function~\eqref{Lagrangian} is a Kurdyka-Lojasiewicz (KL) function.
 This is further elaborated in sub-subsection~\ref{proof_conv} with relevant references.
 The proof of Theorem~\ref{convergence} is motivated from~\citet{wang2019global} and~\citet{kim2020cauchy}.
-The key two ingredients are provided as follows.
+The key two ingredients are provided as the following two lemmas.
 The detailed proofs of the following two Lemmas are in the Appendix.
 \begin{lemma} \label{Lemma2.3}
 Set $\rho>2L_{\nabla g}$ with $L_{\nabla g}:=\sigma_{1}\big( \frac{1}{n}\boldsymbol{X}^{\top}\boldsymbol{X}\big)$.
@@ -351,10 +351,11 @@ Therefore, the weighted singular value $\omega_{j}\sigma_{j}(\boldsymbol{\Theta}
 
 \section{Statistical Properties of the Estimator}
 In this section, we explore statistical properties of the proposed estimator.
-In subsection $3.1$, the non-asymptotic property of the proposed estimator under orthogonal design setting is studied, which sheds lights on understanding the role of weights on the estimation of singular values.
-In subsection $3.2$, the minimax convergence rate of the estimation error is derived under a Gaussian design setting.
+In Section \ref{sec:orthogonal-design}, the non-asymptotic property of the proposed estimator under orthogonal design setting is studied, which sheds lights on understanding the role of weights on the estimation of singular values.
+In Section \ref{sec:random-design}, the minimax convergence rate of the estimation error is derived under a Gaussian design setting.
 
 \subsection{Statistical Properties of $\widehat{\boldsymbol{\Theta}}$ under the Orthogonal Design}
+\label{sec:orthogonal-design}
 We first study the convergent rate of the estimated eigenvalues $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$ for $j = 1, \cdots, p$.
 
 \begin{proposition} \label{clsed-form}
@@ -387,7 +388,7 @@ Bounds in~\eqref{sing1} and~\eqref{sing2} provide us with the guideline for the 
 That is, for the set of indices of $\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)>0$, the corresponding weights $\omega_{j}$s need to be set lower than the twice of variance size of the measurement error $\sigma$, whereas, for the set of indices whose $\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)=0$, the corresponding weights can be set even higher than $2\sigma$.
 This is consistent with our intuition that we need small weights for estimating non-zero singular values of $\boldsymbol{\Theta}^{\star}$, whereas large weights are required for the consistent estimation of zero singular values of $\boldsymbol{\Theta}^{\star}$.
 
-\subsection{Estimation Error under Random Design}
+\subsection{Estimation Error under Random Design}\label{sec:random-design}
 We further study the estimation error in the Frobenius norm (i.e., $\| \widehat{\boldsymbol{\Theta}} - \boldsymbol{\Theta^{\star}} \|_{\text{F}}^{2}$)  under a random design assumption.
 Specifically, we begin this subsection by providing the additional assumptions on a model, which will be used for stating our theorem.
 Then, with a brief introduction of the framework on which our theorem is based, an important Lemma on the subset $\mathcal{C}$, where the error matrix $\widehat{\boldsymbol{\Theta}}-\boldsymbol{\Theta^{\star}}$ belongs, is provided.
@@ -499,12 +500,13 @@ It is worth noting that the information on weights is solely encoded in factor $
 This factor allows a natural comparison of estimation rates between SNN and WNN, and we defer the discussion on this comparison to Section~\ref{Disc}.
 
 \section{Data-driven Model Selections} \label{parameter_selection}
-In the first subsection, we introduce a surrogate estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$, which approximates the estimator $\widehat{\boldsymbol{\Theta}}$.
+In Section \ref{sec:surrogate}, we introduce a surrogate estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$, which approximates the estimator $\widehat{\boldsymbol{\Theta}}$.
 It is worth noting that $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ has a ridge regression type of closed-form solution.
-In the next subsection, the closed form solution is used to calculate the GCV statistic for choosing the proper hyper-tuning parameter  $\boldsymbol{\lambda}_{n}$.
+In Section \ref{sec:gcv-update}, the closed form solution is used to calculate the GCV statistic for choosing the proper hyper-tuning parameter  $\boldsymbol{\lambda}_{n}$.
 Furthermore, a data-driven method for updating the weights is also provided.
 
 \subsection{Surrogate Estimator $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ for the GCV statistic}
+\label{sec:surrogate}
 From Proposition~\ref{clsed-form}, we know $\widehat{\boldsymbol{\Theta}} := \widehat{\boldsymbol{U}}^{\text{LS}}\widehat{\boldsymbol{D}}\big(\widehat{\boldsymbol{V}}^{\text{LS}}\big)^{\top}$,
 where the diagonal entry of $\widehat{\boldsymbol{D}}$ is: $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big) = \max \big(  \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} \omega_{j},0 \big)$ for $j\in\{1,\dots,p\}$.
 Hereafter, for the convenience of notation, we denote $\widehat{d}_{j}:=\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)$, for $j\in\{1,\dots,p\}$.
@@ -519,7 +521,7 @@ Then, we define the following matrix $\boldsymbol{K}\in\mathbb{R}^{d_{1}\times d
 where $\widehat{r}$ denotes the cardinality of a set $\{j : \widehat{d}_{j}>0 \}$.
 We provide the following proposition, whose proof is deferred in the Appendix.
 \begin{proposition} \label{surrogate}
-    For a fixed $\boldsymbol{K}$, we denote $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ as the minimizer of the following surrogate optimization problem :
+    For a fixed $\boldsymbol{K}$ that is defined in \eqref{K}, we denote $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ as the minimizer of the following surrogate optimization problem :
     \begin{align} \label{closed_form}
         \widehat{\boldsymbol{\Theta}}^{\text{SR}} :=
         \argmin_{\boldsymbol{\Theta}\in\mathbb{R}^{d_{1} \times d_{2}}} \Bigg\{ \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\Theta \right\|_{\text{F}}^{2} + \frac{\boldsymbol{\lambda}_{n}}{2}
@@ -547,11 +549,12 @@ We provide the following proposition, whose proof is deferred in the Appendix.
 
 Note that as long as $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$ is a full-rank, $\widehat{\boldsymbol{\Theta}}^{\text{SR}}$ is a full-rank matrix whose first $\widehat{r}$ singular values are identical to those of $\widehat{\boldsymbol{\Theta}}$, and remaining $(p-\widehat{r})$ singular values are equal to the  corresponding singular values of $\widehat{\boldsymbol{\Theta}}^{\text{LS}}$.
 Although the result of Proposition~\ref{surrogate} is stated under orthogonal design assumption, we also empirically demonstrate that the same results hold under non-orthogonal design in Figure~\ref{Fig2}.
-Specifically, under the same experimental setting of Figure~\ref{Fig1}, $\widehat{\boldsymbol{\Theta}}$ is a minimizer of~\eqref{WMVR} obtained via WMVR-ADMM with the weight updating scheme, which will be introduced in Section~\ref{parameter_selection}.
+Specifically, under the same experimental setting of Figure~\ref{Fig1}, $\widehat{\boldsymbol{\Theta}}$ is a minimizer of~\eqref{WMVR} obtained via WMVR-ADMM with the weight updating scheme, which will be defined later. 
 In this experiment, the minimum absolute off-diagonal entry of $\boldsymbol{X}^{\top}\boldsymbol{X}$ is $0.00157$, which implies $\boldsymbol{X}$ is a non-orthogonal design.
 The result in Figure~\ref{Fig2} is consistent with the statement in Proposition~\ref{surrogate}.
 
 \subsection{GCV Statistic and Weight Updates}
+\label{sec:gcv-update}
 We divide the process for tuning $\boldsymbol{\lambda_{n}}$ and weights $\omega_{1}, \cdots, \omega_{p}$ into two procedures.
 In the first procedure, we propose the following iterative algorithm that alternates between estimating $\boldsymbol{\Theta}^{\star}$ and updating weights.
 \begin{enumerate}
@@ -582,8 +585,8 @@ Thus, the GCV score for $\widehat{\boldsymbol{\Theta}}^{\text{W}}(\lambda_{n})$ 
 and the optimal $\boldsymbol{\lambda}_{n}^{\star}$ for which GCV($\boldsymbol{\lambda}_{n}$) is obtained by minimizing the GCV score (\ref{GCV}) over the search range $\boldsymbol{\lambda}_{n}\in [0,\mathcal{T}]$.
 
 \section{Simulation Study} \label{SC5}
-In subsection $5.1$, we empirically demonstrate convergence results stated in Theorem~\ref{convergence}.
-In subsection $5.2$, we compare our methods with the existing methods in terms of estimation error.
+In Section \ref{conv_exp}, we empirically demonstrate convergence results stated in Theorem~\ref{convergence}.
+In Section \ref{sec:compare-others}, we compare our methods with the existing methods in terms of estimation error.
 Specifically, SNN method (\citet{yuan2007dimension}) and the estimator introduced by~\citet{chen2013reduced} are used for the comparisons.
 Hereafter, we refer the estimator in~\citet{chen2013reduced} as Adpative Nuclear Norm estimator (i.e., ANN estimator).
 Moreover, we provide an experiment showing the effectiveness of our weight updating scheme~\eqref{weight} in comparison to weight setting in~\citet{chen2013reduced}.
@@ -617,7 +620,7 @@ Weights $\{\omega_j\}_{j=1}^{p}$ are updated once, and with the updated weights,
 The resulting  $R^{(k)}$ and $O^{(k)}$ values are demonstrated in Figure~\ref{Fig4}, and the figure shows that both $R^{(k)}$ and $O^{(k)}$ converge to 0 as $k$ increases, regardless of the initializations of algorithm.
 This observation is consistent with the claims in Theorem~\ref{convergence}, and implies that the the converged solutions from WMVR-ADMM have the same objective value on the non-convex landscape of problem~\eqref{WMVR}.
 
-\subsection{Comparisons of Estimation Error with Other Methods}
+\subsection{Comparisons of Estimation Error with Other Methods} \label{sec:compare-others}
 
 The simulation setting is under model (\ref{MVR}) with a ground-truth coefficient matrix $\boldsymbol{\Theta}^{\star}$  whose dimension is $d_{1} = 25$ and $d_{2} = 25$.
 The coefficient matrix is generated by choosing $\boldsymbol{\Theta}^{\star}  = \boldsymbol{A}\boldsymbol{B}^{\top},$ where $\boldsymbol{A}, \boldsymbol{B} \in R^{25 \times r^{\star}}$ and the elements of  $\boldsymbol{A}$ and $\boldsymbol{B}$ are independently and identically following the standardized normal distribution $\mathcal{N}(0, 1)$.
@@ -660,9 +663,9 @@ Analogously, Figures (D) $\sim$ (F) (second row) are the results from $r^{\star}
 \label{Fig_S4_Ex1}
 \end{figure}
 
-To show the effectiveness of the proposed weight updating scheme in section~\ref{parameter_selection},
+To show the effectiveness of the proposed weight updating scheme in Section~\ref{parameter_selection},
 we compare the weight setting suggested in~\citet{chen2013reduced} with our method.
-For the comparison, we revisit the synthetic setting used in Figure~\ref{Fig1}.
+For comparison, we revisit the synthetic setting used in Figure~\ref{Fig1}.
 Let $\widehat{\boldsymbol{\Theta}}^{(1)}$ be the SNN estimator, and denote $\omega^{\text{WNN}}$
 and $\omega^{\text{ANN}}$ be the weight settings introduced in~\eqref{weight} and~\citet{chen2013reduced}, respectively.
 Then, we have
@@ -735,8 +738,8 @@ We summarize them as follows.
 \end{figure}
 
 \begin{enumerate}
-    \item A question on whether the non-convex ADMM can achieve the global minimizer of~\eqref{WMVR} is a huge open question.
-    Although empirical results on the convergence of WMVR-ADMM are provided in section~\ref{SC5}, they still cannot verify the converged solution is a global minimizer of~\eqref{WMVR}.
+\item A question on whether the non-convex ADMM can achieve the global minimizer of~\eqref{WMVR} is a well-known open question.
+Although empirical results on the convergence of WMVR-ADMM are provided in Section~\ref{SC5}, they still cannot verify the converged solution is a global minimizer of~\eqref{WMVR}.
     We leave both empirical and theoretical justifications on this issue as important open problems.
     Under SNN setting, it is proved that there exists a primal-dual pair of~\eqref{WMVR} which satisfies the strong duality~\citep{shang2021regularization}.
     Therefore, the existence of saddle point on $\mathcal{L}_{0}$ can be ensured, so that the global minimizer of~\eqref{WMVR} can be proved through the classical techniques in~\citet{boyd2011distributed}.
@@ -761,7 +764,8 @@ We summarize them as follows.
 \section{Appendix}
 In this section, an extended algorithm of WMVR-ADMM to trace regression model is proposed in Section 8.1.
 %Then, we provide a noition of decomposability of nuclear norm with respect to a pair of specially designed matrix subspaces.
-Subsequently, proofs on Lemma~\ref{Lemma2.3}, Lemma~\ref{Lemma2.4}, Theorem~\ref{convergence}, Lemma~\ref{Cone_like_set}, and Theorem~\ref{thm2} are provided in Sections $8.2$, $8.3$, $8.4$, and $8.5$, respectively.
+%Subsequently, proofs of Lemma 1, Lemma~\ref{Lemma2.3}, Lemma~\ref{Lemma2.4}, Theorem~\ref{convergence}, Lemma~\ref{Cone_like_set}, and Theorem~\ref{thm2}
+Proof of lemmas, propositions, and a theorem are provided in subsequent subsections. % $8.2$, $8.3$, $8.4$, and $8.5$, respectively.
 
 \subsection{Extension of WMVR-ADMM to Trace Regression Model} \label{tr_algo}
 First, let us consider the following trace regression problem :
@@ -792,7 +796,7 @@ With this notation, the algorithm is summarized in the Algorithm~\ref{trace_algo
     \caption{ADMM for weighted Trace Regression. (WTR-ADMM)}
     \label{trace_algo}
 \end{algorithm}
-The presented algorithm can be derived easily by using exactly the same techniques employed in subsection~\ref{WMVR-ADMM} by plugging $f(\boldsymbol{\Theta}):=-\frac{1}{n}\textbf{tr}\big( \big(\sum_{j=1}^{n}y_{i}\boldsymbol{X}_{i}\big)^{\top}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}\|\boldsymbol{\Theta}\|_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\sum_{j=1}^{n}\textbf{tr}\big(\boldsymbol{X_i^\top}\boldsymbol{\Gamma}\big)^{2}$ in~\eqref{reform},
+The presented algorithm can be derived easily by using exactly the same techniques employed in Section~\ref{WMVR-ADMM} by plugging $f(\boldsymbol{\Theta}):=-\frac{1}{n}\textbf{tr}\big( \big(\sum_{j=1}^{n}y_{i}\boldsymbol{X}_{i}\big)^{\top}\boldsymbol{\Theta} \big)+\boldsymbol{\lambda}_{n}\|\boldsymbol{\Theta}\|_{\boldsymbol{\omega,\star}}$ and $g(\boldsymbol{\Gamma})=\frac{1}{2n}\sum_{j=1}^{n}\textbf{tr}\big(\boldsymbol{X_i^\top}\boldsymbol{\Gamma}\big)^{2}$ in~\eqref{reform},
 and we omit the detailed derivation.
 
 \subsection{Proof of Lemma 1}
@@ -825,108 +829,9 @@ Then, the final form of the optimization problem~\eqref{eq: step1_sec} reduces t
 The objective function~\eqref{eq: step1} is completely decompsable coordinate-wise and is minimized at $d_{j}=\max\big\{\frac{1}{\rho}\big(\sigma_{j}(\boldsymbol{B}^{(k)}\big)-\boldsymbol{\lambda}_{n} \omega_{j}\big),0 \big\}$ for $j=1,\dots,p$.
 Since $\sigma_{1}(\boldsymbol{B}^{(k)})\geq\sigma_{2}(\boldsymbol{B}^{(k)})\dots\geq\sigma_{p}(\boldsymbol{B}^{(k)})$ and $0\leq\omega_{1}\leq\omega_{2}\leq\cdots\leq\omega_{p}$, the solution is feasible.
 Furthermore, we have an unique minimizer due to the equality condition of von-Neumann's trace inequality when $\boldsymbol{B}^{(k)}$ has distinct non-zero singular values, and the uniqueness of strict convex optimization  of~\eqref{eq: step1} in $d_{j}$ for $j=1,\dots,p$.
-\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
-\qquad \qquad \qquad \qquad \qquad \qquad \quad \quad $\Box$
-
-\subsection{Proof of Proposition 5}
-The derivation on the closed-form solution of $\widehat{\boldsymbol{\Theta}}$ is exactly same with that of Lemma $1$ in~\citet{yuan2007dimension}, under the orthogonal design assumption.
-So we omit the proof.
-We only focus on controlling the distance between singular values of $\widehat{\boldsymbol{\Theta}}$ and $\boldsymbol{\Theta}^{\star}$.
-With the equality $\boldsymbol{Y}=\boldsymbol{X}\boldsymbol{\Theta}^{\star}+\boldsymbol{E}$ and $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$, we have
-\begin{align} \label{OLS}
-    \widehat{\boldsymbol{\Theta}}^{\text{LS}}=\big(\boldsymbol{X}^{\top}\boldsymbol{X}\big)^{-1}\boldsymbol{X}^{\top}\boldsymbol{Y} = \boldsymbol{\Theta^\star} + \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n}.
-\end{align}
-By the corollary of Weyl's Theorem and the equality~\eqref{OLS}, inequality
-\begin{align} \label{sing_ineq}
-    \max_{j=1,\dots,p}\left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) - \sigma_{j}\big(\boldsymbol{\Theta^\star}\big) \right|
-    \leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg).
-\end{align}
-can be obtained. Recall from our problem setting that the rows of $\boldsymbol{E}$ are independent from $\mathcal{N}(0,\sigma^{2}\boldsymbol{I}_{d_{2} \times d_{2}})$.
-Therefore, we know each entry of $\boldsymbol{X}^{\top}\boldsymbol{E}/\sigma\sqrt{n}$ follows $\mathcal{N}(0,1)$ and is independent with each other.
-Following Chapter $6$ in~\cite{wainwright2019high},
-with probability at least $1-2\exp(-(\sqrt{d_{1}}+\sqrt{d_{2}})^{2}/2)$, the right hand side of (\ref{sing_ineq}) satisfies
-\begin{align} \label{Singular_bnd}
-    \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) \leq 2\sigma \sqrt{\frac{d_{1}+d_{2}}{n}} .
-\end{align}
-Because $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big) = \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} w_{j}>0$ for $j=1,\dots,\widehat{r}$, with further combing (\ref{sing_ineq}) and (\ref{Singular_bnd}), we know  for $j\in\{1,\dots,\widehat{r}\}$
-\begin{align}
-    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
-    &= \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n}\omega_{j}
-    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| \nonumber \\
-    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
-    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \boldsymbol{\lambda}_{n}\omega_{j} \nonumber \\
-    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
-    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
-\end{align}
-where in the last inequality, we use~\eqref{Singular_bnd} and choose $\boldsymbol{\lambda}_{n}=\sqrt{\frac{d_{1}+d_{2}}{n}}$. For $j\in\{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) > 0$, the following inequalities hold
-\begin{align}
-    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
-    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
-    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \nonumber \\
-    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
-    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
-\end{align}
-where in the second inequality, we use~\eqref{sing_ineq} and $| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) |\leq \boldsymbol{\lambda}_{n}\omega_{j}$ for $j\in\{\widehat{r}+1,\dots,p\}$.
-For $j \in \{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) = 0$, we have the following result:
-\begin{align}\label{thrd_case}
-    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
-    &\leq \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \leq \boldsymbol{\lambda}_{n}\omega_{j}.
-\end{align}
-Using that the three inequalities~\eqref{sing_ineq},~\eqref{Singular_bnd}, and~\eqref{thrd_case} should hold at the same time, we can conclude the proof.
-\qquad $\Box$
-
-\subsection{Proof of Proposition 8}
-
-Let $\boldsymbol{\Theta}=\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}$ be the SVD of $\boldsymbol{\Theta}$.
-Then, we have
-\begin{align*}
-    \textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{K}\boldsymbol{\Theta}\big)
-    =\textbf{tr}\big(\boldsymbol{V}\boldsymbol{D}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}\big)
-    =\textbf{tr}\big(\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\big)
-    =\textbf{tr}\big(\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\big).
-\end{align*}
-Let $\boldsymbol{A}:=\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}$ and $\boldsymbol{B}:=\boldsymbol{K}$.
-As proved in~\cite{ruhe1970perturbation}, for two positive-semi definite matrices $\boldsymbol{A}$ and $\boldsymbol{B}$, we have
-\begin{align} \label{Upper_bnd}
-    \textbf{tr}\big(\boldsymbol{A}^{\top}\boldsymbol{B}\big)\geq \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big),
-\end{align}
-where $\sigma_{1}\big(\cdot\big)\geq\sigma_{2}\big(\cdot\big)\geq\dots\geq\sigma_{p}\big(\cdot\big)\geq0$.
-Denote $d_{j}:=\sigma_{j}\big(\boldsymbol{\Theta}\big)$ for $j\in\{1,\dots,p\}$.
-Given $0\leq \omega_{1} \leq \omega_{2} \leq \dots \leq \omega_{p}$, it is easy to see that
-\begin{align} \label{Lower_bnd}
-    \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big)
-    = \sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
-\end{align}
-Recalling the assumption $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$ and a simple fact $\big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top}\boldsymbol{X}=0$, we can rewrite the cost function in~\eqref{closed_form} as follows:
-\begin{align} \label{cost}
-    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta} \right\|_{\text{F}}^{2}
-    &= \frac{1}{2n} \textbf{tr}\big( \big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top} \big( \boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \big)
-    + \frac{1}{2} \textbf{tr}\big( \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big)^{\top} \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big) \big).
-\end{align}
-By combining~\eqref{Lower_bnd} and~\eqref{cost}, we can obtain the lower bound of the objective function in~\eqref{closed_form} as follows:
-\begin{align*}
-    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\Theta \right\|_{\text{F}}^{2} + \frac{\boldsymbol{\lambda}_{n}}{2}
-    \textbf{tr}\big(\boldsymbol{\Theta}^{\top} \boldsymbol{K} \boldsymbol{\Theta} \big) \geq
-    \frac{1}{2} \sum_{j=1}^{p} d_{j}^2 - \sum_{j=1}^{p} \sigma_{j}\big( \widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)d_{j}  + \frac{\boldsymbol{\lambda}_{n}}{2}\sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
-\end{align*}
-We use the equality $\textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{\Theta}\big)=\sum_{j=1}^{p}d_{j}^{2}$ and the inequality~\eqref{Upper_bnd} to get a lower bound.
-It also should be noted that the equality in the above lower bound holds when $\boldsymbol{U}=\widehat{\boldsymbol{U}}^{\text{LS}}$ and $\boldsymbol{V}=\widehat{\boldsymbol{V}}^{\text{LS}}$.
-Solving the quadratic equation yields the followings:
-\begin{align} \label{Singular}
-    &\widehat{\boldsymbol{D}}^{\text{SR}}_{jj} =
-    \begin{cases}
-        \frac{\widehat{d}_{j}\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big) }{\widehat{d}_{j} + \boldsymbol{\lambda}_{n}\omega_{j}}
-        \qquad \, j = 1,\dots,\widehat{r}, \\
-        \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)
-        \qquad \,\,\, j = \widehat{r}+1,\dots,p.
-    \end{cases}
-\end{align}
-Recall that $\widehat{d}_{j}=\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)-\boldsymbol{\lambda}_{n}\omega_{j}$ for $j=1,\dots,\widehat{r}$,
-and plugging this equality in~\eqref{Singular} for $j\in\{1,\dots,\widehat{r}\}$ yields the claim.
-$\Box$
-
-
-
+%\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
+%\qquad \qquad \qquad \qquad \qquad \qquad \quad \quad $\Box$
+\hfill $\Box$
 
 \subsection{Proof of Lemma 3}
 By the result of Lemma~\ref{Lemma2.1}, we have
@@ -1063,6 +968,58 @@ Furthermore, its Frobenious norm can be bounded by combining~\eqref{ineq5} and~\
 \end{align*}
 Setting $C_{2}:=\rho + \big(2+\frac{1}{\rho}\big)L_{\nabla g}$ yields the claim.
 \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad $\Box$
+
+
+
+\subsection{Proof of Proposition 5}
+The derivation on the closed-form solution of $\widehat{\boldsymbol{\Theta}}$ is exactly same with that of Lemma $1$ in~\citet{yuan2007dimension}, under the orthogonal design assumption.
+So we omit the proof.
+We only focus on controlling the distance between singular values of $\widehat{\boldsymbol{\Theta}}$ and $\boldsymbol{\Theta}^{\star}$.
+With the equality $\boldsymbol{Y}=\boldsymbol{X}\boldsymbol{\Theta}^{\star}+\boldsymbol{E}$ and $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$, we have
+\begin{align} \label{OLS}
+    \widehat{\boldsymbol{\Theta}}^{\text{LS}}=\big(\boldsymbol{X}^{\top}\boldsymbol{X}\big)^{-1}\boldsymbol{X}^{\top}\boldsymbol{Y} = \boldsymbol{\Theta^\star} + \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n}.
+\end{align}
+By the corollary of Weyl's Theorem and the equality~\eqref{OLS}, inequality
+\begin{align} \label{sing_ineq}
+    \max_{j=1,\dots,p}\left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) - \sigma_{j}\big(\boldsymbol{\Theta^\star}\big) \right|
+    \leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg).
+\end{align}
+can be obtained. Recall from our problem setting that the rows of $\boldsymbol{E}$ are independent from $\mathcal{N}(0,\sigma^{2}\boldsymbol{I}_{d_{2} \times d_{2}})$.
+Therefore, we know each entry of $\boldsymbol{X}^{\top}\boldsymbol{E}/\sigma\sqrt{n}$ follows $\mathcal{N}(0,1)$ and is independent with each other.
+Following Chapter $6$ in~\cite{wainwright2019high},
+with probability at least $1-2\exp(-(\sqrt{d_{1}}+\sqrt{d_{2}})^{2}/2)$, the right hand side of (\ref{sing_ineq}) satisfies
+\begin{align} \label{Singular_bnd}
+    \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) \leq 2\sigma \sqrt{\frac{d_{1}+d_{2}}{n}} .
+\end{align}
+Because $\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big) = \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n} w_{j}>0$ for $j=1,\dots,\widehat{r}$, with further combing (\ref{sing_ineq}) and (\ref{Singular_bnd}), we know  for $j\in\{1,\dots,\widehat{r}\}$
+\begin{align}
+    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
+    &= \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)-\boldsymbol{\lambda}_{n}\omega_{j}
+    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| \nonumber \\
+    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
+    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \boldsymbol{\lambda}_{n}\omega_{j} \nonumber \\
+    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
+    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
+\end{align}
+where in the last inequality, we use~\eqref{Singular_bnd} and choose $\boldsymbol{\lambda}_{n}=\sqrt{\frac{d_{1}+d_{2}}{n}}$. For $j\in\{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) > 0$, the following inequalities hold
+\begin{align}
+    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
+    &\leq \left|\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)
+    -\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right| + \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \nonumber \\
+    &\leq \sigma_{1}\bigg( \frac{\boldsymbol{X}^{\top}\boldsymbol{E}}{n} \bigg) + \boldsymbol{\lambda}_{n}\omega_{j}
+    \leq \max\big(4\sigma,2\omega_{j}\big)\cdot \sqrt{\frac{d_{1}+d_{2}}{n}},  \nonumber
+\end{align}
+where in the second inequality, we use~\eqref{sing_ineq} and $| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) |\leq \boldsymbol{\lambda}_{n}\omega_{j}$ for $j\in\{\widehat{r}+1,\dots,p\}$.
+For $j \in \{\widehat{r}+1,\dots,p\}$ such that $\sigma_{j}\big( \boldsymbol{\Theta}^{\star} \big) = 0$, we have the following result:
+\begin{align}\label{thrd_case}
+    \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}\big)-\sigma_{j}\big(\boldsymbol{\Theta}^{\star}\big)\right|
+    &\leq \left| \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \right| \leq \boldsymbol{\lambda}_{n}\omega_{j}.
+\end{align}
+Using that the three inequalities~\eqref{sing_ineq},~\eqref{Singular_bnd}, and~\eqref{thrd_case} should hold at the same time, we can conclude the proof.
+\qquad $\Box$
+
+
+
 
 %\subsection{Proof of Theorem \ref{Thm1}}
 \subsection{Proof of Lemma 6}
@@ -1213,9 +1170,11 @@ the inequality (\ref{eq: new main_0}) implies
     + \frac{2w_{p}-w_{1}+\frac{1}{2}}{w_{1}-\frac{1}{2}}\cdot \| \boldsymbol{\widehat{\Delta}}' \|_{\star}.
     \label{eq: new main_1}
 \end{align}
+\hfill $\Box$ 
+
 
 %\subsection{Proof of Theorem~\ref{thm2}}
-\subsection{Proof of Theorem 2}
+\subsection{Proof of Theorem 7}
 \label{pf_thm_3_2}
 First, recall the basic inequality~\eqref{eq: apn_pre}, transformation of weighted nuclear norm~\eqref{eq: wnn_diff} and duality of operator and nuclear norm~\eqref{holder_ineq}.
 Then, we have
@@ -1333,6 +1292,62 @@ Plugging $\boldsymbol{\lambda}_{n}=10 \sigma \|\boldsymbol{\Sigma}\|_{\text{op}}
     &\leq 64 \mathcal{W}^{2} \cdot r^{\star} \Bigg(10 \sigma \|\boldsymbol{\Sigma}\|_{\text{op}} \sqrt{\frac{d_{1}+d_{2}}{n}} \frac{18}{\sigma_{\text{min}}(\boldsymbol{\Sigma})} \Bigg)^{2-q} \\
     &= c_{1} \mathcal{W}^{2} \Bigg( \frac{\sigma^{2}\|\boldsymbol{\Sigma}\|_{\text{op}}^{2}}{\sigma_{\text{min}}^{2}(\boldsymbol{\Sigma})} \Bigg)^{1-q/2} r^{\star} \Bigg( \frac{d_{1}+d_{2}}{n} \Bigg)^{1-q/2}.
 \end{align*}
+\hfill $\Box$
+
+
+
+\subsection{Proof of Proposition 8}
+
+Let $\boldsymbol{\Theta}=\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}$ be the SVD of $\boldsymbol{\Theta}$.
+Then, we have
+\begin{align*}
+    \textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{K}\boldsymbol{\Theta}\big)
+    =\textbf{tr}\big(\boldsymbol{V}\boldsymbol{D}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\boldsymbol{D}\boldsymbol{V}^{\top}\big)
+    =\textbf{tr}\big(\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\boldsymbol{U}\big)
+    =\textbf{tr}\big(\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}\boldsymbol{K}\big).
+\end{align*}
+Let $\boldsymbol{A}:=\boldsymbol{U}\boldsymbol{D}^{2}\boldsymbol{U}^{\top}$ and $\boldsymbol{B}:=\boldsymbol{K}$.
+As proved in~\cite{ruhe1970perturbation}, for two positive-semi definite matrices $\boldsymbol{A}$ and $\boldsymbol{B}$, we have
+\begin{align} \label{Upper_bnd}
+    \textbf{tr}\big(\boldsymbol{A}^{\top}\boldsymbol{B}\big)\geq \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big),
+\end{align}
+where $\sigma_{1}\big(\cdot\big)\geq\sigma_{2}\big(\cdot\big)\geq\dots\geq\sigma_{p}\big(\cdot\big)\geq0$.
+Denote $d_{j}:=\sigma_{j}\big(\boldsymbol{\Theta}\big)$ for $j\in\{1,\dots,p\}$.
+Given $0\leq \omega_{1} \leq \omega_{2} \leq \dots \leq \omega_{p}$, it is easy to see that
+\begin{align} \label{Lower_bnd}
+    \sum_{j=1}^{p}\sigma_{j}\big(\boldsymbol{A}\big)\sigma_{p+1-j}\big(\boldsymbol{B}\big)
+    = \sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
+\end{align}
+Recalling the assumption $\boldsymbol{X}^{\top}\boldsymbol{X}=n\boldsymbol{I}_{d_{1} \times d_{1}}$ and a simple fact $\big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top}\boldsymbol{X}=0$, we can rewrite the cost function in~\eqref{closed_form} as follows:
+\begin{align} \label{cost}
+    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\boldsymbol{\Theta} \right\|_{\text{F}}^{2}
+    &= \frac{1}{2n} \textbf{tr}\big( \big(\boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big)^{\top} \big( \boldsymbol{Y}-\boldsymbol{X}\widehat{\boldsymbol{\Theta}}^{\text{LS}}\big) \big)
+    + \frac{1}{2} \textbf{tr}\big( \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big)^{\top} \big(\widehat{\boldsymbol{\Theta}}^{\text{LS}}-\boldsymbol{\Theta}\big) \big).
+\end{align}
+By combining~\eqref{Lower_bnd} and~\eqref{cost}, we can obtain the lower bound of the objective function in~\eqref{closed_form} as follows:
+\begin{align*}
+    \frac{1}{2n} \left\| \boldsymbol{Y}-\boldsymbol{X}\Theta \right\|_{\text{F}}^{2} + \frac{\boldsymbol{\lambda}_{n}}{2}
+    \textbf{tr}\big(\boldsymbol{\Theta}^{\top} \boldsymbol{K} \boldsymbol{\Theta} \big) \geq
+    \frac{1}{2} \sum_{j=1}^{p} d_{j}^2 - \sum_{j=1}^{p} \sigma_{j}\big( \widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)d_{j}  + \frac{\boldsymbol{\lambda}_{n}}{2}\sum_{j=1}^{\widehat{r}} \frac{\omega_{j}}{\widehat{d}_{j}}d_{j}^2.
+\end{align*}
+We use the equality $\textbf{tr}\big(\boldsymbol{\Theta}^{\top}\boldsymbol{\Theta}\big)=\sum_{j=1}^{p}d_{j}^{2}$ and the inequality~\eqref{Upper_bnd} to get a lower bound.
+It also should be noted that the equality in the above lower bound holds when $\boldsymbol{U}=\widehat{\boldsymbol{U}}^{\text{LS}}$ and $\boldsymbol{V}=\widehat{\boldsymbol{V}}^{\text{LS}}$.
+Solving the quadratic equation yields the followings:
+\begin{align} \label{Singular}
+    &\widehat{\boldsymbol{D}}^{\text{SR}}_{jj} =
+    \begin{cases}
+        \frac{\widehat{d}_{j}\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big) }{\widehat{d}_{j} + \boldsymbol{\lambda}_{n}\omega_{j}}
+        \qquad \, j = 1,\dots,\widehat{r}, \\
+        \sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)
+        \qquad \,\,\, j = \widehat{r}+1,\dots,p.
+    \end{cases}
+\end{align}
+Recall that $\widehat{d}_{j}=\sigma_{j}\big(\widehat{\boldsymbol{\Theta}}^{\text{LS}} \big)-\boldsymbol{\lambda}_{n}\omega_{j}$ for $j=1,\dots,\widehat{r}$,
+and plugging this equality in~\eqref{Singular} for $j\in\{1,\dots,\widehat{r}\}$ yields the claim.
+$\Box$
+
+
+
 
 %\section*{acknowledgements}
 %Acknowledgements should include contributions from anyone who does not meet the criteria for authorship (for example, to recognize contributions from people who provided technical help, collation of data, writing assistance, acquisition of funding, or a department chairperson who provided general support), as well as any funding or other support information.
